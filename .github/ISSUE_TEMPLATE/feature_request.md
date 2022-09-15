@@ -13,6 +13,3 @@ Write a concise description of the problem
 Write concise description of what feature you want
 
 
-
-<!-- Love openemr? Please consider supporting our collective:
-👉  https://opencollective.com/openemr/donate -->

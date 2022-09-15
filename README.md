@@ -2,7 +2,6 @@
 ![Styling Status](https://github.com/openemr/openemr/workflows/Styling/badge.svg?branch=rel-700)
 ![Testing Status](https://github.com/openemr/openemr/workflows/Test/badge.svg?branch=rel-700)
 
-[![Backers on Open Collective](https://opencollective.com/openemr/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/openemr/sponsors/badge.svg)](#sponsors)
 
 # OpenEMR
 
