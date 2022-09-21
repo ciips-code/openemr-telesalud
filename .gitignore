@@ -30,3 +30,6 @@ ccdaservice/node_modules
 
 # testing
 .phpunit.result.cache
+
+#ignore documents
+/sites/default/documents/
