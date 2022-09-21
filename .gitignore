@@ -33,3 +33,4 @@ ccdaservice/node_modules
 
 #ignore documents
 /sites/default/documents/
+sites/default/sqlconf.php
