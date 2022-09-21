@@ -31,3 +31,9 @@ Se esta utilizando la herramienta de [Trello](https://trello.com/b/xVT3UM0I/ts-a
 **En prueba**: Una vez finalizado el desarrollo, se procede a realizar todo el proceso de QA.
 
 **Hecho**: Una vez superada las pruebas QA se indica la tarea como realiada y se procede a crear el Pull Request para enviar los datos de la rama `develop` a `main`.
+
+**Commits**:
+Cada commit debe llevar un comentario con leyenda con un sufijo y/o id asociado a la tarea y/o issue correspondiente.
+
+**CI/CD**:
+Mediante GithubActions se actualizarán las ramas main y develop después de cada commit de manera automática así como también los servidores dev y testing según corresponda.
