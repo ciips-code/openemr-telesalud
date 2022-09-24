@@ -121,15 +121,15 @@ if (isset($_POST["privatemode"]) && $_POST["privatemode"] == "user_admin") {
             sqlStatement("update users set state_license_number=? where id= ? ", array($_POST["state_license_number"], $_POST["id"]));
         }
 
-        if ($_POST["drugid"]) {
+        if (isset($_POST["drugid"])) {
             sqlStatement("update users set federaldrugid=? where id= ? ", array($_POST["drugid"], $_POST["id"]));
         }
 
-        if ($_POST["upin"]) {
+        if (isset($_POST["upin"])) {
             sqlStatement("update users set upin=? where id= ? ", array($_POST["upin"], $_POST["id"]));
         }
 
-        if ($_POST["npi"]) {
+        if (isset($_POST["npi"])) {
             sqlStatement("update users set npi=? where id= ? ", array($_POST["npi"], $_POST["id"]));
         }
 
@@ -156,7 +156,7 @@ if (isset($_POST["privatemode"]) && $_POST["privatemode"] == "user_admin") {
             //END (CHEMED)
         }
 
-        if ($_POST["billing_facility_id"]) {
+        if (isset($_POST["billing_facility_id"])) {
             sqlStatement("update users set billing_facility_id = ? where id = ? ", array($_POST["billing_facility_id"], $_POST["id"]));
             //(CHEMED) Update facility name when changing the id
             sqlStatement("UPDATE users, facility SET users.billing_facility = facility.name WHERE facility.id = ? AND users.id = ?", array($_POST["billing_facility_id"], $_POST["id"]));
@@ -282,17 +282,17 @@ if (isset($_POST["privatemode"]) && $_POST["privatemode"] == "user_admin") {
             sqlStatement("update users set physician_type = ? where id = ? ", array($_POST["physician_type"], $_POST["id"]));
         }
 
-        if ($_POST["main_menu_role"]) {
+        if (isset($_POST["main_menu_role"])) {
               $mainMenuRole = filter_input(INPUT_POST, 'main_menu_role');
               sqlStatement("update `users` set `main_menu_role` = ? where `id` = ? ", array($mainMenuRole, $_POST["id"]));
         }
 
-        if ($_POST["patient_menu_role"]) {
+        if (isset($_POST["patient_menu_role"])) {
             $patientMenuRole = filter_input(INPUT_POST, 'patient_menu_role');
             sqlStatement("update `users` set `patient_menu_role` = ? where `id` = ? ", array($patientMenuRole, $_POST["id"]));
         }
 
-        if ($_POST["erxprid"]) {
+        if (isset($_POST["erxprid"])) {
             sqlStatement("update users set weno_prov_id = ? where id = ? ", array($_POST["erxprid"], $_POST["id"]));
         }
 

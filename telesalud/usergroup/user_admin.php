@@ -389,11 +389,11 @@ if ($fres) {
 
 <TR>
 <TD><span class=text><?php echo xlt('Federal Tax ID'); ?>: </span></TD><TD><input type=text name=taxid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaltaxid"]); ?>"></td>
-<TD><span class=text><?php echo xlt('DEA Number'); ?>: </span></TD><TD><input type=text name=drugid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaldrugid"]); ?>"></td>
+<TD colspan="2">&nbsp;</TD>
 </TR>
 
 <tr>
-<td><span class="text"><?php echo xlt('UPIN'); ?>: </span></td><td><input type="text" name="upin" style="width:150px;" class="form-control" value="<?php echo attr($iter["upin"]); ?>"></td>
+<td>&nbsp;</td><td>&nbsp;</td>
 <td class='text'><?php echo xlt('See Authorizations'); ?>: </td>
 <td><select name="see_auth" style="width:150px;" class="form-control" >
 <?php
@@ -410,7 +410,7 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
 </tr>
 
 <tr>
-<td><span class="text"><?php echo xlt('NPI'); ?>: </span></td><td><input type="text" name="npi" style="width:150px;" class="form-control" value="<?php echo attr($iter["npi"]); ?>"></td>
+<td>&nbsp;</td><td>&nbsp;</td>
 <td><span class="text"><?php echo xlt('Job Description'); ?>: </span></td><td><input type="text" name="job" style="width:150px;" class="form-control" value="<?php echo attr($iter["specialty"]); ?>"></td>
 </tr>
 
@@ -444,40 +444,17 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
 <tr>
 <td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
 <td><input type="text" name="state_license_number" style="width:150px;" class="form-control" value="<?php echo attr($iter["state_license_number"]); ?>"></td>
-<td class='text'><?php echo xlt('NewCrop eRX Role'); ?>:</td>
-<td>
-    <?php echo generate_select_list("erxrole", "newcrop_erx_role", $iter['newcrop_user_role'], '', xl('Select Role'), '', '', '', array('style' => 'width:150px')); ?>
-</td>
+<td colspan="2" rowspan="2" class='text'>&nbsp;</td>
 </tr>
 <tr>
-<td><span class="text"><?php echo xlt('Weno Provider ID'); ?>: </span></td><td><input type="text" name="erxprid" style="width:150px;" class="form-control" value="<?php echo attr($iter["weno_prov_id"]); ?>"></td>
-<td><span class="text"><?php echo xlt('Google Email for Login'); ?>: </span></td><td><input type="text" name="google_signin_email" style="width:150px;" class="form-control" value="<?php echo attr($iter["google_signin_email"]); ?>"></td>
+<td>&nbsp;</td><td>&nbsp;</td>
 </tr>
 
 <tr>
   <td><span class="text"><?php echo xlt('Provider Type'); ?>: </span></td>
   <td><?php echo generate_select_list("physician_type", "physician_type", $iter['physician_type'], '', xl('Select Type'), 'physician_type_class', '', '', ''); ?></td>
-</tr>
-<tr>
-  <td>
-    <span class="text"><?php echo xlt('Main Menu Role'); ?>: </span>
-  </td>
-  <td>
-    <?php
-    $menuMain = new MainMenuRole($GLOBALS['kernel']->getEventDispatcher());
-    echo $menuMain->displayMenuRoleSelector($iter["main_menu_role"]);
-    ?>
-  </td>
-  <td>
-    <span class="text"><?php echo xlt('Patient Menu Role'); ?>: </span>
-  </td>
-  <td>
-    <?php
-    $menuPatient = new PatientMenuRole();
-    echo $menuPatient->displayMenuRoleSelector($iter["patient_menu_role"]);
-    ?>
-  </td>
-
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
 </tr>
 <?php if (!empty($GLOBALS['inhouse_pharmacy'])) { ?>
 <tr>
@@ -562,9 +539,9 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
 <?php } ?>
 
  <tr>
-<td class='text'><?php echo xlt('Access Control'); ?>:</td>
- <td><select id="access_group_id" name="access_group[]" multiple style="width:150px;" class="form-control">
-<?php
+  <td class='text'><?php echo xlt('Access Control'); ?>:</td>
+   <td><select id="access_group_id" name="access_group[]" multiple style="width:150px;" class="form-control">
+  <?php
 // Collect the access control group of user
 $list_acl_groups = AclExtended::aclGetGroupTitleList($is_super_user || $selected_user_is_superuser);
 $username_acl_groups = AclExtended::aclGetGroupTitles($iter["username"]);
@@ -577,49 +554,25 @@ foreach ($list_acl_groups as $value) {
     echo " <option value='" . attr($value) . "' $tmp>" . text(xl_gacl_group($value)) . "</option>\n";
 }
 ?>
-  </select></td>
-  <td><span class=text><?php echo xlt('Additional Info'); ?>:</span></td>
-  <td><textarea style="width:150px;" name="comments" wrap=auto rows=4 cols=25 class="form-control"><?php echo text($iter["info"]); ?></textarea></td>
-
-  </tr>
-    <tr>
-        <td><span class=text><?php echo xlt('Default Billing Facility'); ?>: </span></td><td><select name="billing_facility_id" style="width:150px;" class="form-control">
-            <?php
-            $fres = $facilityService->getAllBillingLocations();
-            if ($fres) {
-                $billResults = [];
-                for ($iter2 = 0; $iter2 < sizeof($fres); $iter2++) {
-                    $billResults[$iter2] = $fres[$iter2];
-                }
-
-                foreach ($billResults as $iter2) {
-                    ?>
-                    <option value="<?php echo attr($iter2['id']); ?>" <?php if ($iter['billing_facility_id'] == $iter2['id']) {
-                        echo "selected";
-                                   } ?>><?php echo text($iter2['name']); ?></option>
-                    <?php
-                }
-            }
-            ?>
-        </select></td>
-        <td>
-
-        </td>
-    </tr>
-  <tr height="20" valign="bottom">
-  <td colspan="4" class="text">
-      <p>*<?php echo xlt('You must enter your own password to change user passwords. Leave blank to keep password unchanged.'); ?></p>
-    <?php
+     </select></td>
+   <td><span class=text><?php echo xlt('Additional Info'); ?>:</span></td>
+   <td><textarea style="width:150px;" name="comments" wrap=auto rows=4 cols=25 class="form-control"><?php echo text($iter["info"]); ?></textarea></td>
+   
+ </tr>
+    <tr height="20" valign="bottom">
+      <td colspan="4" class="text">
+        <p>*<?php echo xlt('You must enter your own password to change user passwords. Leave blank to keep password unchanged.'); ?></p>
+        <?php
     if (!$is_super_user && $selected_user_is_superuser) {
         echo '<p class="redtext">*' . xlt('View mode - only administrator can edit another administrator user') . '.</p>';
     }
     ?>
-<!--
+  <!--
 Display red alert if entered password matched one of last three passwords/Display red alert if user password is expired
 -->
-  <div class="redtext" id="error_message">&nbsp;</div>
-  </td>
-  </tr>
+        <div class="redtext" id="error_message">&nbsp;</div>
+      </td>
+    </tr>
 
 </table>
 
