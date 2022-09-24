@@ -34,3 +34,5 @@ ccdaservice/node_modules
 #ignore documents
 /sites/default/documents/
 sites/default/sqlconf.php
+info.php
+telesalud/notas.txt
