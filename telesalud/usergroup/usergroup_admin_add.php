@@ -288,7 +288,7 @@ if ($fres) {
 </tr>
 <tr>
 <td><span class="text"><?php echo xlt('Federal Tax ID'); ?>: </span></td><td><input type="text" name='federaltaxid' style="width:120px;" class="form-control"></td>
-<td><span class="text"><?php echo xlt('DEA number'); ?>: </span></td><td><input type="text" name='federaldrugid' style="width:120px;" class="form-control"></td>
+<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
 <td>&nbsp;</td><td>&nbsp;</td>
@@ -303,7 +303,7 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
 </select></td>
 
 <tr>
-<td><span class="text"><?php echo xlt('NPI'); ?>: </span></td><td><input type="text" name="npi" style="width:120px;" class="form-control"></td>
+<td colspan="2">&nbsp;</td>
 <td><span class="text"><?php echo xlt('Job Description'); ?>: </span></td><td><input type="text" name="specialty" style="width:120px;" class="form-control"></td>
 </tr>
 
@@ -316,15 +316,8 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
     </td>
 </tr>
 <tr>
-  <td>
-    <span class="text"><?php echo xlt('Main Menu Role'); ?>: </span>
-  </td>
-  <td>
-    <?php
-    $menuMain = new MainMenuRole($GLOBALS['kernel']->getEventDispatcher());
-    echo $menuMain->displayMenuRoleSelector();
-    ?>
-  </td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
   <td>
     <span class="text"><?php echo xlt('Patient Menu Role'); ?>: </span>
   </td>
@@ -364,15 +357,9 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
 <tr>
 <td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
 <td><input type="text" name="state_license_number" style="width:120px;" class="form-control"></td>
-<td class='text'><?php echo xlt('NewCrop eRX Role'); ?>:</td>
-<td>
-    <?php echo generate_select_list("erxrole", "newcrop_erx_role", '', '', '--Select Role--', '', '', '', array('style' => 'width:120px')); ?>
-</td>
+<td colspan="2">&nbsp;</td>
 </tr>
-<tr>
-<td><span class="text"><?php echo xlt('Weno Provider ID'); ?>: </span></td><td><input type="text" name="erxprid" style="width:120px;" class="form-control" value="<?php echo attr($iter["weno_prov_id"] ?? ''); ?>"></td>
-<td><span class="text"><?php echo xlt('Google Email for Login'); ?>: </span></td><td><input type="text" name="google_signin_email" style="width:150px;" class="form-control" value="<?php echo attr($iter["google_signin_email"] ?? ''); ?>"></td>
-</tr>
+
 <?php if ($GLOBALS['inhouse_pharmacy']) { ?>
 <tr>
  <td class="text"><?php echo xlt('Default Warehouse'); ?>: </td>
@@ -473,28 +460,7 @@ foreach ($list_acl_groups as $value) {
   <td><textarea name=info style="width:120px;" cols='27' rows='4' wrap='auto' class="form-control"></textarea></td>
 
   </tr>
-    <tr>
-        <td><span class=text><?php echo xlt('Default Billing Facility'); ?>: </span></td>
-        <td><select name="billing_facility_id" style="width:150px;" class="form-control">
-                <?php
-                $fres = $facilityService->getAllBillingLocations();
-                if ($fres) {
-                    $billResults = [];
-                    for ($iter2 = 0; $iter2 < sizeof($fres); $iter2++) {
-                        $billResults[$iter2] = $fres[$iter2];
-                    }
-
-                    foreach ($billResults as $iter2) {
-                        ?>
-                        <option value="<?php echo attr($iter2['id']); ?>"><?php echo text($iter2['name']); ?></option>
-                        <?php
-                    }
-                }
-                ?>
-            </select>
-        </td>
-        <td></td>
-    </tr>
+  
   <tr height="25"><td colspan="4">&nbsp;</td></tr>
 
 </table>
