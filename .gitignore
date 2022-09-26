@@ -37,3 +37,5 @@ sites/default/sqlconf.php
 #package-lock
 package-lock.json
 ccdaservice/package-lock.json
+info.php
+telesalud/notas.txt
