@@ -16,6 +16,7 @@ require_once("$srcdir/calendar.inc");
 require_once("$srcdir/options.inc.php");
 require_once("$srcdir/erx_javascript.inc.php");
 
+$action_script="usergroup_admin.php";
 use OpenEMR\Common\Acl\AclExtended;
 use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Common\Csrf\CsrfUtils;
@@ -215,7 +216,7 @@ function authorized_clicked() {
 
 <tr>
 <td valign='top'>
-<form name='new_user' id="new_user" method='post' action="usergroup_admin.php">
+<form name='new_user' id="new_user" method='post' action="<?=$action_script?>">
 <input type="hidden" name="csrf_token_form" value="<?php echo attr(CsrfUtils::collectCsrfToken()); ?>" />
 
 <input type='hidden' name='mode' value='new_user'>
@@ -288,10 +289,12 @@ if ($fres) {
 </tr>
 <tr>
 <td><span class="text"><?php echo xlt('Federal Tax ID'); ?>: </span></td><td><input type="text" name='federaltaxid' style="width:120px;" class="form-control"></td>
-<td colspan="2">&nbsp;</td>
+<td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
+<td><input type="text" name="state_license_number" style="width:120px;" class="form-control"></td>
 </tr>
 <tr>
-<td>&nbsp;</td><td>&nbsp;</td>
+  <td><span class="text"><?php echo xlt('Provider Type'); ?>: </span></td>
+  <td><?php echo generate_select_list("physician_type", "physician_type", '', '', xl('Select Type'), 'physician_type_class', '', '', ''); ?></td>
 <td class='text'><?php echo xlt('See Authorizations'); ?>: </td>
 <td><select name="see_auth" style="width:120px;" class="form-control">
 <?php
@@ -302,41 +305,15 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
 ?>
 </select></td>
 
-<tr>
-<td colspan="2">&nbsp;</td>
-<td><span class="text"><?php echo xlt('Job Description'); ?>: </span></td><td><input type="text" name="specialty" style="width:120px;" class="form-control"></td>
-</tr>
+
 
 <tr>
-    <td>
-        <span class="text"><?php echo xlt('Provider Type'); ?>: </span>
-    </td>
-    <td>
-        <?php echo generate_select_list("physician_type", "physician_type", '', '', xl('Select Type'), 'physician_type_class', '', '', ''); ?>
-    </td>
-</tr>
-<tr>
-  <td>&nbsp;</td>
-  <td>&nbsp;</td>
-  <td>
-    <span class="text"><?php echo xlt('Patient Menu Role'); ?>: </span>
-  </td>
-  <td>
+  <td><span class="text"><?php echo xlt('Taxonomy'); ?>: </span></td>
+  <td><input type="text" name="taxonomy" style="width:120px;" class="form-control" value="207Q00000X"></td>
+  <td><span class="text"><?php echo xlt('Supervisor'); ?>: </span></td>
+  <td><select name="supervisor_id" style="width:150px;" class="form-control">
+    <option value=""><?php echo xlt("Select Supervisor") ?></option>
     <?php
-    $menuPatient = new PatientMenuRole();
-    echo $menuPatient->displayMenuRoleSelector();
-    ?>
-  </td>
-</tr>
-
-<tr>
-<td><span class="text"><?php echo xlt('Taxonomy'); ?>: </span></td>
-<td><input type="text" name="taxonomy" style="width:120px;" class="form-control" value="207Q00000X"></td>
-    <td><span class="text"><?php echo xlt('Supervisor'); ?>: </span></td>
-    <td>
-        <select name="supervisor_id" style="width:150px;" class="form-control">
-            <option value=""><?php echo xlt("Select Supervisor") ?></option>
-            <?php
             $userService = new UserService();
             $users = $userService->getActiveUsers();
             foreach ($users as $activeUser) {
@@ -352,14 +329,8 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
                     text($activeUser['fname']) . ' ' . text($activeUser['mname']) . "</option>\n";
             }
             ?>
-        </select>
-    </td>
-<tr>
-<td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
-<td><input type="text" name="state_license_number" style="width:120px;" class="form-control"></td>
-<td colspan="2">&nbsp;</td>
+    </select></td>
 </tr>
-
 <?php if ($GLOBALS['inhouse_pharmacy']) { ?>
 <tr>
  <td class="text"><?php echo xlt('Default Warehouse'); ?>: </td>
@@ -475,7 +446,7 @@ foreach ($list_acl_groups as $value) {
 <tr<?php echo ($GLOBALS['disable_non_default_groups']) ? " style='display:none'" : ""; ?>>
 
 <td valign='top'>
-<form name='new_group' method='post' action="usergroup_admin.php"
+<form name='new_group' method='post' action="<?=$action_script?>"
  onsubmit='return top.restoreSession()'>
 <input type="hidden" name="csrf_token_form" value="<?php echo attr(CsrfUtils::collectCsrfToken()); ?>" />
 <br />
@@ -508,7 +479,7 @@ foreach ($result as $iter) {
 <tr<?php echo ($GLOBALS['disable_non_default_groups']) ? " style='display:none'" : ""; ?>>
 
 <td valign='top'>
-<form name='new_group' method='post' action="usergroup_admin.php"
+<form name='new_group' method='post' action="<?=$action_script?>"
  onsubmit='return top.restoreSession()'>
 <input type="hidden" name="csrf_token_form" value="<?php echo attr(CsrfUtils::collectCsrfToken()); ?>" />
 <input type='hidden' name='mode' value='new_group' />

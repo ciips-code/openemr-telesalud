@@ -361,8 +361,9 @@ if ($fres) {
 
 <?php if ($GLOBALS['restrict_user_facility']) { ?>
 <tr>
- <td colspan=2>&nbsp;</td>
- <td><span class=text><?php echo xlt('Schedule Facilities:');?></td>
+ <td>&nbsp;</td>
+ <td>&nbsp;</td>
+ <td><span class=text><?php echo xlt('Schedule Facilities:');?></span></td>
  <td>
   <select name="schedule_facility[]" multiple style="width:150px;" class="form-control">
     <?php
@@ -389,14 +390,16 @@ if ($fres) {
 
 <TR>
 <TD><span class=text><?php echo xlt('Federal Tax ID'); ?>: </span></TD><TD><input type=text name=taxid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaltaxid"]); ?>"></td>
-<TD colspan="2">&nbsp;</TD>
+<td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
+<td><input type="text" name="state_license_number" style="width:150px;" class="form-control" value="<?php echo attr($iter["state_license_number"]); ?>"></td>
 </TR>
 
 <tr>
-<td>&nbsp;</td><td>&nbsp;</td>
-<td class='text'><?php echo xlt('See Authorizations'); ?>: </td>
-<td><select name="see_auth" style="width:150px;" class="form-control" >
-<?php
+  <td><span class="text"><?php echo xlt('Taxonomy'); ?>: </span></td>
+  <td><input type="text" name="taxonomy" style="width:150px;" class="form-control" value="<?php echo attr($iter["taxonomy"]); ?>"></td>
+  <td class='text'><?php echo xlt('See Authorizations'); ?>: </td>
+  <td><select name="see_auth" style="width:150px;" class="form-control" >
+  <?php
 foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('All')) as $key => $value) {
     echo " <option value='" . attr($key) . "'";
     if ($key == $iter['see_auth']) {
@@ -406,22 +409,17 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
     echo ">" . text($value) . "</option>\n";
 }
 ?>
-</select></td>
+  </select></td>
 </tr>
 
 <tr>
-<td>&nbsp;</td><td>&nbsp;</td>
-<td><span class="text"><?php echo xlt('Job Description'); ?>: </span></td><td><input type="text" name="job" style="width:150px;" class="form-control" value="<?php echo attr($iter["specialty"]); ?>"></td>
-</tr>
-
-<tr>
-<td><span class="text"><?php echo xlt('Taxonomy'); ?>: </span></td>
-<td><input type="text" name="taxonomy" style="width:150px;" class="form-control" value="<?php echo attr($iter["taxonomy"]); ?>"></td>
-<td><span class="text"><?php echo xlt('Supervisor'); ?>: </span></td>
-<td>
+  <td><span class="text"><?php echo xlt('Provider Type'); ?>: </span></td>
+  <td><?php echo generate_select_list("physician_type", "physician_type", $iter['physician_type'], '', xl('Select Type'), 'physician_type_class', '', '', ''); ?></td>
+  <td><span class="text"><?php echo xlt('Supervisor'); ?>: </span></td>
+  <td>
     <select name="supervisor_id" style="width:150px;" class="form-control">
-        <option value=""><?php echo xlt("Select Supervisor") ?></option>
-        <?php
+      <option value=""><?php echo xlt("Select Supervisor") ?></option>
+      <?php
         $userService = new UserService();
         $users = $userService->getActiveUsers();
         foreach ($users as $activeUser) {
@@ -437,111 +435,17 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
                 text($activeUser['fname']) . ' ' . text($activeUser['mname']) . "</option>\n";
         }
         ?>
-    </select>
-</td>
+      </select>
+    </td>
 </tr>
 
 <tr>
-<td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
-<td><input type="text" name="state_license_number" style="width:150px;" class="form-control" value="<?php echo attr($iter["state_license_number"]); ?>"></td>
-<td colspan="2" rowspan="2" class='text'>&nbsp;</td>
-</tr>
+  <td colspan="4" valign="top" class='text'>&nbsp;</td>
+  </tr>
 <tr>
-<td>&nbsp;</td><td>&nbsp;</td>
-</tr>
-
-<tr>
-  <td><span class="text"><?php echo xlt('Provider Type'); ?>: </span></td>
-  <td><?php echo generate_select_list("physician_type", "physician_type", $iter['physician_type'], '', xl('Select Type'), 'physician_type_class', '', '', ''); ?></td>
-  <td>&nbsp;</td>
-  <td>&nbsp;</td>
-</tr>
-<?php if (!empty($GLOBALS['inhouse_pharmacy'])) { ?>
-<tr>
- <td class="text"><?php echo xlt('Default Warehouse'); ?>: </td>
- <td class='text'>
+  <td valign="top" class='text'><?php echo xlt('Access Control'); ?>:</td>
+  <td valign="top"><select id="access_group_id" name="access_group[]" multiple style="width:150px;" class="form-control">
     <?php
-    echo generate_select_list(
-        'default_warehouse',
-        'warehouse',
-        $iter['default_warehouse'],
-        ''
-    );
-    ?>
- </td>
-
-    <?php if (!empty($GLOBALS['inhouse_pharmacy'])) { ?>
- <td class="text"><?php echo xlt('Invoice Refno Pool'); ?>: </td>
- <td class='text'>
-        <?php
-        echo generate_select_list(
-            'irnpool',
-            'irnpool',
-            $iter['irnpool'],
-            xl('Invoice reference number pool, if used')
-        );
-        ?>
- </td>
-    <?php } else { ?>
-  <td class="text" colspan="2">&nbsp;</td>
-    <?php } ?>
-
-</tr>
-<?php } ?>
-
-<!-- facility and warehouse restrictions, optional -->
-<?php if (!empty($GLOBALS['gbl_fac_warehouse_restrictions']) || !empty($GLOBALS['restrict_user_facility'])) { ?>
- <tr title="<?php echo xla('If nothing is selected here then all are permitted.'); ?>">
-  <td class="text"><?php echo !empty($GLOBALS['gbl_fac_warehouse_restrictions']) ?
-    xlt('Facility and warehouse permissions') : xlt('Facility permissions'); ?>:</td>
-  <td colspan="3">
-   <select name="schedule_facility[]" multiple style="width:490px;">
-    <?php
-    $userFacilities = getUserFacilities($_GET['id'], 'id', $GLOBALS['gbl_fac_warehouse_restrictions']);
-    $ufid = array();
-    foreach ($userFacilities as $uf) {
-        $ufid[] = $uf['id'];
-    }
-    $fres = sqlStatement("select * from facility order by name");
-    if ($fres) {
-        while ($frow = sqlFetchArray($fres)) {
-            // Get the warehouses that are linked to this user and facility.
-            $whids = getUserFacWH($_GET['id'], $frow['id']); // from calendar.inc
-            // Generate an option for just the facility with no warehouse restriction.
-            echo "    <option";
-            if (empty($whids) && in_array($frow['id'], $ufid)) {
-                echo ' selected';
-            }
-            echo " value='" . attr($frow['id']) . "'>" . text($frow['name']) . "</option>\n";
-            // Then generate an option for each of the facility's warehouses.
-            // Does not apply if the site does not use warehouse restrictions.
-            if (!empty($GLOBALS['gbl_fac_warehouse_restrictions'])) {
-                $lres = sqlStatement(
-                    "SELECT option_id, title FROM list_options WHERE " .
-                    "list_id = ? AND option_value = ? ORDER BY seq, title",
-                    array('warehouse', $frow['id'])
-                );
-                while ($lrow = sqlFetchArray($lres)) {
-                    echo "    <option";
-                    if (in_array($lrow['option_id'], $whids)) {
-                        echo ' selected';
-                    }
-                    echo " value='" . attr($frow['id']) . "/" . attr($lrow['option_id']) . "'>&nbsp;&nbsp;&nbsp;" .
-                        text(xl_list_label($lrow['title'])) . "</option>\n";
-                }
-            }
-        }
-    }
-    ?>
-   </select>
-  </td>
- </tr>
-<?php } ?>
-
- <tr>
-  <td class='text'><?php echo xlt('Access Control'); ?>:</td>
-   <td><select id="access_group_id" name="access_group[]" multiple style="width:150px;" class="form-control">
-  <?php
 // Collect the access control group of user
 $list_acl_groups = AclExtended::aclGetGroupTitleList($is_super_user || $selected_user_is_superuser);
 $username_acl_groups = AclExtended::aclGetGroupTitles($iter["username"]);
@@ -554,27 +458,35 @@ foreach ($list_acl_groups as $value) {
     echo " <option value='" . attr($value) . "' $tmp>" . text(xl_gacl_group($value)) . "</option>\n";
 }
 ?>
-     </select></td>
-   <td><span class=text><?php echo xlt('Additional Info'); ?>:</span></td>
-   <td><textarea style="width:150px;" name="comments" wrap=auto rows=4 cols=25 class="form-control"><?php echo text($iter["info"]); ?></textarea></td>
-   
- </tr>
-    <tr height="20" valign="bottom">
-      <td colspan="4" class="text">
-        <p>*<?php echo xlt('You must enter your own password to change user passwords. Leave blank to keep password unchanged.'); ?></p>
-        <?php
+    </select></td>
+  <td valign="top"><span class=text><?php echo xlt('Additional Info'); ?>:</span></td>
+  <td valign="top"><textarea style="width:150px;" name="comments" wrap=auto rows=4 cols=25 class="form-control"><?php echo text($iter["info"]); ?></textarea></td>
+</tr>
+<?php if (!empty($GLOBALS['inhouse_pharmacy'])) { ?>
+<tr>
+  <td colspan="4" valign="bottom" class="text"><p>*<?php echo xlt('You must enter your own password to change user passwords. Leave blank to keep password unchanged.'); ?></p>
+    <?php
     if (!$is_super_user && $selected_user_is_superuser) {
         echo '<p class="redtext">*' . xlt('View mode - only administrator can edit another administrator user') . '.</p>';
     }
     ?>
-  <!--
+    <!--
 Display red alert if entered password matched one of last three passwords/Display red alert if user password is expired
 -->
-        <div class="redtext" id="error_message">&nbsp;</div>
-      </td>
-    </tr>
+    <div class="redtext" id="error_message">&nbsp;</div></td>
+ <?php if (!empty($GLOBALS['inhouse_pharmacy'])) { ?>
+ <?php } else { ?>
+  <td class="text" colspan="2">&nbsp;</td>
+    <?php } ?>
 
-</table>
+</tr>
+<?php } ?>
+
+<!-- facility and warehouse restrictions, optional -->
+<?php if (!empty($GLOBALS['gbl_fac_warehouse_restrictions']) || !empty($GLOBALS['restrict_user_facility'])) { ?>
+ <?php } ?>
+
+ </table>
 
 <INPUT TYPE="HIDDEN" NAME="id" VALUE="<?php echo attr($_GET["id"]); ?>">
 <INPUT TYPE="HIDDEN" NAME="mode" VALUE="update">
