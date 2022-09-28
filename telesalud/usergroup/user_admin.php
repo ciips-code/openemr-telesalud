@@ -395,8 +395,8 @@ if ($fres) {
 </TR>
 
 <tr>
-  <td><span class="text"><?php echo xlt('Taxonomy'); ?>: </span></td>
-  <td><input type="text" name="taxonomy" style="width:150px;" class="form-control" value="<?php echo attr($iter["taxonomy"]); ?>"></td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
   <td class='text'><?php echo xlt('See Authorizations'); ?>: </td>
   <td><select name="see_auth" style="width:150px;" class="form-control" >
   <?php

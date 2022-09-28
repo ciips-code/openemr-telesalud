@@ -3,4 +3,5 @@
  * Variables globales usadas dentro del modulo
  */
 // Dependecia de las globales del OpenEmr
-require_once ("../../interface/globals.php");
+$p = $_SERVER['DOCUMENT_ROOT'];
+require_once ($p . "/interface/globals.php");

@@ -8,6 +8,13 @@
 -- Provider type-> Tipo de profesional
 -- Control de acceso-> Perfiles de acceso
 -- 
+-- Correcciones 2: 
+-- cambiar leyendas: 
+-- 'username' -> 'Nombre de usuario'   
+-- 'Su palabra clave' -> 'Contraseña de su usuario con perfil administrador' 
+-- corregir falta de ortografía de campo 
+-- "Numero de identidicación profesoional" 
+--
 -- Cambiar nompre por Nombre -> Primer nombre
 UPDATE lang_definitions AS ld,
 lang_constants AS lc 
@@ -40,19 +47,56 @@ SET definition = 'Perfiles de acceso'
 WHERE
 	ld.cons_id = lc.cons_id 
 	AND lang_id = 4 
-	AND definition = 'Control de acceso';-- Provider type-> Tipo de profesional
+	AND definition = 'Control de acceso';--
+-- Main Menu Role -> Rol menú principal
+--
+UPDATE lang_definitions AS ld,
+lang_constants AS lc 
+SET definition = 'Main Menu Role' 
+WHERE
+	ld.cons_id = lc.cons_id 
+	AND lang_id = 4 
+	AND definition = 'Rol menú principal';--
+-- Main Menu Role -> Rol menú principal
+--
+UPDATE lang_definitions AS ld,
+lang_constants AS lc 
+SET definition = 'Nombre de usuario' 
+WHERE
+	ld.cons_id = lc.cons_id 
+	AND lang_id = 4 
+	AND definition = 'username';--
+-- corregir falta de ortografía de campo "Numero de identidicación profesoional
+--
+UPDATE lang_definitions AS ld,
+lang_constants AS lc 
+SET definition = REPLACE ( definition, 'profesoional', 'profesional' ) 
+WHERE
+	ld.cons_id = lc.cons_id 
+	AND lang_id = 4 
+	AND definition LIKE '%profesoional%';--
+-- Su palabra clave  -> Contraseña de su usuario con perfil administrador
+--
+UPDATE lang_definitions AS ld,
+lang_constants AS lc 
+SET definition = 'Contraseña de su usuario con perfil administrador' 
+WHERE
+	ld.cons_id = lc.cons_id 
+	AND lang_id = 4 
+	AND definition = 'Su palabra clave';--
+-- Provider type-> Tipo de profesional
 -- no esta en la carga inicial
 --
-INSERT INTO `openemr`.`lang_definitions` ( `cons_id`, `lang_id`, `definition` )
+INSERT INTO lang_definitions ( `cons_id`, `lang_id`, `definition` )
 VALUES
 	(
 		(
 		SELECT
 			lc.cons_id 
 		FROM
-			`openemr`.`lang_constants` AS lc 
+			lang_constants AS lc 
 		WHERE
-			`constant_name` = 'Provider Type' 
+			constant_name LIKE '%Provider Type%' 
 			AND lc.cons_id NOT IN ( SELECT DISTINCT cons_id FROM lang_definitions ld WHERE ld.lang_id = 4 ) 
 			LIMIT 1 
 		),
