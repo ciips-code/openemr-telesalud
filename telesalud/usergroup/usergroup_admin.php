@@ -133,7 +133,7 @@ if (isset($_POST["privatemode"]) && $_POST["privatemode"] == "user_admin") {
             sqlStatement("update users set npi=? where id= ? ", array($_POST["npi"], $_POST["id"]));
         }
 
-        if ($_POST["taxonomy"]) {
+        if (isset($_POST["taxonomy"])) {
             sqlStatement("update users set taxonomy = ? where id= ? ", array($_POST["taxonomy"], $_POST["id"]));
         }
 
@@ -141,7 +141,7 @@ if (isset($_POST["privatemode"]) && $_POST["privatemode"] == "user_admin") {
             sqlStatement("update users set lname=? where id= ? ", array($_POST["lname"], $_POST["id"]));
         }
 
-        if ($_POST["job"]) {
+        if (isset($_POST["job"])) {
             sqlStatement("update users set specialty=? where id= ? ", array($_POST["job"], $_POST["id"]));
         }
 
