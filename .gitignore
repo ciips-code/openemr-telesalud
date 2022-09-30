@@ -36,3 +36,4 @@ ccdaservice/node_modules
 sites/default/sqlconf.php
 info.php
 telesalud/notas.txt
+telesalud/laravel/routes.txt
