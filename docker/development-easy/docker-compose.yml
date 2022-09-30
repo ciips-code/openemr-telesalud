@@ -146,6 +146,22 @@ services:
             XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
         volumes:
             - ../..:/var/www/html
+    # Laravel service
+    telesalud-laravel:
+        container_name: telesalud_laravel
+        image: docker.io/bitnami/laravel:9
+        ports:
+            - 8490:8000
+        environment:
+            - DB_HOST=telesalud-openemr-mysql
+            - DB_PORT=3306
+            - DB_USERNAME=openemr
+            - DB_PASSWORD=openemr
+            - DB_DATABASE=openemr
+        volumes:
+            - '../../telesalud/laravel:/app'
+        depends_on:
+            - telesalud-openemr-mysql
 networks:
     internal:
         driver: bridge
