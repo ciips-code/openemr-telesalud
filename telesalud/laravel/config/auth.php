@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'tsalud_users',
     ],
 
     /*
@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'tsalud_users',
         ],
     ],
 
@@ -60,14 +60,14 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'tsalud_users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
+        // 'tsalud_users' => [
         //     'driver' => 'database',
-        //     'table' => 'users',
+        //     'table' => 'tsalud_users',
         // ],
     ],
 
@@ -87,9 +87,9 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
+        'tsalud_users' => [
+            'provider' => 'tsalud_users',
+            'table' => 'tsalud_password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
