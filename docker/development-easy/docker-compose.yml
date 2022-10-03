@@ -149,7 +149,7 @@ services:
     # Laravel service
     telesalud-laravel:
         container_name: telesalud_laravel
-        image: docker.io/bitnami/laravel:9
+        image: docker.io/bitnami/laravel:8
         ports:
             - 8490:8000
         environment:
