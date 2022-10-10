@@ -12,12 +12,12 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasFactory, HasApiTokens;
+    use HasApiTokens, Authenticatable, Authorizable, HasFactory;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'name', 'email',
@@ -26,11 +26,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * The attributes excluded from the model's JSON form.
      *
-     * @var array
+     * @var string[]
      */
     protected $hidden = [
         'password',
     ];
-
-    protected $connection = 'mysql';
 }
