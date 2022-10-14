@@ -37,3 +37,4 @@ sites/default/sqlconf.php
 info.php
 telesalud/notas.txt
 telesalud/laravel/routes.txt
+interface/themes/
