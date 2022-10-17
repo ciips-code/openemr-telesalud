@@ -38,3 +38,5 @@ info.php
 telesalud/notas.txt
 telesalud/laravel/routes.txt
 interface/themes/
+
+composer.lock
