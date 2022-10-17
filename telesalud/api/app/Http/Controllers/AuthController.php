@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\ApiUser;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\Request;
@@ -20,29 +20,8 @@ class AuthController extends Controller
         }
 
         $client = new Client();
-        
-        /*
-        return response()->json(['status' => 'success', 'message' => [
-                config('service.passport.login_endpoint'),
-                config('service.passport.client_secret'),
-                config('service.passport.client_id')
-            ]
-        ]);
-        */
 
-        /* try {*/
-
-            return $client->request('POST', config('service.passport.login_endpoint'), [
-                "form_params" => [
-                    "client_secret" => config('service.passport.client_secret'),
-                    "grant_type" => "password",
-                    "client_id" => config('service.passport.client_id'),
-                    "username" => $request->email,
-                    "password" => $request->password
-                ]
-            ]);
-            
-            /*
+        try {
             return $client->post(config('service.passport.login_endpoint'), [
                 "form_params" => [
                     "client_secret" => config('service.passport.client_secret'),
@@ -52,11 +31,9 @@ class AuthController extends Controller
                     "password" => $request->password
                 ]
             ]);
-            */
-            
-        /* } catch (BadResponseException $e) { */
-        //    return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
-        /* } */
+        } catch (BadResponseException $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 
     public function register(Request $request)
@@ -81,13 +58,13 @@ class AuthController extends Controller
         }
 
         // Check if user already exist
-        if (User::where('email', '=', $email)->exists()) {
+        if (ApiUser::where('email', '=', $email)->exists()) {
             return response()->json(['status' => 'error', 'message' => 'User already exists with this email']);
         }
 
         // Create new user
         try {
-            $user = new User();
+            $user = new ApiUser();
             $user->name = $name;
             $user->email = $email;
             $user->password = app('hash')->make($password);

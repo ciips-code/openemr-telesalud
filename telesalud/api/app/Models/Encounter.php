@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,6 +41,11 @@ class Encounter extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'pid', 'pid');
+    }
+
+    public function provider()
+    {
+        return $this->hasOne(Provider::class, 'id', 'provider_id');
     }
 
 }
