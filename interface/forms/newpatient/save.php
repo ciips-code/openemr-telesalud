@@ -77,12 +77,13 @@ if (!empty($encounter_type)) {
     }
 }
 // TSALUD- ISSUE-#16: Campos obligatorios nueva visita
-// Si dede globales se ocultan todos los campos y opciones del formulario nueva visita. 
+// Desde globales se ocultan todos los campos del formulario nueva visita. 
 // A continuación se asignan los valores obligatorios para que se pueda generar una nueva visita. 
 
 // facility_id=3
 // pc_catid=5
 // class_code='AMB'
+// date=fecha actual
 
 if (!isset($pc_catid)) {
     $pc_catid=5;
@@ -92,6 +93,9 @@ if (!isset($facility_id)) {
 }
 if (!isset($class_code)) {
     $class_code='ABM';
+}
+if (!isset($date)) {
+    $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d h:i:s', time()));
 }
 
 
