@@ -188,3 +188,73 @@ VALUES
 		4,
 	'Buscador de Pacientes'
 	);
+	
+-- Provide Since Date --> Proporcionar desde
+INSERT INTO lang_constants ( `constant_name`) VALUES ('Provide Since Date');
+-- Traduciendo... 
+INSERT INTO lang_definitions ( `cons_id`, `lang_id`, `definition` )
+VALUES
+	(
+		(
+		SELECT
+			lc.cons_id 
+		FROM
+			lang_constants AS lc 
+		WHERE `constant_name` = 'Provide Since Date'
+			AND lc.cons_id NOT IN ( SELECT DISTINCT cons_id FROM lang_definitions ld WHERE ld.lang_id = 4 ) 
+			LIMIT 1 
+		),
+		4,
+	'Proporcionar desde'
+	);
+	
+	-- Industry - Tipo de Industria 
+INSERT INTO lang_definitions ( `cons_id`, `lang_id`, `definition` )
+VALUES
+	(
+		(
+		SELECT
+			lc.cons_id 
+		FROM
+			lang_constants AS lc 
+		WHERE `constant_name` = 'Industry'
+			AND lc.cons_id NOT IN ( SELECT DISTINCT cons_id FROM lang_definitions ld WHERE ld.lang_id = 4 ) 
+			LIMIT 1 
+		),
+		4,
+	'Tipo de Industria'
+	);
+	
+	-- Idioma - Idioma Preferido 
+	UPDATE lang_definitions AS ld, lang_constants AS lc  SET ld.definition = 'Idioma Preferido'
+WHERE ld.cons_id = lc.cons_id 
+	AND lang_id = 4  and  `definition` = 'Idioma' ;
+	
+	-- raza 
+	UPDATE `openemr`.`lang_definitions` SET `definition` = 'Raza/Etnia' WHERE `cons_id` = (
+		SELECT
+			lc.cons_id 
+		FROM
+			lang_constants AS lc 
+		WHERE `constant_name` = 'Ethnicity'			LIMIT 1 
+		)  AND lang_id = 4  ;
+	-- ocultar raza 
+	UPDATE `openemr`.`layout_options`  SET uor = 0   WHERE `form_id` = 'DEM' AND `title` = 'Race' AND `group_id` = '5';
+	-- Finder --> Buscador de Pacientes
+INSERT INTO lang_constants ( `constant_name`) VALUES ('Finder');
+-- Traduciendo... 
+INSERT INTO lang_definitions ( `cons_id`, `lang_id`, `definition` )
+VALUES
+	(
+		(
+		SELECT
+			lc.cons_id 
+		FROM
+			lang_constants AS lc 
+		WHERE `constant_name` = 'Finder'
+			AND lc.cons_id NOT IN ( SELECT DISTINCT cons_id FROM lang_definitions ld WHERE ld.lang_id = 4 ) 
+			LIMIT 1 
+		),
+		4,
+	'Buscador de Pacientes'
+	);
