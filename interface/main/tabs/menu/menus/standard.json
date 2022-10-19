@@ -1150,7 +1150,7 @@
         "label": "Users",
         "menu_id": "adm0",
         "target": "adm",
-        "url": "/interface/usergroup/usergroup_admin.php",
+        "url": "/telesalud/usergroup/usergroup_admin.php",
         "children": [],
         "requirement": 0,
         "acl_req": [

@@ -123,6 +123,48 @@ services:
             LDAP_TLS_CA_CRT_FILENAME: ca.pem
             LDAP_TLS_CRT_FILENAME: server-cert.pem
             LDAP_TLS_KEY_FILENAME: server-key.pem
+    telesalud-xdebug-nginx:
+        container_name: telesalud_xdebug_nginx
+        build:
+            context: .
+            dockerfile: nginx/Dockerfile
+        ports:
+            - 8390:80
+        # networks:
+        #     - internal
+        volumes:
+            - ../..:/var/www/html
+    telesalud-xdebug-php:
+        container_name: telesalud_xdebug_php
+        build:
+            context: .
+            dockerfile: php/Dockerfile
+        # networks:
+        #     - internal
+        environment:
+            XDEBUG_MODE: debug
+            XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
+        volumes:
+            - ../..:/var/www/html
+    # Laravel service
+    telesalud-laravel:
+        container_name: telesalud_laravel
+        image: docker.io/bitnami/laravel:8
+        ports:
+            - 8490:8000
+        environment:
+            - DB_HOST=telesalud-openemr-mysql
+            - DB_PORT=3306
+            - DB_USERNAME=openemr
+            - DB_PASSWORD=openemr
+            - DB_DATABASE=openemr
+        volumes:
+            - '../../telesalud/laravel:/app'
+        depends_on:
+            - telesalud-openemr-mysql
+networks:
+    internal:
+        driver: bridge
 volumes:
     database: {}
     public: {}
