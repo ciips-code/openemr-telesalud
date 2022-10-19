@@ -95,7 +95,7 @@ if ($class_code==null) {
     $class_code='ABM';
 }
 if ($date==null) {
-    $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d h:i:s', time()));
+    $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d h:i', time()));
 }
 
 
