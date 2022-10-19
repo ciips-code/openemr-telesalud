@@ -85,16 +85,16 @@ if (!empty($encounter_type)) {
 // class_code='AMB'
 // date=fecha actual
 
-if (!isset($pc_catid)) {
+if ($pc_catid==null) {
     $pc_catid=5;
 }
-if (!isset($facility_id)) {
+if ($facility_id==null) {
     $facility_id=3;
 }
-if (!isset($class_code)) {
+if ($class_code==null) {
     $class_code='ABM';
 }
-if (!isset($date)) {
+if ($date==null) {
     $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d h:i:s', time()));
 }
 
