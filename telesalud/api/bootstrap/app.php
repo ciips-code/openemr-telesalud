@@ -61,6 +61,7 @@ $app->singleton(
 
 $app->configure('auth');
 $app->configure('service');
+$app->configure('swagger-lume');
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +99,7 @@ $app->routeMiddleware([
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+$app->register(\SwaggerLume\ServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
