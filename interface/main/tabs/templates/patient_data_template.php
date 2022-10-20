@@ -117,12 +117,12 @@ switch ($search_any_type) {
             <!-- ko if: patient -->
             <!-- ko with: patient -->
             <div class="btn-group btn-group-sm">               
-				<a class="btn btn-sm btn-secondary" data-bind="click: clickEncounterList" href="#" title="<?php echo xla("Visit History"); ?>">
+				<a class="btn btn-primary" data-bind="click: clickEncounterList" href="#" title="<?php echo xla("Visit History"); ?>">
                     <?php echo xla("Visit History"); ?>
                 </a> &nbsp		
                 
                
-				<a class="btn btn-sm btn-secondary" data-bind="click: clickNewEncounter" href="#"
+				<a class="btn btn-primary" data-bind="click: clickNewEncounter" href="#"
                     title="<?php echo xla("New Encounter"); ?>">
                     <?php echo xla("New Encounter"); ?>
                 </a>
