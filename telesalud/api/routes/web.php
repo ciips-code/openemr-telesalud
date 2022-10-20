@@ -25,9 +25,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->post('/logout', 'AuthController@logout');
         $router->get('patients', 'PatientController@showAllPatients');
-        $router->get('patient/{id}', 'PatientController@showOnePatient');
-        $router->get('patient/{id}/encounters', 'PatientController@showAllEncountersByPatient');
-        $router->get('patient/{id}/encounter/{encounterId}', 'PatientController@showPatientEncounterById');
         
+        /*
+        $router->get('/posts', 'PostController@index');
+        $router->post('/posts', 'PostController@store');
+        $router->put('/posts/{id}', 'PostController@update');
+        $router->delete('/posts/{id}', 'PostController@destroy');
+        */
     });
 });

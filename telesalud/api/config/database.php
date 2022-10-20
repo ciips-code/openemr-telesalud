@@ -2,9 +2,8 @@
 
 return [
     'default' => 'mysql',
-    'migrations' => 'migrations',
     'connections' => [
-        'mysql2' => [
+        'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -23,15 +22,15 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-        
-        'mysql' => [
+
+        'mysql2' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('API_DB_HOST', '127.0.0.1'),
-            'port' => env('API_DB_PORT', '3306'),
-            'database' => env('API_DB_DATABASE', 'forge'),
-            'username' => env('API_DB_USERNAME', 'forge'),
-            'password' => env('API_DB_PASSWORD', ''),
+            'host' => env('DB_HOST_2', '127.0.0.1'),
+            'port' => env('DB_PORT_2', '3306'),
+            'database' => env('DB_DATABASE_2', 'forge'),
+            'username' => env('DB_USERNAME_2', 'forge'),
+            'password' => env('DB_PASSWORD_2', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -43,6 +42,5 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-        
     ]
 ];

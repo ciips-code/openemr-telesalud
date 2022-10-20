@@ -16,7 +16,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\ApiUser::class
+            'model' => \App\Models\User::class
         ]
     ]
 ];

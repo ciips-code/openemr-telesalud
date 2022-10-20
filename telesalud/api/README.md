@@ -1,8 +1,17 @@
+# Develop REST API with Lumen and PASSPORT authentication
+
 # Installation
 
-1. Install composer packages
+1. Clone this repo
 
 ```
+git clone https://github.com/samironbarai/lumen-rest-api-passport-auth.git
+```
+
+2. Install composer packages
+
+```
+cd lumen-rest-api-passport-auth
 $ composer install
 ```
 
@@ -10,7 +19,7 @@ $ composer install
 
 ```
 make a copy of .env.example
-$ cp .env.example .env
+$ copy .env.example .env
 $ php artisan key:generate
 put database credentials in .env file
 ```
@@ -18,7 +27,6 @@ put database credentials in .env file
 4. Migrate and insert records
 
 ```
-$ php artisan migrate:install
 $ php artisan migrate
 ```
 
@@ -30,13 +38,6 @@ Put these keys and values in .env file
 PASSPORT_LOGIN_ENDPOINT=
 PASSPORT_CLIENT_ID=
 PASSPORT_CLIENT_SECRET=
-```
-
-6. Publish Swagger
-```
-php artisan swagger-lume:publish-config
-php artisan swagger-lume:publish
-php artisan swagger-lume:generate
 ```
 
 To test application follow the tutorial bellow.

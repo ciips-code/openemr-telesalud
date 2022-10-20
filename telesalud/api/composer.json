@@ -6,7 +6,6 @@
     "type": "project",
     "require": {
         "php": "^7.3|^8.1.2",
-        "darkaonline/swagger-lume": "8.*",
         "dusterio/lumen-passport": "^0.3.4",
         "flipbox/lumen-generator": "^8.2",
         "guzzlehttp/guzzle": "^7.2",

@@ -32,11 +32,11 @@ ccdaservice/node_modules
 .phpunit.result.cache
 
 #ignore documents
-/sites/default/documents/
+sites/default/documents/
 sites/default/sqlconf.php
+#package-lock
+package-lock.json
+ccdaservice/package-lock.json
 info.php
 telesalud/notas.txt
 telesalud/laravel/routes.txt
-interface/themes/
-
-composer.lock
