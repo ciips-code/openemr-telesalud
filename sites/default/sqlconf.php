@@ -5,7 +5,7 @@
 global $disable_utf8_flag;
 $disable_utf8_flag = false;
 
-$host   = 'localhost';
+$host   = 'telesalud-openemr-mysql';
 $port   = '3306';
 $login  = 'openemr';
 $pass   = 'openemr';
@@ -25,7 +25,7 @@ $sqlconf["db_encoding"] = $db_encoding;
 //////////////////////////
 //////////////////////////
 //////DO NOT TOUCH THIS///
-$config = 0; /////////////
+$config = 1; /////////////
 //////////////////////////
 //////////////////////////
 //////////////////////////
