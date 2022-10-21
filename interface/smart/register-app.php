@@ -311,7 +311,7 @@ $audienceUrl = (new ServerConfig())->getFhirUrl();
             <?php if ($extraLogo) { ?>
                 <div class="text-center">
                     <span class="d-inline-block w-40">
-                        <?php echo file_get_contents($GLOBALS['images_static_absolute'] . "/login-logo.svg"); ?>
+                        <?php echo file_get_contents($GLOBALS['images_static_absolute'] . "/OPS-logo_blanco.svg"); ?>
                     </span>
                     <span class="d-inline-block w-15 login-bg-text-color"><i class="fas fa-plus fa-2x"></i></span>
                     <span class="d-inline-block w-40">
@@ -320,7 +320,7 @@ $audienceUrl = (new ServerConfig())->getFhirUrl();
                 </div>
             <?php } else { ?>
                 <div class="mx-auto m-4 w-75">
-                    <?php echo file_get_contents($GLOBALS['images_static_absolute'] . "/login-logo.svg"); ?>
+                    <?php echo file_get_contents($GLOBALS['images_static_absolute'] . "/OPS-logo_blanco.svg"); ?>
                 </div>
             <?php } ?>
             <?php if ($GLOBALS['show_label_login']) { ?>
