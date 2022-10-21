@@ -40,7 +40,4 @@ ccdaservice/package-lock.json
 info.php
 telesalud/notas.txt
 telesalud/laravel/routes.txt
-ccdaservice/package-lock.json
-package-lock.json
 sites/default/documents/smarty/main/README
-sites/default/sqlconf.php
