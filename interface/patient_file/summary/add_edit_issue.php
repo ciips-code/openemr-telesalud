@@ -499,9 +499,9 @@ function getCodeText($code)
                 document.getElementById('row_severity').style.display = alldisp;
                 document.getElementById('row_reaction').style.display = alldisp;
                 document.getElementById('row_verification').style.display = verificationdisp;
-                document.getElementById('row_referredby').style.display = (f.form_referredby.value) ? '' : comdisp;
+               // document.getElementById('row_referredby').style.display = (f.form_referredby.value) ? '' : comdisp;
                 //document.getElementById('row_comments'      ).style.display = (f.form_comments.value) ? '' : revdisp;
-                document.getElementById('row_referredby').style.display = (f.form_referredby.value) ? '' : comdisp;
+               // document.getElementById('row_referredby').style.display = (f.form_referredby.value) ? '' : comdisp;
             });
             <?php
             if (!empty($ISSUE_TYPES['ippf_gcac']) && empty($_POST['form_save'])) {
@@ -758,7 +758,7 @@ function getCodeText($code)
 <body>
     <div class="container mt-3">
         <ul class="tabNav">
-            <li class='current'><a href='#'><?php echo xlt('Issue'); ?></a></li>
+            <li class='current'><a href='#'><?php /* echo xlt('Issue');  */ echo('Dato Clínico')?></a></li>
             <?php
             // Build html tab data for each visit form linked to this issue.
             $tabcontents = '';
@@ -848,7 +848,7 @@ function getCodeText($code)
                             </div>
                         <?php } ?>
                         <div class="form-group col-12">
-                            <label class="col-form-label" for="title_diagnosis"><?php echo xlt('Title'); ?>:</label>
+                            <label class="col-form-label" for="title_diagnosis"><?php echo xlt('Otro Problema'); /* echo xlt('Title'); */ ?>:</label>
                             <input type='text' class="form-control" name='form_title' id='form_title' value='<?php echo attr($irow['title'] ?? '') ?>' />
                             <input type='hidden' name='form_title_id' value='<?php echo attr($irow['list_option_id'] ?? '') ?>'>
                         </div>
@@ -879,11 +879,12 @@ function getCodeText($code)
                                    title='<?php echo xla('Click to select or change coding'); ?>' readonly />
                         </div>
                         <div class="form-group col-12">
-                            <label class="col-form-label" for="form_begin"><?php echo xlt('Begin Date and Time'); ?>:</label>
-                            <input type='text' class='datepicker form-control' name='form_begin' id='form_begin' value='<?php echo attr(trim(oeFormatDateTime($irow['begdate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd HH:MM date of onset, surgery or start of medication'); ?>' />
+                            <label class="col-form-label" for="form_begin"><?php echo ('Fecha de inicio') /*echo xlt('Begin Date and Time');*/ ?>:</label>
+                            <input type='text' class='datepicker form-control' name='form_begin' id='form_begin' value='<?php echo attr(trim(oeFormatDateTime($irow['begdate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd date of onset, surgery or start of medication'); ?>' />
                         </div>
+					
                         <div class="form-group col-12" id='row_enddate'>
-                            <label class="col-form-label" for="form_begin"><?php echo xlt('End Date and Time'); ?>:</label>
+                            <label class="col-form-label" for="form_begin"><?php echo ('Fecha de resolución') /*xlt('End Date and Time');*/ ?>:</label>
                             <input type='text' class='datepicker form-control' name='form_end' id='form_end' value='<?php echo attr(trim(oeFormatDateTime($irow['enddate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd HH:MM date of recovery or end of medication'); ?>' />
                             &nbsp;(<?php echo xlt('leave blank if still active'); ?>)
                         </div>
@@ -898,13 +899,13 @@ function getCodeText($code)
                             <input type='hidden' name='row_reinjury_id' id='row_reinjury_id' />
                             <img id='img_return' />
                         </div>
-                        <div class="form-group col-12" id='row_subtype'>
+                        <div style="display: none"class="form-group col-12" id='row_subtype'>
                             <label class="col-form-label" for="form_subtype"><?php echo xlt('Classification Type'); ?>:</label>
                             <?php
                             echo generate_select_list('form_subtype', 'issue_subtypes', ($irow['subtype'] ?? null), '', 'NA', '', '');
                             ?>
                         </div>
-                        <div class="form-group col-12" id='row_occurrence'>
+                        <div style="display: none" class="form-group col-12" id='row_occurrence'>
                             <label class="col-form-label" for="form_occur"><?php echo xlt('Occurrence'); ?>:</label>
                             <?php
                             // Modified 6/2009 by BM to incorporate the occurrence items into the list_options listings
@@ -933,7 +934,7 @@ function getCodeText($code)
                             generate_form_field(array('data_type' => 1, 'field_id' => 'severity_id', 'list_id' => 'severity_ccda', 'empty_title' => 'SKIP'), $severity);
                             ?>
                         </div>
-                        <div class="form-group col-12" id='row_reaction'>
+                        <div style="display: none" class="form-group col-12" id='row_reaction' >
                             <label class="col-form-label" for="form_reaction"><?php echo xlt('Reaction'); ?>:</label>
                             <?php
                             echo generate_select_list('form_reaction', 'reaction', ($irow['reaction'] ?? null), '', '', '', '');
@@ -942,14 +943,14 @@ function getCodeText($code)
                         <!-- End of reaction -->
                         <!-- Verification Status for Medication Allergy -->
                         <div class="form-group col-12" id='row_verification'>
-                            <label class="col-form-label" for="form_verification"><?php echo xlt('Verification Status'); ?>:</label>
+                            <label class="col-form-label" for="form_verification"><?php /*echo xlt('Verification Status'); */ echo ('Estado de confirmación')?>:</label>
                             <?php
                             $codeListName = ($thistype == 'medical_problem') ? 'condition-verification' : 'allergyintolerance-verification';
                             echo generate_select_list('form_verification', $codeListName, ($irow['verification'] ?? null), '', '', '', '');
                             ?>
                         </div>
                         <!-- End of Verification Status -->
-                        <div class="form-group col-12" id='row_referredby'>
+                        <div style="display: none" class="form-group col-12" id='row_referredby' >
                             <label class="col-form-label" for="form_referredby"><?php echo xlt('Referred by'); ?>:</label>
                             <input type='text' name='form_referredby' id='form_referredby' class='form-control' value='<?php echo attr($irow['referredby'] ?? '') ?>' title='<?php echo xla('Referring physician and practice'); ?>' />
                         </div>
@@ -961,7 +962,7 @@ function getCodeText($code)
                         if ($GLOBALS['ippf_specific']) {
                             echo " style='display:none;'";
                         } ?>>
-                            <label class="col-form-label" for="form_outcome"><?php echo xlt('Outcome'); ?>:</label>
+                            <label class="col-form-label" for="form_outcome"><?php echo('Estado del problema') /*echo xlt('Outcome'); */?>:</label>
                             <?php
                             echo generate_select_list('form_outcome', 'outcome', ($irow['outcome'] ?? null), '', '', '', 'outcomeClicked(this);');
                             ?>
@@ -969,7 +970,7 @@ function getCodeText($code)
                         <div class="form-group col-12" <?php
                         if ($GLOBALS['ippf_specific']) {
                             echo " style='display:none;'";
-                        } ?>>
+                        } ?> style="display:none;">
                             <label class="col-form-label" for="form_destination"><?php echo xlt('Destination'); ?>:</label>
                             <?php if (true) { ?>
                                 <input type='text' class='form-control' name='form_destination' id='form_destination' value='<?php echo attr($irow['destination'] ?? '') ?>' style='width:100%' title='GP, Secondary care specialist, etc.' />
@@ -1027,7 +1028,27 @@ function getCodeText($code)
 
             onCodeSelectionChange()
         });
-    </script>
+    	
+  $(function() {
+    // trigger datepicker
+    $('#form_begin').datetimepicker({
+       pickTime: false,
+        minView: 2,
+        format: 'd/m/y',
+        autoclose: true,
+    });
+  });
+		
+		$(function() {
+    // trigger datepicker
+    $('#form_end').datetimepicker({
+       pickTime: false,
+        minView: 2,
+        format: 'd/m/y',
+        autoclose: true,
+    });
+  });
+</script>
 
     <?php validateUsingPageRules($_SERVER['PHP_SELF']); ?>
 
