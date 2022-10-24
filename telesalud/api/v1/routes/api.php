@@ -26,11 +26,13 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/userinfo', [AuthController::class, 'infouser']);
     Route::post('/revoke', [AuthController::class, 'revoke']);
 
+    // Enrutamiento para pacientes
     Route::get('patients', [PatientController::class, 'showAllPatients']);
     Route::get('patient/{id}', [PatientController::class, 'showOnePatient']);
     Route::get('patient/{id}/encounters', [PatientController::class, 'showAllEncountersByPatient']);
     Route::get('patient/{id}/encounter/{encounterId}', [PatientController::class, 'showPatientEncounterById']);
 
+    // Enturamiento para videoconsultas
     Route::post('vc/create', [JitsiController::class, 'createVC']);
 
 });
