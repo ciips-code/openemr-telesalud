@@ -116,37 +116,17 @@ switch ($search_any_type) {
         <div class="flex-fill ml-2">
             <!-- ko if: patient -->
             <!-- ko with: patient -->
-            <div class="btn-group btn-group-sm">
-                <a class="btn btn-sm btn-secondary" data-bind="click: clickEncounterList" href="#"
-                    title="<?php echo xla("Visit History"); ?>">
-                    <i class="fas fa-history"></i>
-                </a>
-                <div class="btn-group dropdown">
-                <button class="btn btn-secondary btn-sm dropdown-toggle"
-                    type="button" id="pastEncounters"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="true">
-                    <?php echo xlt("Select Encounter"); ?>&nbsp;
-                    (<span data-bind="text:encounterArray().length"></span>)<span class="caret"></span></button>
-                <ul class="dropdown-menu" aria-labelledby="pastEncounters">
-                    <!-- ko foreach:encounterArray -->
-                    <li class="d-inline-flex">
-                        <a class="dropdown-item" href="#" data-bind="click:chooseEncounterEvent">
-                            <span data-bind="text:date"></span>
-                            <span data-bind="text:category"></span>
-                        </a>
-                        <a href="#" class="dropdown-item" data-bind="click:reviewEncounterEvent">
-                            <i class="fa fa-rotate-left"></i>&nbsp;<?php echo xlt("Review"); ?>
-                        </a>
-                    </li>
-                    <!-- /ko -->
-                </ul>
-            </div>
-                <a class="btn btn-sm btn-secondary" data-bind="click: clickNewEncounter" href="#"
+            <div class="btn-group btn-group-sm">               
+				<a class="btn btn-primary" data-bind="click: clickEncounterList" href="#" title="<?php echo xla("Visit History"); ?>">
+                    <?php echo xla("Visit History"); ?>
+                </a> &nbsp		
+                
+               
+				<a class="btn btn-primary" data-bind="click: clickNewEncounter" href="#"
                     title="<?php echo xla("New Encounter"); ?>">
-                    <i class="fa fa-plus"></i>
+                    <?php echo xla("New Encounter"); ?>
                 </a>
+				
             </div>
 
             <!-- ko if: encounterArray().length > 0 -->

@@ -13,7 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
+<<<<<<< HEAD:telesalud/api/v1/database/migrations/2014_10_12_000000_create_telesa_users_table.php
         Schema::create('telesa_users', function (Blueprint $table) {
+=======
+        Schema::create('users', function (Blueprint $table) {
+>>>>>>> develop:telesalud/api/database/migrations/2021_02_26_094144_create_users_table.php
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
@@ -31,6 +35,10 @@ return new class extends Migration
      */
     public function down()
     {
+<<<<<<< HEAD:telesalud/api/v1/database/migrations/2014_10_12_000000_create_telesa_users_table.php
         Schema::dropIfExists('telesa_users');
+=======
+        Schema::dropIfExists('users');
+>>>>>>> develop:telesalud/api/database/migrations/2021_02_26_094144_create_users_table.php
     }
 };
