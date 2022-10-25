@@ -126,6 +126,18 @@ switch ($search_any_type) {
                     title="<?php echo xla("New Encounter"); ?>">
                     <?php echo xla("New Encounter"); ?>
                 </a>
+				<?php /*include_once('../../../telesalud/controllers/C_TSalud_Vc.php'); */?>
+				&nbsp
+				 
+				 <a class="btn btn-primary" href="https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=37138231bca5255abbc13936ba997f1cfd4652bd&medic=e07uDsZDV8" title="<?php echo xla("Teleconsulta Medico"); ?>" target="_blank">
+                    <?php echo xla("Teleconsulta Medico"); ?>
+                </a> 
+				
+				&nbsp
+				 
+				 <a class="btn btn-primary" href="https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=37138231bca5255abbc13936ba997f1cfd4652bd" title="<?php echo xla("Teleconsulta Paciente"); ?>" target="_blank">
+                    <?php echo xla("Teleconsulta Paciente"); ?>
+                </a> 
 				
             </div>
 
@@ -205,3 +217,4 @@ switch ($search_any_type) {
         </div>
     </div>
 </script>
+
