@@ -26,7 +26,7 @@ if (isset($_GET['action'])) {
     }
     ;
 }
-print_r($GLOBALS["pid"]);
+//print_r($GLOBALS["pid"]);
 
 /**
  * Show VC Patient link
@@ -72,8 +72,10 @@ and c.pc_pid=$pc_pid";
     // data_patient_url, data_medic_url
     $patinet_url = $data['data_patient_url'];
     $medic_url = $data['data_medic_url'];
+    //
     $link_patient = "&nbsp <a class=\"btn btn-primary\" href=\"$patinet_url\" title=\"$patient_title\" target=\"_blank \">$patient_title</a>&nbsp ";
     $link_medic = "&nbsp <a class=\"btn btn-primary\" href=\"$medic_url\" title=\"$medic_title\" target=\"_blank \">$medic_title</a> &nbsp ";
+    //
     return array(
         'patient_url' => $link_patient,
         'medic_url' => $link_medic
@@ -119,6 +121,7 @@ WHERE
             'saludo' => 'Hola'
         )
     );
+    //
     $vc_response = requestVc($data);
     if ($vc_response) {
         insertVc($pc_eid, $vc_response);
