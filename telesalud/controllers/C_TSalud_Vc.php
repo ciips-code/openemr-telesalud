@@ -6,28 +6,6 @@ $p = $_SERVER['DOCUMENT_ROOT'];
 $telesalud_path = $p . '/telesalud';
 //
 require_once ($p . "/interface/globals.php");
-// include_once '../globals.php';
-
-/**
- * Only for demo
- */
-if (isset($_GET['action'])) {
-    
-    switch ($_GET['action']) {
-        case 'link':
-            echo "generate link";
-            break;
-        case 'insertEvent':
-            createVc($_GET['pc_eid']);
-            break;
-        default:
-            ;
-            break;
-    }
-    ;
-}
-
-// print_r($GLOBALS["pid"]);
 
 /**
  * Show VC Patient link
@@ -70,19 +48,18 @@ and c.pc_pid=$pc_pid";
     
     $res = sqlStatement($sql);
     $data = sqlFetchArray($res);
-    // data_patient_url, data_medic_url
-    $medic_url = $data['data_medic_url'];
-    $link_medic = "href=\"$medic_url\" target=\"_blank\"";
-    //
-    $patinet_url = $data['data_patient_url'];
-    $link_patient = "href=\"$patinet_url\" target=\"_blank\"";
-    //
-    $link_medic_btn = "&nbsp <a class=\"btn btn-primary\" $link_medic title=\"$medic_title\" >$medic_title</a> &nbsp ";
-    $link_patient_btn = "&nbsp <a class=\"btn btn-primary\" $link_patient title=\"$patient_title\" >$patient_title</a>&nbsp ";
     
-    // <li><a href="#">Link Medico</a></li>
-    // <li><a href="#">Link Paciente</a></li>
-    //
+    if ($data) {
+        // data_patient_url, data_medic_url
+        $medic_url = $data['data_medic_url'];
+        $link_medic = "href=\"$medic_url\" target=\"_blank\"";
+        //
+        $patinet_url = $data['data_patient_url'];
+        $link_patient = "href=\"$patinet_url\" target=\"_blank\"";
+        //
+        $link_medic_btn = "&nbsp <a class=\"btn btn-primary\" $link_medic title=\"$medic_title\" >$medic_title</a> &nbsp ";
+        $link_patient_btn = "&nbsp <a class=\"btn btn-primary\" $link_patient title=\"$patient_title\" >$patient_title</a>&nbsp ";
+        //
     /**
      * medic-set-attendance: El médico ingresa a la videoconsulta
      * medic-unset-attendance: El médico cierra la pantalla de videoconsulta
@@ -91,9 +68,10 @@ and c.pc_pid=$pc_pid";
      * patient-set-attendance: El paciente anuncia su presencia
      * Enviar mail al medico y acitavar color de que el paciente esta presente
      */
+    }
     return array(
-        'patient_url' => $link_patient,
-        'medic_url' => $link_medic
+        'patient_url' => $link_patient_btn,
+        'medic_url' => $link_medic_btn
     );
 }
 
@@ -142,7 +120,7 @@ FROM
 	INNER JOIN patient_data AS p ON c.pc_pid = p.id
 	INNER JOIN users AS m ON c.pc_aid = m.id 
 WHERE
-	c.pc_catid in ($vc_category_list)  and c.pc_eid=$pc_eid;";
+	c.pc_catid IN ($vc_category_list)  and c.pc_eid=$pc_eid;";
     /**
      *
      * @var array $vc_data -
@@ -154,7 +132,7 @@ WHERE
     $extra_data = array(
         'saludo' => 'Hola'
     );
-    //preparar datos a enviar al SCV
+    // preparar datos a enviar al SCV
     $vc_data = array(
         "medic_name" => $calendar_data['medic_name'],
         "patient_name" => $calendar_data['patient_name'],
@@ -170,19 +148,81 @@ WHERE
     // si hay respuesta
     if ($svc_response) {
         /**
+         * Plan A
+         * - Actualizacion de liks dentro de consulta despues de generar consutla
+         * - Envio de email a paciente y medico
+         * - Recibir notificaciones
+         * - Mostrar opciones de teleconsulta en el momento y hora correctas
+         * - Traducciones del excel
+         * - Icono menu
+         */
+        /**
          *
          * @var array $vc_data datos devueltos por el SCV
          */
         $vc_data = json_decode($svc_response, TRUE);
         // agregar video consulta a la bd
         insertVc($pc_eid, $vc_data);
-        // guardar datos de acceso a la video consulta de comentarios de la cita.
-        // saveVcLinks
-        // enviar email de la video consulta al medico
+        updateLinksToAgenda($pc_eid, $vc_data);
+        // // enviar email de la video consulta al medico
         // sendVcMedicEmail
         // enviar email a paciente
         // sendVcPatientEmail
     }
+}
+
+/**
+ *
+ * @param unknown $p            
+ * @param unknown $email            
+ */
+function sendEmail($p, $email)
+{
+    // if (empty($email)) {
+    // $this->assign("process_result", "Email could not be sent, the address supplied: '$email' was empty or invalid.");
+    // return;
+    // }
+    // $mail->From = $from;
+    // $mail = new PHPMailer();
+    // // this is a temporary config item until the rest of the per practice billing settings make their way in
+    // $from = $GLOBALS['practice_return_email_path'];
+    
+    // $mail->FromName = $p->provider->get_name_display();
+    // $mail->isMail();
+    // $mail->Host = "localhost";
+    // $mail->Mailer = "mail";
+    // $text_body = $p->get_prescription_display();
+    // $mail->Body = $text_body;
+    // $mail->Subject = "Prescription for: " . $p->patient->get_name_display();
+    // $mail->AddAddress($email);
+    // if ($mail->Send()) {
+    // $this->assign("process_result", "Email was successfully sent to: " . $email);
+    // return;
+    // } else {
+    // $this->assign("process_result", "There has been a mail error sending to " . $_POST['email_to'] . " " . $mail->ErrorInfo);
+    // return;
+    // }
+}
+
+/**
+ * Actualizacion de liks dentro de consulta despues de generar consutla
+ * guardar datos de acceso a la video consulta de comentarios de la cita.
+ *
+ * @param unknown $vc_data            
+ * @return recordset
+ */
+function updateLinksToAgenda($pc_eid, $vc_data)
+{
+    $patient_url = $vc_data['data']['patient_url'];
+    $medic_url = $vc_data['data']['medic_url'];
+    $pc_hometext = "Accesos a la video consulta:
+                    <ul>
+                    <li> Profesional: <a href=\"{$medic_url}\">{$medic_url}</a></li>
+                    <li>Paciente: <a href=\"{$patient_url}\">{$patient_url}</a></li>
+                    </ul>";
+    $sql_update_pc_hometext = "update openemr_postcalendar_events set pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
+    // echo $sql_update_pc_hometext;
+    return sqlStatement($sql_update_pc_hometext);
 }
 
 /**
@@ -191,12 +231,7 @@ WHERE
  * @param integer $pc_eid            
  * @param string $vc_response
  *            datos devueltos por el servicio de video consulta
- * @return number
- */
-/**
- *
- * @param unknown $pc_eid            
- * @param unknown $vc_data            
+ *            
  * @return boolean|number
  */
 function insertVc($pc_eid, $vc_data)
@@ -284,8 +319,36 @@ function saveNotify($response)
  */
 }
 
-$links = vcLinks(1, 2);
-$patient_l = $links['patient_url'];
+// include_once '../globals.php';
+// print_r($GLOBALS["pid"]);
+
+/**
+ * Only for demo
+ */
+$pc_aid = 5;
+$pc_pid = 1;
+if (isset($_GET['action'])) {
+    
+    switch ($_GET['action']) {
+        
+        case 'insertEvent':
+            createVc($_GET['pc_eid']);
+            break;
+        case 'generateLinks':
+            // echo "generate link";
+            $pc_aid=$_GET['$pc_aid'];
+            $pc_pid=$_GET['pc_pid'];
+            $links = vcLinks($pc_aid, $pc_pid);
+            // print_r($links);
+            // $patient_l = $links['patient_url'];
+            echo $links['medic_url'];
+            break;
+        default:
+            
+            break;
+    }
+    ;
+}
 ?>
 
 <ul>
