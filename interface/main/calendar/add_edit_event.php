@@ -748,7 +748,16 @@ if (!empty($_POST['form_action']) && ($_POST['form_action'] == "save")) {
      *                    INSERT NEW EVENT(S)
      * ======================================================*/
 
-        $eid = InsertEventFull();
+        $eid = InsertEventFull();        
+    /* =======================================================
+     *                    TELESALUD 
+     * ======================================================*/
+        require_once( $_SERVER['DOCUMENT_ROOT'] . '/telesalud/controllers/C_TSalud_Vc.php');
+        createVc($eid);
+        /* =======================================================
+     *                    END TELESALUD 
+     * ======================================================*/
+
         //Tell subscribers that a new single appointment has been set
         $patientAppointmentSetEvent = new AppointmentSetEvent($_POST);
         $patientAppointmentSetEvent->eid = $eid;  //setting the appointment id to an object
@@ -1782,8 +1791,9 @@ if (empty($_GET['prov'])) { ?>
 </div><!-- status row -->
 <div class="form-row mx-2">
     <div class="col-sm form-group">
-        <label><?php echo xlt('Comments'); ?>:</label>
-        <input class='form-control' type='text' name='form_comments' value='<?php echo attr($hometext); ?>' title='<?php echo xla('Optional information about this event'); ?>' />
+        <!-- <label><?php echo xlt('Comments'); ?>:</label> -->
+        <input class='form-control' type='hidden' name='form_comments' value='<?php echo attr($hometext); ?>' title='<?php echo xla('Optional information about this event'); ?>' />
+        <?php echo htmlspecialchars_decode(stripslashes($hometext)); ?>
     </div>
 </div>
 <div class="form-row mx-2">
