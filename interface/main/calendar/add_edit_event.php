@@ -752,8 +752,8 @@ if (!empty($_POST['form_action']) && ($_POST['form_action'] == "save")) {
     /* =======================================================
      *                    TELESALUD 
      * ======================================================*/
-        require_once( $_SERVER['DOCUMENT_ROOT'] . '/telesalud/controllers/C_TSalud_Vc.php');
-        createVc($eid);
+        // require_once( $_SERVER['DOCUMENT_ROOT'] . '/telesalud/controllers/C_TSalud_Vc.php');
+        // createVc($eid);
         /* =======================================================
      *                    END TELESALUD 
      * ======================================================*/
