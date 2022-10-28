@@ -257,7 +257,7 @@ function insertVc($pc_eid, $vc_data)
     try {
         if (! $posevent_exists) {
             // Save new vc on Database
-            $query = "INSERT INTO openemr.tsalud_vc ";
+            $query = "INSERT INTO tsalud_vc ";
             $query .= "( pc_eid, success,message,data_id,data_valid_from,data_valid_to, data_patient_url, data_medic_url, data_data_url,medic_secret ) ";
             $query .= " VALUES ( $pc_eid, '$success','$message','$id', '$valid_from','$valid_to','$patient_url','$medic_url','$data_url','$medic_secret' )";
             $return = sqlInsert($query);
@@ -336,8 +336,8 @@ if (isset($_GET['action'])) {
             break;
         case 'generateLinks':
             // echo "generate link";
-            $pc_aid=$_GET['$pc_aid'];
-            $pc_pid=$_GET['pc_pid'];
+           // $pc_aid=$_GET['$pc_aid'];
+            //$pc_pid=$_GET['pc_pid'];
             $links = vcLinks($pc_aid, $pc_pid);
             // print_r($links);
             // $patient_l = $links['patient_url'];
@@ -346,19 +346,6 @@ if (isset($_GET['action'])) {
         default:
             
             break;
-    }
-    ;
+    }    
 }
 ?>
-
-<ul>
-	<li><a
-		href="http://localhost:8390/telesalud/controllers/C_TSalud_Vc.php?action=insertEvent&pc_eid=1">Crear</a>
-	</li>
-	<li><a href="#">Link Medico</a></li>
-	<li><a href="#">Link Paciente</a></li>
-</ul>
-<p>&nbsp;</p>
-<p>
-	<strong>Lista de Notificaciones</strong>
-</p>
