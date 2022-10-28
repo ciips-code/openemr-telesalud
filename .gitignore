@@ -35,9 +35,4 @@ ccdaservice/node_modules
 sites/default/documents/
 sites/default/sqlconf.php
 #package-lock
-package-lock.json
 ccdaservice/package-lock.json
-info.php
-telesalud/notas.txt
-telesalud/laravel/routes.txt
-sites/default/documents/smarty/main/README
