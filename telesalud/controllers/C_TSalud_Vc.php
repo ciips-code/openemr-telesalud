@@ -276,6 +276,8 @@ function requestSCV($data)
         ));
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        //
         $result = curl_exec($curl);
         if (! $result) {
             die("API $curl - Connection Failure");
