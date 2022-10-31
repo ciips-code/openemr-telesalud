@@ -277,6 +277,7 @@ function requestSCV($data)
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0); 
         //
         $result = curl_exec($curl);
         if (! $result) {
