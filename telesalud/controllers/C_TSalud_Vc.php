@@ -139,9 +139,8 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
              * - Actualizacion de liks dentro de consulta despues de generar consutla *
              * - Envio de email a paciente y medico
              * - Recibir notificaciones
-             * - Mostrar opciones de teleconsultaen el momento y hora correctas
+             * - Mostrar opciones de teleconsulta en el momento y hora correctas
              * - Traducciones del excel
-             * - Icono menu
              */
             // agregar video consulta a la bd
             insertVc($pc_eid, $vc_data);
@@ -197,8 +196,8 @@ function updateLinksToAgenda($pc_eid, $vc_data)
     $medic_url = $vc_data['data']['medic_url'];
     $pc_hometext = "Accesos a la video consulta:
 <ul>
-<li>Profesional: <a href=\"{$medic_url}\">{$medic_url}</a></li>
-<li>Paciente: <a href=\"{$patient_url}\">{$patient_url}</a></li>
+<li>Profesional: <a href=\"{$medic_url}\" target=\"_blank\">{$medic_url}</a></li>
+<li>Paciente: <a href=\"{$patient_url}\" target=\"_blank\">{$patient_url}</a></li>
 </ul>
 ";
     $sql_update_pc_hometext = "update openemr_postcalendar_events set
