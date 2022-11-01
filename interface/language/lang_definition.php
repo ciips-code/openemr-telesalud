@@ -108,8 +108,8 @@ if (!$disable_utf8_flag) {
         $case_insensitive_collation = "COLLATE utf8_general_ci";
     }
 } else {
-    $case_sensitive_collation = "COLLATE utf8mb4_bin";
-    $case_insensitive_collation = "COLLATE utf8mb4_general_ci";
+    $case_sensitive_collation = "COLLATE latin1_bin";
+    $case_insensitive_collation = "COLLATE latin1_swedish_ci";
 }
 
 if (!empty($_POST['load'])) {
@@ -200,7 +200,7 @@ if (!empty($_POST['edit'])) {
     "FROM lang_definitions AS ld " .
     "RIGHT JOIN ( lang_constants AS lc, lang_languages AS ll ) ON " .
     "( lc.cons_id = ld.cons_id AND ll.lang_id = ld.lang_id ) " .
-    "WHERE lc.constant_name " . $case_insensitive_collation . " LIKE ? AND ( ll.lang_id = 1 ";
+    "WHERE lc.constant_name " . $case_insensitive_collation . " LIKE  ? " . $case_insensitive_collation . " AND ( ll.lang_id = 1 ";
     if ($lang_id != 1) {
                 array_push($bind_sql_array, $lang_id);
         $sql .= "OR ll.lang_id=? ";
