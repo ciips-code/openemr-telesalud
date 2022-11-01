@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * - Mostrar link iniciar teleconsutla en encabezado de resumen de paciente.
+ * - Mostrar opciones de teleconsulta en el momento y hora correctas
+ * - corregir el error sql de traducciones.
+ * - Traducciones del excel
+ * ----
+ * API OpenEmr
+ * - Envio de email a paciente y medico
+ * - Recibir notificaciones
+ */
+
 // namespace telesalud\controllers;
 // Dependecia de las globales del OpenEmr
 $p = $_SERVER['DOCUMENT_ROOT'];
@@ -135,13 +147,6 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
         $vc_data = json_decode($svc_response, TRUE);
         // si hay respuesta
         if ($vc_data['success']) {
-            /**
-             * - Actualizacion de liks dentro de consulta despues de generar consutla *
-             * - Envio de email a paciente y medico
-             * - Recibir notificaciones
-             * - Mostrar opciones de teleconsulta en el momento y hora correctas
-             * - Traducciones del excel
-             */
             // agregar video consulta a la bd
             insertVc($pc_eid, $vc_data);
             updateLinksToAgenda($pc_eid, $vc_data);
@@ -277,7 +282,7 @@ function requestSCV($data)
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0); 
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         //
         $result = curl_exec($curl);
         if (! $result) {
