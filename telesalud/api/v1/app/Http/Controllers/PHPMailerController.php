@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;  
 use PHPMailer\PHPMailer\Exception;
+use App\Models\TsaludVcConfig;
 
 class PHPMailerController extends Controller
 {
@@ -50,6 +51,14 @@ class PHPMailerController extends Controller
             'subject' => "[All in One OPS ] - Nueva video consulta con el Paciente {$patientFullName}",
             'body' => "Hola, se ha agendado una video consulta médica con el paciente {$patientFullName} el día {$encounterDate} a las {$encounterTime}. <br> <br> Para acceder a la video consulta ingrese al siguiente enlace: <br> <a href='{$doctorEncounterUrl}' target='_blank'>{$doctorEncounterUrl}</a>",
         ];
+        
+        $mailSetting = TsaludVcConfig::take(1)->get();
+        if (!isset($mailSetting[0]->mail_smtp)) {
+            return response()->json([
+                'code' => 500,
+                'message' => 'SMTP Server no exists' 
+            ]);
+        }
 
         foreach ([$patient, $doctor] as $addressee) {
             $mail = new PHPMailer(true);
@@ -59,16 +68,19 @@ class PHPMailerController extends Controller
                 // Email server settings
                 $mail->SMTPDebug = 0;
                 $mail->isSMTP();
-                $mail->Host = '192.168.68.50';              //  smtp host
+                $mail->Host = $mailSetting[0]->mail_smtp;              //  smtp host
+                $mail->Port = $mailSetting[0]->mail_port;              // port - 587/465
+
                 $mail->SMTPAuth = false;
-                /*
-                $mail->Username = 'user@example.com';       //  sender username
-                $mail->Password = '**********';             // sender password
-                $mail->SMTPSecure = 'tls';                  // encryption - ssl/tls
-                */
-                $mail->Port = 1025;                          // port - 587/465
-     
-                $mail->setFrom('administrator@openemr.org', 'Admin OpenEMR');
+                if ($mailSetting[0]->mail_password != '') {
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $mailSetting[0]->mail_username;           //  sender username
+                    $mail->Password = $mailSetting[0]->mail_password;           // sender password
+                    $mail->SMTPSecure = $mailSetting[0]->mail_smtp_secure;      // encryption - ssl/tls
+                }
+                
+                
+                $mail->setFrom($mailSetting[0]->mail_from_email, $mailSetting[0]->mail_from_name);
                 $mail->addAddress($addressee['to']);
      
                 $mail->addReplyTo('noreply@openemr.orf', 'No-Replay');
@@ -86,8 +98,6 @@ class PHPMailerController extends Controller
      
                 $mail->Subject = $addressee['subject'];
                 $mail->Body    = $addressee['body'];
-     
-                // $mail->AltBody = plain text version of email body;
      
                 $emailsSent = false;
                 if ($mail->send()) {
