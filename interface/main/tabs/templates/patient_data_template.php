@@ -130,15 +130,9 @@ switch ($search_any_type) {
                 /* =======================================================
                 *                    TELESALUD 
                 * ======================================================*/
-                
-                require_once( $_SERVER['DOCUMENT_ROOT'] . '/telesalud/controllers/C_TSalud_Vc.php');
-        
-                        //$pc_aid=1;
-                        //$pc_pid=5;
-                        //echo $_SESSION['pid'];
-                      //  $link_medic_btn=vcLinks(1,$pid);
-                      //  echo "Link: $link_medic_btn";   
-                
+				if (isset($_SESSION["vcButton"])) {
+                    echo $_SESSION["vcButton"];
+				}
                 ?>
 				<!-- &nbsp
 				 

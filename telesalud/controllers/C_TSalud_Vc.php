@@ -30,24 +30,15 @@ require_once ($p . "/interface/globals.php");
 /**
  * Show VC HTML Button link
  *
- * @param unknown $pc_aid            
- * @param unknown $pc_pid            
+ * @param integer $authUserID            
+ * @param integer $patientID            
  * @param string $url_field_name            
  * @return string
  */
-function vcButton($pc_aid, $pc_pid, $url_field_name = 'data_medic_url')
+function showVCButtonlink($authUserID, $patientID, $url_field_name = 'data_medic_url', $vcCatList = '16')
 {
-    $r = '';
-    if ($url_field_name == 'data_medic_url') {
-        // xlt("Medic Teleconsultation");
-        $medic_title = 'Start video consultation';
-    } else {
-        // xlt("Patient Teleconsultation");
-        $patient_title = 'Patient Teleconsultation';
-    }
-    $pc_catid = 16;
-    $sql = "
-    -- mostrar teleconsulta activa
+    $r = "";
+    $sql = "-- mostrar teleconsulta activa
 SELECT cal.pc_eid,
     cal.pc_aid,
     cal.pc_pid,
@@ -61,20 +52,40 @@ FROM `openemr_postcalendar_events` as cal
     INNER JOIN patient_data AS p ON cal.pc_pid = p.id
 where pc_eventDate = current_date()
     and CURRENT_TIME BETWEEN cal.pc_startTime and cal.pc_endTime 
-    and cal.pc_catid = $pc_catid
-    and cal.pc_aid = $pc_aid
-    and cal.pc_pid = $pc_pid;";
-    echo "$sql";
+    and cal.pc_catid IN ($vcCatList)
+    and cal.pc_aid = $authUserID
+    and cal.pc_pid = $patientID;";
     $res = sqlStatement($sql);
     $data = sqlFetchArray($res);
-    // print_r($data);
+    //
+    // echo "<br>$sql<br>";
     if ($data) {
-        // data_patient_url, data_medic_url
-        $data_url = $data[$url_field_name];
-        $tconsultation_link = "href=\"$data_url\" target=\"_blank\"";
-        $r = " &nbsp  <a class=\"btn btn-primary\" $tconsultation_link title=\"$title\" >$title</a>";
+        $url = $data[$url_field_name];
+        $r = vcButton($url, $url_field_name);
     }
     return $r;
+}
+
+/**
+ *
+ * @param unknown $url            
+ * @param unknown $url_field_name            
+ * @return string
+ */
+function vcButton($url, $url_field_name)
+{
+    $button = '';
+    if ($url_field_name == 'data_medic_url') {
+        // xlt("Medic Teleconsultation");
+        $title = 'Start video consultation';
+    } else {
+        // xlt("Patient Teleconsultation");
+        $title = 'Patient Teleconsultation';
+    }
+    // echo $url;
+    $link_element = "href=\"$url\" target=\"_blank\"";
+    $button = " &nbsp  <a class=\"btn btn-primary\" $link_element title=\"$title\" >$title</a>";
+    return $button;
 }
 
 /**
@@ -322,7 +333,7 @@ if (isset($_GET['action'])) {
             break;
         case 'generateLinks': // echo "generate link"; //
             $pc_aid = $_GET['$pc_aid']; // $pc_pid=$_GET['pc_pid']; $links =
-            vcButton($pc_aid, $pc_pid); // print_r($links); // $patient_l =
+            showVCButtonlink($pc_aid, $pc_pid); // print_r($links); // $patient_l =
             $links['patient_url'];
             echo $links['medic_url'];
             break;

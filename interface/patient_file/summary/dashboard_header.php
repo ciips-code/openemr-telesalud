@@ -27,6 +27,8 @@ $viewArgs = [
     'pageHeading' => $oemr_ui->pageHeading(),
     'pid' => $pid,
     'csrf' => CsrfUtils::collectCsrfToken(),
+    // TELESALUD
+    'vcButton'=>$_SESSION['vcButton']
 ];
 
 echo $t->render('patient/dashboard_header.html.twig', $viewArgs);

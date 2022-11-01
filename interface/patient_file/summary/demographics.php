@@ -49,7 +49,7 @@ use OpenEMR\Reminder\BirthdayReminder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 $twig = new TwigContainer(null, $GLOBALS['kernel']);
-
+$_SESSION["vcButton"]='';
 // Set session for pid (via setpid). Also set session for encounter (if applicable)
 if (isset($_GET['set_pid'])) {
     require_once("$srcdir/pid.inc");
@@ -58,7 +58,18 @@ if (isset($_GET['set_pid'])) {
         $encounter = (int)$_GET['set_encounterid'];
         SessionUtil::setSession('encounter', $encounter);
     }
-}
+    /* =======================================================
+     *                    TELESALUD
+     * ======================================================*/
+    //if (isset($_SESSION["pid"])) {
+        require_once( $_SERVER['DOCUMENT_ROOT'] . '/telesalud/controllers/C_TSalud_Vc.php');
+        $pid=$_SESSION["pid"];
+//         echo "<br> Current Patient ID: $pid ";
+        // print_r($_SESSION['pid']);
+//         echo "<br> Authenticated user ID: $_SESSION[authUserID]";
+        $_SESSION["vcButton"]=showVCButtonlink($_SESSION["authUserID"],$pid);
+    }
+ //}
 
 // Note: it would eventually be a good idea to move this into
 // it's own module that people can remove / add if they don't
@@ -938,6 +949,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
         }
 
         if ($thisauth) :
+            $_SESSION['vcButton'];
             require_once("$include_root/patient_file/summary/dashboard_header.php");
         endif;
 
