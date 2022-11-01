@@ -204,14 +204,14 @@ if (!empty($_POST['edit'])) {
     if ($lang_id != 1) {
                 array_push($bind_sql_array, $lang_id);
         $sql .= "OR ll.lang_id=? ";
-        // $what = "SELECT * from lang_languages where lang_id=? LIMIT 1";
-        // $res = SqlStatement($what, array($lang_id));
-        // $row = SqlFetchArray($res);
-        // $lang_name = $row['lang_description'];
+        $what = "SELECT * from lang_languages where lang_id=? LIMIT 1";
+        $res = SqlStatement($what, array($lang_id));
+        $row = SqlFetchArray($res);
+        $lang_name = $row['lang_description'];
     }
 
     // Sort same case together and English/null before other languages.
-    $sql .= ") ORDER BY lc.constant_name, lc.constant_name, ld.lang_id " . $case_insensitive_collation;
+    $sql .= ") ORDER BY lc.constant_name, lc.constant_name, ld.lang_id ";
     echo "<br> $sql <br>";
     $res = SqlStatement($sql, $bind_sql_array);
 
