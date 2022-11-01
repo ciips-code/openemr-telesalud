@@ -5,10 +5,10 @@
 global $disable_utf8_flag;
 $disable_utf8_flag = false;
 
-$host	= '192.168.68.50';
+$host	= 'telesalud-openemr-mysql';
 $port	= '3306';
-$login	= 'openemr-user';
-$pass	= 'root';
+$login	= 'openemr';
+$pass	= 'openemr';
 $dbase	= 'openemr';
 $db_encoding	= 'utf8mb4';
 
