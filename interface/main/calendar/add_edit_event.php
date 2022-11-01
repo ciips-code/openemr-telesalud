@@ -748,7 +748,16 @@ if (!empty($_POST['form_action']) && ($_POST['form_action'] == "save")) {
      *                    INSERT NEW EVENT(S)
      * ======================================================*/
 
-        $eid = InsertEventFull();
+        $eid = InsertEventFull();        
+    /* =======================================================
+     *                    TELESALUD 
+     * ======================================================*/
+        require_once( $_SERVER['DOCUMENT_ROOT'] . '/telesalud/controllers/C_TSalud_Vc.php');
+        createVc($eid);
+        /* =======================================================
+     *                    END TELESALUD 
+     * ======================================================*/
+
         //Tell subscribers that a new single appointment has been set
         $patientAppointmentSetEvent = new AppointmentSetEvent($_POST);
         $patientAppointmentSetEvent->eid = $eid;  //setting the appointment id to an object
@@ -1782,8 +1791,14 @@ if (empty($_GET['prov'])) { ?>
 </div><!-- status row -->
 <div class="form-row mx-2">
     <div class="col-sm form-group">
-        <label><?php echo xlt('Comments'); ?>:</label>
-        <input class='form-control' type='text' name='form_comments' value='<?php echo attr($hometext); ?>' title='<?php echo xla('Optional information about this event'); ?>' />
+        <!-- <label><?php echo xlt('Comments'); ?>:</label> -->
+        <input class='form-control' type='hidden' name='form_comments' value='<?php echo attr($hometext); ?>' title='<?php echo xla('Optional information about this event'); ?>' />
+        <?php echo htmlspecialchars_decode(stripslashes($hometext)); ?>
+        <!-- Accesos a la video consulta:
+                    <ul>
+                    <li> Profesional: <a href="https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=1a1ba7a4e18756f02d939e1f95dbcdb82e744869&medic=KO15fC6fzh" target="_blank">https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=1a1ba7a4e18756f02d939e1f95dbcdb82e744869&medic=KO15fC6fzh</a></li>
+                    <li>Paciente: <a href="https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=1a1ba7a4e18756f02d939e1f95dbcdb82e744869" target="_blank">https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=1a1ba7a4e18756f02d939e1f95dbcdb82e744869</a></li>
+                    </ul> -->
     </div>
 </div>
 <div class="form-row mx-2">

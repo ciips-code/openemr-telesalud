@@ -76,6 +76,29 @@ if (!empty($encounter_type)) {
         $encounter_type_description = $option['title'];
     }
 }
+// TSALUD- ISSUE-#16: Campos obligatorios nueva visita
+// Desde globales se ocultan todos los campos del formulario nueva visita. 
+// A continuación se asignan los valores obligatorios para que se pueda generar una nueva visita. 
+
+// facility_id=3
+// pc_catid=5
+// class_code='AMB'
+// date=fecha actual
+
+if ($pc_catid==null) {
+    $pc_catid=5;
+}
+if ($facility_id==null) {
+    $facility_id=3;
+}
+if ($class_code==null) {
+    $class_code='ABM';
+}
+if ($date==null) {
+    $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d h:i', time()));
+}
+
+
 
 if ($mode == 'new') {
     $encounter = generate_id();
