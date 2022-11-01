@@ -211,8 +211,7 @@ if (!empty($_POST['edit'])) {
     }
 
     // Sort same case together and English/null before other languages.
-    $sql .= ") ORDER BY lc.constant_name, lc.constant_name, ld.lang_id ";
-    echo "<br> $sql <br>";
+    $sql .= ") ORDER BY lc.constant_name, lc.constant_name, ld.lang_id ";    
     $res = SqlStatement($sql, $bind_sql_array);
 
         $isResults = false; //flag to record whether there are any results
