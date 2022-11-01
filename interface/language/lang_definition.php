@@ -203,7 +203,7 @@ if (!empty($_POST['edit'])) {
     "WHERE lc.constant_name " . $case_insensitive_collation . " LIKE  ? " . $case_insensitive_collation . " AND ( ll.lang_id = 1 ";
     if ($lang_id != 1) {
                 array_push($bind_sql_array, $lang_id);
-        $sql .= "OR ll.lang_id=? ";
+        $sql .= "OR ll.lang_id=? " . $case_insensitive_collation . " ";
         $what = "SELECT * from lang_languages where lang_id=? LIMIT 1";
         $res = SqlStatement($what, array($lang_id));
         $row = SqlFetchArray($res);
