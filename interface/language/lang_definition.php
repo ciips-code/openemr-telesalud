@@ -200,10 +200,10 @@ if (!empty($_POST['edit'])) {
     "FROM lang_definitions AS ld " .
     "RIGHT JOIN ( lang_constants AS lc, lang_languages AS ll ) ON " .
     "( lc.cons_id = ld.cons_id AND ll.lang_id = ld.lang_id ) " .
-    "WHERE lc.constant_name " . $case_insensitive_collation . " LIKE  ? " . $case_insensitive_collation . " AND ( ll.lang_id = 1 ";
+    "WHERE lc.constant_name " . $case_insensitive_collation . " LIKE ? AND ( ll.lang_id = 1 ";
     if ($lang_id != 1) {
                 array_push($bind_sql_array, $lang_id);
-        $sql .= "OR ll.lang_id=? " . $case_insensitive_collation . " ";
+        $sql .= "OR ll.lang_id=? ";
         $what = "SELECT * from lang_languages where lang_id=? LIMIT 1";
         $res = SqlStatement($what, array($lang_id));
         $row = SqlFetchArray($res);
@@ -211,8 +211,8 @@ if (!empty($_POST['edit'])) {
     }
 
     // Sort same case together and English/null before other languages.
-    $sql .= ") ORDER BY lc.constant_name, BINARY lc.constant_name, ld.lang_id " . $case_insensitive_collation;
-
+    $sql .= ") ORDER BY lc.constant_name, lc.constant_name, ld.lang_id " . $case_insensitive_collation;
+    //echo "<br> $sql <br>";
     $res = SqlStatement($sql, $bind_sql_array);
 
         $isResults = false; //flag to record whether there are any results
