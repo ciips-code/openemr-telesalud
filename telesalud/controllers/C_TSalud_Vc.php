@@ -8,9 +8,17 @@
  * ----
  * API OpenEmr
  * - Envio de email a paciente y medico
- * - Recibir notificaciones
+ * - Recibir notificaciones : 
+ *      - medic-set-attendance: El médico ingresa a la videoconsulta
+ *      - medic-unset-attendance: El médico cierra la pantalla de videoconsulta
+ *      - videoconsultation-started: Se da por iniciada la videoconsulta, esto se da cuando tanto el médico como el paciente están presentes
+ *      - videoconsultation-finished: El médico presiona el botón Finalizar consulta
+ *      - patient-set-attendance: El paciente anuncia su presencia
+ * -Enviar mail al medico y acitavar color de que el paciente esta presente
  */
 
+/**
+ */
 // namespace telesalud\controllers;
 // Dependecia de las globales del OpenEmr
 $p = $_SERVER['DOCUMENT_ROOT'];
@@ -20,31 +28,24 @@ $telesalud_path = $p . '/telesalud';
 require_once ($p . "/interface/globals.php");
 
 /**
- * medic-set-attendance: El médico ingresa a la videoconsulta
- * medic-unset-attendance: El médico cierra la pantalla de videoconsulta
- * videoconsultation-started: Se da por iniciada la videoconsulta, esto se da cuando tanto el médico como el paciente están presentes
- * videoconsultation-finished: El médico presiona el botón Finalizar consulta
- * patient-set-attendance: El paciente anuncia su presencia
- * Enviar mail al medico y acitavar color de que el paciente esta presente
- */
-/**
- * Show VC Patient link
+ * Show VC HTML Button link
  *
  * @param unknown $pc_aid            
  * @param unknown $pc_pid            
  * @param string $url_field_name            
  * @return string
  */
-function vcLinks($pc_aid, $pc_pid, $url_field_name = 'data_medic_url')
+function vcButton($pc_aid, $pc_pid, $url_field_name = 'data_medic_url')
 {
     $r = '';
-    // xlt("Iniciar Teleconsulta");
-    $title = "Iniciar Teleconsulta";
+    if ($url_field_name == 'data_medic_url') {
+        // xlt("Medic Teleconsultation");
+        $medic_title = 'Start video consultation';
+    } else {
+        // xlt("Patient Teleconsultation");
+        $patient_title = 'Patient Teleconsultation';
+    }
     $pc_catid = 16;
-    // xlt("Patient Teleconsultation");
-    $patient_title = 'Patient Teleconsultation';
-    // xlt("Medic Teleconsultation");
-    $medic_title = 'Medic Teleconsultation';
     $sql = "
     -- mostrar teleconsulta activa
 SELECT cal.pc_eid,
@@ -63,7 +64,7 @@ where pc_eventDate = current_date()
     and cal.pc_catid = $pc_catid
     and cal.pc_aid = $pc_aid
     and cal.pc_pid = $pc_pid;";
-    // echo "$sql";
+    echo "$sql";
     $res = sqlStatement($sql);
     $data = sqlFetchArray($res);
     // print_r($data);
@@ -321,7 +322,7 @@ if (isset($_GET['action'])) {
             break;
         case 'generateLinks': // echo "generate link"; //
             $pc_aid = $_GET['$pc_aid']; // $pc_pid=$_GET['pc_pid']; $links =
-            vcLinks($pc_aid, $pc_pid); // print_r($links); // $patient_l =
+            vcButton($pc_aid, $pc_pid); // print_r($links); // $patient_l =
             $links['patient_url'];
             echo $links['medic_url'];
             break;

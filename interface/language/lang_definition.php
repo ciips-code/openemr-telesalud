@@ -108,8 +108,8 @@ if (!$disable_utf8_flag) {
         $case_insensitive_collation = "COLLATE utf8_general_ci";
     }
 } else {
-    $case_sensitive_collation = "COLLATE latin1_bin";
-    $case_insensitive_collation = "COLLATE latin1_swedish_ci";
+    $case_sensitive_collation = "COLLATE utf8mb4_bin";
+    $case_insensitive_collation = "COLLATE utf8mb4_general_ci";
 }
 
 if (!empty($_POST['load'])) {
