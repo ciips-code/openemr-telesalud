@@ -212,7 +212,7 @@ if (!empty($_POST['edit'])) {
 
     // Sort same case together and English/null before other languages.
     $sql .= ") ORDER BY lc.constant_name, lc.constant_name, ld.lang_id " . $case_insensitive_collation;
-    //echo "<br> $sql <br>";
+    echo "<br> $sql <br>";
     $res = SqlStatement($sql, $bind_sql_array);
 
         $isResults = false; //flag to record whether there are any results
