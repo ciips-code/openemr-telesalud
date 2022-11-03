@@ -319,7 +319,8 @@ class ClinicalNotesService extends BaseService
                 FROM `form_clinical_notes` fcn
                 LEFT JOIN list_options lo_category ON lo_category.option_id = fcn.clinical_notes_category
                 LEFT JOIN list_options lo_type ON lo_type.option_id = fcn.clinical_notes_type
-                WHERE fcn.`form_id`=? AND fcn.`pid` = ? AND fcn.`encounter` = ?";
+                WHERE fcn.`form_id`=? AND fcn.`pid` = ? AND fcn.`encounter` = ?
+                GROUP BY fcn.id";
         return QueryUtils::fetchRecords($sql, array($formid, $pid, $encounter));
     }
 
