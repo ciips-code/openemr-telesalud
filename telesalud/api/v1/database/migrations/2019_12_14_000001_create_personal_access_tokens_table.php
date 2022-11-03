@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('telesa_personal_access_tokens', function (Blueprint $table) {
+        Schema::create('tsalud_personal_access_tokens', function (Blueprint $table) {
             $table->id();
             $table->morphs('tokenable');
             $table->string('name');
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('telesa_personal_access_tokens');
+        Schema::dropIfExists('tsalud_personal_access_tokens');
     }
 };

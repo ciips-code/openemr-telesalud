@@ -5,7 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request as JitsiRequest;
+use App\Models\{OpenemrPostCalendarEvents, VideoEncounter};
 
+/**
+ * medic-set-attendance: El médico ingresa a la videoconsulta
+ * medic-unset-attendance: El médico cierra la pantalla de videoconsulta
+ * videoconsultation-started: Se da por iniciada la videoconsulta, esto se da cuando tanto el médico como el paciente están presentes
+ * videoconsultation-finished: El médico presiona el botón Finalizar consulta
+ * patient-set-attendance: El paciente anuncia su presencia
+ * 
+ * Enviar mail al medico y activar color de que el paciente esta presente
+ */
 class JitsiController extends Controller
 {
     
@@ -44,24 +54,18 @@ class JitsiController extends Controller
         $request = new JitsiRequest('POST', $url, $headers);
         $response = $client->sendAsync($request, $options)->wait();
 
-        $data = $response->getBody();
+        $data = json_decode($response->getBody());
 
         return response($data);
     }
 
+
     /**
-     * Iniciamos una Teleconsulta
+     * Show VC Patient link
      */
-    public function startVC(Request $request)
+    public function getVcLink(Request $request)
     {
 
     }
-
-    /**
-     * Verificamos si un paciente inició una videoconsulta
-     */
-    public function verifyIfPatientStartVC(Request $request)
-    {
-
-    }
+    
 }
