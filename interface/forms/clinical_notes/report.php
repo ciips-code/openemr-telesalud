@@ -36,7 +36,7 @@ function clinical_notes_report($pid, $encounter, $cols, $id)
         <table class="table w-100">
             <thead>
             <tr>
-                <th class="border p-1"><?php echo xlt('Date'); ?></th>
+                <th class="border p-1"><?php echo xlt('Date and Time'); ?></th>
                 <th class="border p-1"><?php echo xlt('Note Type'); ?></th>
                 <th class="border p-1"><?php echo xlt('Narrative'); ?></th>
                 <th class="border p-1"><?php echo xlt('Author'); ?></th>
@@ -49,7 +49,7 @@ function clinical_notes_report($pid, $encounter, $cols, $id)
             foreach ($data as $key => $value) {
                 ?>
                 <tr>
-                    <td class="border p-1"><span class='text'><?php echo text($value['date']); ?></span></td>
+                    <td class="border p-1"><span class='text'><?php echo text($value['date']) . ' ' . text($value['time']); ?></span></td>
                     <td class="border p-1"><span class='text text-wrap'><?php echo text($value['codetext']); ?></span></td>
                     <td class="border p-1"><span class='text'><?php echo text($value['description']); ?></span></td>
                     <td class="border p-1"><span class='text'><?php echo text($value['user']); ?></span></td>

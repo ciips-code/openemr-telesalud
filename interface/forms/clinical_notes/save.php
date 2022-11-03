@@ -97,7 +97,8 @@ if (!empty($count)) {
         $record['pid'] = $_SESSION['pid'];
         $record['encounter'] = $_SESSION['encounter'];
         $record['authorized'] = $userauthorized;
-        $record['date'] = $code_date[$key];
+        $record['date'] = explode(' ', $code_date[$key])[0];
+        $record['time'] = explode(' ', $code_date[$key])[1];
         $record['groupname'] = $_SESSION["authProvider"];
         $record['activity'] = ClinicalNotesService::ACTIVITY_ACTIVE;
         $clinicalNotesService->saveArray($record);
