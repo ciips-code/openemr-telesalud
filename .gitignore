@@ -36,3 +36,8 @@ sites/default/documents/
 sites/default/sqlconf.php
 #package-lock
 ccdaservice/package-lock.json
+info.php
+telesalud/notas.txt
+telesalud/laravel/routes.txt
+sites/default/sqlconf.php
+telesalud/api/v1/composer.lock

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AuthController, JitsiController};
+use App\Http\Controllers\{AuthController, JitsiController, PHPMailerController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +34,8 @@ Route::middleware('auth:sanctum')->group(function() {
 
     // Enturamiento para videoconsultas
     Route::post('vc/create', [JitsiController::class, 'createVC']);
+
+    // Email
+    Route::post('mail/send', [PHPMailerController::class, 'composeEmail']);
 
 });
