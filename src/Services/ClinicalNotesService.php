@@ -313,6 +313,7 @@ class ClinicalNotesService extends BaseService
             throw new \InvalidArgumentException("formid, and pid must all be populated");
         }
 
+        // BEGIN TELESALUD
         $sql = "SELECT fcn.*
                         ,lo_category.title AS category_title
                         ,lo_category.notes AS category_code
@@ -321,6 +322,7 @@ class ClinicalNotesService extends BaseService
                 LEFT JOIN list_options lo_type ON lo_type.option_id = fcn.clinical_notes_type
                 WHERE fcn.`form_id`=? AND fcn.`pid` = ? AND fcn.`encounter` = ?
                 GROUP BY fcn.id";
+        // END TELESALUD
         return QueryUtils::fetchRecords($sql, array($formid, $pid, $encounter));
     }
 
