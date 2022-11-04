@@ -19,13 +19,10 @@
 
 /**
  */
-// namespace telesalud\controllers;
 // Dependecia de las globales del OpenEmr
 $p = $_SERVER['DOCUMENT_ROOT'];
-//
 $telesalud_path = $p . '/telesalud';
-//
-require_once ($p . "/interface/globals.php");
+require_once ($telesalud_path . "/globals.php");
 
 /**
  * Show VC HTML Button link
@@ -331,11 +328,13 @@ if (isset($_GET['action'])) {
         case 'insertEvent':
             createVc(1);
             break;
-        case 'generateLinks': // echo "generate link"; //
-            $pc_aid = $_GET['$pc_aid']; // $pc_pid=$_GET['pc_pid']; $links =
-            showVCButtonlink($pc_aid, $pc_pid); // print_r($links); // $patient_l =
-            $links['patient_url'];
-            echo $links['medic_url'];
+        case 'vcButton': // echo "generate link"; //
+            $pc_aid = $_GET['pc_aid']; 
+            $pc_pid=$_GET['pc_pid']; 
+            //$links =
+            echo showVCButtonlink($pc_aid, $pc_pid); // print_r($links); // $patient_l =
+            //$links['patient_url'];
+            //echo $links['medic_url'];
             break;
         default:
             break;

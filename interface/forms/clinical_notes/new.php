@@ -202,11 +202,21 @@ $clinical_notes_category = $clinicalNotesService->getClinicalNoteCategories();
                                                 <label for="clinical_notes_type_<?php echo attr($key) + 1; ?>" class="h5"><?php echo xlt('Type'); ?>:</label>
                                                 <select name="clinical_notes_type[]" id="clinical_notes_type_<?php echo attr($key) + 1; ?>" class="form-control clinical_notes_type" onchange="typeChange(this)">
                                                     <option value=""><?php echo xlt('Select Note Type'); ?></option>
-                                                    <?php foreach ($clinical_notes_type as $value) :
-                                                        $selected = ($value['value'] == $obj["clinical_notes_type"]) ? 'selected="selected"' : '';
-                                                        if (!empty($selected)) {
-                                                            $context = $value['title'];
-                                                        }
+                                                    <?php $is_selected = 'selected="selected"';
+                                                    foreach ($clinical_notes_type as $value) :
+                                                        $obj_is_selected = $value['value'] == $obj["clinical_notes_type"];
+                                                        //  set the default value from the list_options
+                                                        echo "is default this $value[value]  - $value[is_default]";
+                                                        if (!$obj_is_selected && $value['is_default']) {
+                                                            $selected=$is_selected;
+                                                            $context=$value['title'];
+                                                        }else {
+                                                            $selected = $obj_is_selected ? $is_selected : '';
+                                                            if (!empty($selected)) {
+                                                                $context = $value['title'];
+                                                            }
+                                                        }                                             
+                                                        
                                                         ?>
                                                         <option value="<?php echo attr($value['value']); ?>" <?php echo $selected; ?>><?php echo text($value['title']); ?></option>
                                                     <?php endforeach; ?>
@@ -217,7 +227,7 @@ $clinical_notes_category = $clinicalNotesService->getClinicalNoteCategories();
                                                 <select name="clinical_notes_category[]" id="clinical_notes_category_<?php echo attr($key) + 1; ?>" class="form-control clinical_notes_category">
                                                     <option value=""><?php echo xlt('Select Note Category'); ?></option>
                                                     <?php foreach ($clinical_notes_category as $value) :
-                                                        $selected = ($value['value'] == ($obj["clinical_notes_category"] ?? '')) ? 'selected="selected"' : '';
+                                                        $selected = ($value['value'] == ($obj["clinical_notes_category"] ?? '')) ? $is_selected : '';
                                                         if (!empty($selected)) {
                                                             $context = $value['title'];
                                                         }

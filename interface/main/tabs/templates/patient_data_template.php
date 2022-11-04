@@ -119,28 +119,14 @@ switch ($search_any_type) {
             <div class="btn-group btn-group-sm">               
 				<a class="btn btn-primary" data-bind="click: clickEncounterList" href="#" title="<?php echo xla("Visit History"); ?>">
                     <?php echo xla("Visit History"); ?>
-                </a> &nbsp		
-                
+                </a> &nbsp
                
 				<a class="btn btn-primary" data-bind="click: clickNewEncounter" href="#"
                     title="<?php echo xla("New Encounter"); ?>">
                     <?php echo xla("New Encounter"); ?>
                 </a>
-				<?php  
-                /* =======================================================
-                *                    TELESALUD 
-                * ======================================================*/
-				if (isset($_SESSION["vcButton"])) {
-                    echo $_SESSION["vcButton"];
-				}
-                ?>
-				<!-- &nbsp
-				 
-				 <a class="btn btn-primary" href="https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=1a1ba7a4e18756f02d939e1f95dbcdb82e744869&medic=KO15fC6fzh" target="_blank" title="<?php echo xla("Teleconsulta Medico"); ?>" >
-                    <?php echo xla("Iniciar Teleconsulta"); ?>
-                </a> 			 -->
-				
-				
+                <!-- TELESALUD -->
+                <div id="vcButton" >&nbsp Aca va el boton</div>
             </div>
 
             <!-- ko if: encounterArray().length > 0 -->

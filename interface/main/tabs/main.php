@@ -272,7 +272,7 @@ $esignApi = new Api();
     ?>
 
     <?php require_once("templates/tabs_template.php"); ?>
-    <?php require_once("templates/menu_template.php"); ?>
+    <?php require_once("templates/menu_template.php"); ?>    
     <?php require_once("templates/patient_data_template.php"); ?>
     <?php require_once("templates/therapy_group_template.php"); ?>
     <?php require_once("templates/user_data_template.php"); ?>
