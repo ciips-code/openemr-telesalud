@@ -41,3 +41,4 @@ info.php
 telesalud/notas.txt
 telesalud/laravel/routes.txt
 sites/default/sqlconf.php
+telesalud/api/v1/composer.lock

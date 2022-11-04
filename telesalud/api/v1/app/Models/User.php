@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'telesa_users';
+    protected $table = 'tsalud_users';
     
     /**
      * The attributes that are mass assignable.

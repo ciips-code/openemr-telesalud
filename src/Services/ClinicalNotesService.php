@@ -369,7 +369,9 @@ class ClinicalNotesService extends BaseService
         $selectList = [];
         foreach ($optionsList as $option) {
             $selectList[] = ['value' => $option['option_id'], 'code' => $option['notes'], 'title' => $option['title']
-        //  include is default
+        /**
+         * include is_default this is necessary for the function getDefaultSelectedOption
+         */
             , 'is_default' => $option['is_default']
         ];
         }
