@@ -99,5 +99,38 @@ class JitsiController extends Controller
             'Charset' => 'utf-8'
         ], JSON_UNESCAPED_UNICODE);
     }
-    
+
+    /**
+     * Actualizacion de liks dentro
+     * de consulta despues de generar consutla * guardar datos de acceso a la
+     * video consulta de comentarios de la cita.
+     * @param unknown $vc_data *
+     */
+    public function updateLinksToAgenda(Request $request)
+    {
+        $patientUrl = $request['patient_url'];
+        $medicUrl = $request['medic_url'];
+        $response = [
+            'message' => 'Los enlaces no se pudieron actualizar'
+        ];
+        $pcHometext = "Accesos a la video consulta:
+        <ul>
+            <li>Profesional: <a href=\"{$medicUrl}\" target=\"_blank\">{$medicUrl}</a></li>
+            <li>Paciente: <a href=\"{$patientUrl}\" target=\"_blank\">{$patientUrl}</a></li>
+        </ul>";
+        
+        $updatePcHometext = CalendarEvents::where('pc_eid', $request['pc_eid'])
+        ->update([
+            'pc_hometext' => $pcHometext
+        ]);
+
+        if ($updatePcHometext) {
+            $response = [
+                'message' => 'Enlaces actualizados'
+            ];
+        }
+
+        return response()->json($response);
+
+    }
 }
