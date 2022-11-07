@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request as JitsiRequest;
-use App\Models\{OpenemrPostCalendarEvents, VideoEncounter};
+use App\Models\CalendarEvents;
 
 /**
  * medic-set-attendance: El médico ingresa a la videoconsulta
@@ -61,11 +61,43 @@ class JitsiController extends Controller
 
 
     /**
-     * Show VC Patient link
+     * Show VC HTML Button link
      */
     public function getVcLink(Request $request)
     {
+        $title = 'Patient Teleconsultation';
+        $currentTime = date('h:i:s', time());
+        $currentDate = date('Y-m-d', time());
+        $data = [];
+        $response = [];
+        
+        if ($request['url_field_name'] == 'data_medic_url') {
+            $title = 'Start video consultation';
+        }
 
+        $data = CalendarEvents::with('patient', 'videoCall')
+        ->whereRaw("? BETWEEN pc_startTime AND pc_endTime", ["'". $currentTime . "'"])
+        ->whereIn('pc_catid', [16])
+        ->where([
+            ['pc_eventDate', '=', $currentDate],
+            ['pc_aid', '=', $request['pc_aid']],
+            ['pc_pid', '=', $request['pc_pid']]
+        ])->get();
+        
+        if ($data) {
+            $href = 'href="' . $data[0]->videoCall->data_url;
+            $response = [
+                'data_url' => $request['url_field_name'],
+                'href' => $href,
+                'title' => $title,
+                'html_button' => "&nbsp <a class=\"btn btn-primary\" $href title=\"$title\"> $title </a>" 
+            ];
+        }
+
+        return response()->json($response, 200, [
+            'Content-Type' => 'application/json;charset=UTF-8', 
+            'Charset' => 'utf-8'
+        ], JSON_UNESCAPED_UNICODE);
     }
     
 }

@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     // Enturamiento para videoconsultas
     Route::post('vc/create', [JitsiController::class, 'createVC']);
+    Route::post('vc/get-link', [JitsiController::class, 'getVcLink']);
 
     // Email
     Route::post('mail/send', [PHPMailerController::class, 'composeEmail']);
