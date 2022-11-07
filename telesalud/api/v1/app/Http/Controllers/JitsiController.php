@@ -83,8 +83,8 @@ class JitsiController extends Controller
             ['pc_aid', '=', $request['pc_aid']],
             ['pc_pid', '=', $request['pc_pid']]
         ])->get();
-        
-        if ($data) {
+
+        if (isset($data[0])) {
             $href = 'href="' . $data[0]->videoCall->data_url;
             $response = [
                 'data_url' => $request['url_field_name'],
