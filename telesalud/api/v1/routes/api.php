@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('vc/create', [JitsiController::class, 'createVC']);
     Route::post('vc/get-link', [JitsiController::class, 'getVcLink']);
 
-    // Email
+    // EmailYa q
     Route::post('mail/send', [PHPMailerController::class, 'composeEmail']);
 
 });
