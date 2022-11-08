@@ -1,5 +1,5 @@
 <?php
-
+// C_TSalud_Vc.php
 /**
  * - Mostrar link iniciar teleconsutla en encabezado de resumen de paciente.
  * - Mostrar opciones de teleconsulta en el momento y hora correctas
@@ -8,21 +8,64 @@
  * ----
  * API OpenEmr
  * - Envio de email a paciente y medico
- * - Recibir notificaciones : 
- *      - medic-set-attendance: El médico ingresa a la videoconsulta
- *      - medic-unset-attendance: El médico cierra la pantalla de videoconsulta
- *      - videoconsultation-started: Se da por iniciada la videoconsulta, esto se da cuando tanto el médico como el paciente están presentes
- *      - videoconsultation-finished: El médico presiona el botón Finalizar consulta
- *      - patient-set-attendance: El paciente anuncia su presencia
+ * - Recibir notificaciones :
+ * - medic-set-attendance: El médico ingresa a la videoconsulta
+ * - medic-unset-attendance: El médico cierra la pantalla de videoconsulta
+ * - videoconsultation-started: Se da por iniciada la videoconsulta, esto se da cuando tanto el médico como el paciente están presentes
+ * - videoconsultation-finished: El médico presiona el botón Finalizar consulta
+ * - patient-set-attendance: El paciente anuncia su presencia
  * -Enviar mail al medico y acitavar color de que el paciente esta presente
  */
+require_once ($p = $_SERVER['DOCUMENT_ROOT'] . "/telesalud/globals.php");
 
 /**
+ *
+ * @return NULL|mysqli
  */
-// Dependecia de las globales del OpenEmr
-$p = $_SERVER['DOCUMENT_ROOT'];
-$telesalud_path = $p . '/telesalud';
-require_once ($telesalud_path . "/globals.php");
+function dbConn()
+{
+    $servername = "telesalud-openemr-mysql";
+    $username = "openemr";
+    $password = "openemr";
+    $database = "openemr";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $database);
+    
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+        $conn = null;
+    }
+    // echo "Connected successfully";
+    return $conn;
+}
+
+/**
+ *
+ * @param unknown $conn            
+ * @param unknown $sql            
+ * @return array|NULL[]
+ */
+function sqlS($sql)
+{
+    $r = array();
+    try {
+        $conn = dbConn();
+        if ($conn) {
+            // echo $sql;
+            $result = $conn->query($sql) or trigger_error($conn->error . " " . $sql);
+            if ($result !== false && $result->num_rows > 0) {
+                $r = $result->fetch_assoc();
+            }
+            $conn->close();
+        }
+    } catch (Exception $e) {
+        $r = array(
+            'error' => $e->getMessage()
+        );
+    }
+    return $r;
+}
 
 /**
  * Show VC HTML Button link
@@ -34,8 +77,10 @@ require_once ($telesalud_path . "/globals.php");
  */
 function showVCButtonlink($authUserID, $patientID, $url_field_name = 'data_medic_url', $vcCatList = '16')
 {
-    $r = "";
-    $sql = "-- mostrar teleconsulta activa
+    try {
+        $r = '';
+        $sql = "
+            
 SELECT cal.pc_eid,
     cal.pc_aid,
     cal.pc_pid,
@@ -48,17 +93,19 @@ FROM `openemr_postcalendar_events` as cal
     inner join tsalud_vc as vcdata on cal.pc_eid = vcdata.pc_eid
     INNER JOIN patient_data AS p ON cal.pc_pid = p.id
 where pc_eventDate = current_date()
-    and CURRENT_TIME BETWEEN cal.pc_startTime and cal.pc_endTime 
+    and CURRENT_TIME BETWEEN cal.pc_startTime and cal.pc_endTime
     and cal.pc_catid IN ($vcCatList)
     and cal.pc_aid = $authUserID
-    and cal.pc_pid = $patientID;";
-    $res = sqlStatement($sql);
-    $data = sqlFetchArray($res);
-    //
-    // echo "<br>$sql<br>";
-    if ($data) {
-        $url = $data[$url_field_name];
-        $r = vcButton($url, $url_field_name);
+    and cal.pc_pid = $patientID";
+        
+        $row = sqlS($sql);
+        if (isset($row['data_medic_url'])) {
+            $url = $row['data_medic_url'];
+            $r .= vcButton($url, $url_field_name);
+        }
+        // }
+    } catch (Exception $e) {
+        echo $e->getMessage();
     }
     return $r;
 }
@@ -149,7 +196,7 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
          * @var string $vc_response -
          *      respuesta de SCV
          */
-        $svc_response = requestSCV($data);
+        $svc_response = requestAPI($data, CURLOPT_POST);
         /**
          * * * @var array $vc_data datos devueltos por el SCV
          */
@@ -266,14 +313,20 @@ $pc_eid, '$success','$message','$id',
  * solcita servicio de video consulta
  *
  * @param array $data            
+ * @param string $method            
+ * @param string $bearToken            
+ * @param unknown $authorization            
+ * @param string $api_url            
  * @return string -
  *         respuesta del servicio de video consulta
  */
-function requestSCV($data)
+function requestAPI($data, $method)
+
 {
     $bearToken = "1|hqg8cSkfrmLVwq12jK6yAv03HHGyP6BYJNpH84Wg";
     $authorization = "Authorization: Bearer $bearToken";
     $api_url = 'https://srv3.integrandosalud.com/os-telesalud/api/videoconsultation?';
+    
     try {
         // Create VC
         $curl = curl_init();
@@ -288,7 +341,8 @@ function requestSCV($data)
             'Content-Type:application/json',
             'Authorization: Bearer ' . $bearToken
         ));
-        curl_setopt($curl, CURLOPT_POST, 1);
+        
+        curl_setopt($curl, $method, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
@@ -329,12 +383,12 @@ if (isset($_GET['action'])) {
             createVc(1);
             break;
         case 'vcButton': // echo "generate link"; //
-            $pc_aid = $_GET['pc_aid']; 
-            $pc_pid=$_GET['pc_pid']; 
-            //$links =
+            $pc_aid = $_GET['pc_aid'];
+            $pc_pid = $_GET['pc_pid'];
+            // $links =
             echo showVCButtonlink($pc_aid, $pc_pid); // print_r($links); // $patient_l =
-            //$links['patient_url'];
-            //echo $links['medic_url'];
+                                                     // $links['patient_url'];
+                                                     // echo $links['medic_url'];
             break;
         default:
             break;

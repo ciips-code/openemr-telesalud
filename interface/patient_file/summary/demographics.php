@@ -1808,6 +1808,23 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     $("#eligibility").get(0).scrollIntoView();
                 }
             });
+            // TELESALUD
+
+        $.ajax({
+            type: 'GET',
+            url: '/telesalud/controllers/C_TSalud_Vc.php',
+            data: {
+                action: 'vcButton',
+                pc_aid: <?php echo $_SESSION['authUserID']; ?>,
+                pc_pid: <?php echo $_GET['set_pid']; ?>,
+            },
+            //dataType: 'json',
+            success: function(data) {            
+            // replace the contents of the div with the link teleconsultation 
+            $('#vcButton', window.parent.document).html(data);
+            
+            }
+        });
         </script>
 
 </body>
