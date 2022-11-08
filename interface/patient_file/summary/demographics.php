@@ -49,7 +49,6 @@ use OpenEMR\Reminder\BirthdayReminder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 $twig = new TwigContainer(null, $GLOBALS['kernel']);
-
 // Set session for pid (via setpid). Also set session for encounter (if applicable)
 if (isset($_GET['set_pid'])) {
     require_once("$srcdir/pid.inc");
@@ -58,7 +57,10 @@ if (isset($_GET['set_pid'])) {
         $encounter = (int)$_GET['set_encounterid'];
         SessionUtil::setSession('encounter', $encounter);
     }
-}
+   
+  
+    }
+ //}
 
 // Note: it would eventually be a good idea to move this into
 // it's own module that people can remove / add if they don't
@@ -937,7 +939,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
             }
         }
 
-        if ($thisauth) :
+        if ($thisauth) :            
             require_once("$include_root/patient_file/summary/dashboard_header.php");
         endif;
 
@@ -1806,7 +1808,25 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     $("#eligibility").get(0).scrollIntoView();
                 }
             });
+            // TELESALUD
+
+        $.ajax({
+            type: 'GET',
+            url: '/telesalud/controllers/C_TSalud_Vc.php',
+            data: {
+                action: 'vcButton',
+                pc_aid: <?php echo $_SESSION['authUserID']; ?>,
+                pc_pid: <?php echo $_GET['set_pid']; ?>,
+            },
+            //dataType: 'json',
+            success: function(data) {            
+            // replace the contents of the div with the link teleconsultation 
+            $('#vcButton', window.parent.document).html(data);
+            
+            }
+        });
         </script>
+
 </body>
 
 </html>
