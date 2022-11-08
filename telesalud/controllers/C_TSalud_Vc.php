@@ -24,7 +24,7 @@ require_once ($p = $_SERVER['DOCUMENT_ROOT'] . "/telesalud/globals.php");
  */
 function dbConn()
 {
-    $servername = "telesalud-openemr-mysql";
+    $servername = "localhost";
     $username = "admin_devopenemr";
     $password = "BxX7vZb27z";
     $database = "admin_devopenemr";
