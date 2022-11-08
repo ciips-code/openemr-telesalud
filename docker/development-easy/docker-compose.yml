@@ -26,6 +26,9 @@ services:
             - ../../../data/database:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: root
+            TZ : America/Argentina/Buenos_Aires
+        # networks:
+        #     - internal
     telesalud-openemr:
         # build: .
         container_name: telesalud_openemr
@@ -88,6 +91,8 @@ services:
             OPENEMR_SETTING_gbl_ldap_dn: 'cn={login},dc=example,dc=org'
         depends_on:
             - telesalud-openemr-mysql
+        # networks:
+        #     - internal
     telesalud-openemr-phpmyadmin:
         container_name: telesalud_openemr_phpmyadmin
         restart: always
@@ -112,17 +117,25 @@ services:
         environment:
             COUCHDB_USER: admin
             COUCHDB_PASSWORD: password
-    telesalud-openemr-openldap:
-        container_name: telesalud_openemr_openldap
-        restart: always
-        image: openemr/dev-ldap:easy
-        ports:
-            - 8389:389
-        environment:
-            LDAP_TLS_VERIFY_CLIENT: try
-            LDAP_TLS_CA_CRT_FILENAME: ca.pem
-            LDAP_TLS_CRT_FILENAME: server-cert.pem
-            LDAP_TLS_KEY_FILENAME: server-key.pem
+        depends_on:
+            - telesalud-openemr-mysql
+    #     networks:
+    #         - internal
+    # telesalud-openemr-openldap:
+    #     container_name: telesalud_openemr_openldap
+    #     restart: always
+    #     image: openemr/dev-ldap:easy
+    #     ports:
+    #         - 8389:389
+    #     environment:
+    #         LDAP_TLS_VERIFY_CLIENT: try
+    #         LDAP_TLS_CA_CRT_FILENAME: ca.pem
+    #         LDAP_TLS_CRT_FILENAME: server-cert.pem
+    #         LDAP_TLS_KEY_FILENAME: server-key.pem
+    #     # depends_on:
+    #     #     - telesalud-openemr
+    #     networks:
+    #         - internal
     telesalud-xdebug-nginx:
         container_name: telesalud_xdebug_nginx
         build:
@@ -147,9 +160,10 @@ services:
         volumes:
             - ../..:/var/www/html
     # Laravel service
-    telesalud-laravel:
-        container_name: telesalud_laravel
-        image: docker.io/bitnami/laravel:8
+    telesalud-api:
+        container_name: telesalud_api
+        # image: docker.io/bitnami/laravel:8
+        image: laravel/lumen
         ports:
             - 8490:8000
         environment:
@@ -159,19 +173,19 @@ services:
             - DB_PASSWORD=openemr
             - DB_DATABASE=openemr
         volumes:
-            - '../../telesalud/laravel:/app'
+            - '../../telesalud/api/v1:/app'
         depends_on:
             - telesalud-openemr-mysql
-networks:
-    internal:
-        driver: bridge
-volumes:
-    database: {}
-    public: {}
-    sites: {}
-    nodemodules: {}
-    vendor: {}
-    ccdanodemodules: {}
-    log: {}
-    logs-www: {}
-    couchdb: {}
+# networks:
+#     internal:
+#         driver: bridge
+# volumes:
+#     database: {}
+#     public: {}
+#     sites: {}
+#     nodemodules: {}
+#     vendor: {}
+#     ccdanodemodules: {}
+#     log: {}
+#     logs-www: {}
+#     couchdb: {}
