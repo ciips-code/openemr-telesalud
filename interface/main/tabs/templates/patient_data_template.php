@@ -126,7 +126,9 @@ switch ($search_any_type) {
                     <?php echo xla("New Encounter"); ?>
                 </a>
                 <!-- TELESALUD -->
-                <div id="vcButton" >&nbsp Aca va el boton</div>
+                <div id="vcButton" >
+                    <!-- teleconsultation button -->
+                </div>
             </div>
 
             <!-- ko if: encounterArray().length > 0 -->
