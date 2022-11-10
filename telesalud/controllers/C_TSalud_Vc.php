@@ -221,6 +221,7 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
             insertVc($pc_eid, $vc_data);
             updateLinksToAgenda($pc_eid, $vc_data);
             // enviar email de la video consulta al medico
+            sendEmail($calendar_data);
             // sendVcMedicEmail
             // enviar email a paciente // sendVcPatientEmail
         } else {
@@ -232,67 +233,77 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
 }
 
 /**
- * * * @param unknown
- * $p * @param unknown $email
+ *
+ * @param unknown $calendar_data            
  */
-function sendEmail($p, $email)
+function sendEmail($calendar_data)
 {
-    $mailData = emailMessageFor();
-    
+    $mailData = emailMessageFor($calendar_data);
+    $to = $mailData['to'];
+    print_r($mailData);
     //
-    if (empty($email)) {
-        $this->assign("process_result", "Email could not be
-    sent, the address supplied: '$email' was empty or invalid.");
-        
-        return;
+    if (empty($to)) {
+        echo "Email could not be
+        sent, the address supplied: '$to' was empty or invalid.";
+        return false;
     } else {
-        $fromEmail = 'noreplay@telesalud.com';
-        $fromName = 'All in One OPS';
-        $mailHost = "localhost";
-        $text_body = $p->get_prescription_display();
-        $subject = "Prescription for: " . $p->patient->get_name_display();
-        //
-        $mail = new PHPMailer();
-        // this is a temporary config item until the rest of the per practice billing settings make their way in
-        $mail->From = $fromEmail;
-        $mail->FromName = $fromName;
-        $mail->isMail();
-        $mail->Host = $mailHost;
-        $mail->Mailer = "mail";
-        $mail->Body = $text_body;
-        $mail->Subject = $subject;
-        $mail->AddAddress($email);
-        //
-        if ($mail->Send()) {
-            $this->assign("process_result", "Email was successfully sent to: " . $email);
-            return;
-        } else {
-            $this->assign("process_result", "There has been a mail error sending to " . $_POST['email_to'] . " " . $mail->ErrorInfo);
-            return;
-        }
-        ;
+        // $fromEmail = 'noreplay@telesalud.com';
+        // $fromName = 'All in One OPS';
+        // $mailHost = "localhost";
+        // $text_body = $p->get_prescription_display();
+        // $subject = "Prescription for: " . $p->patient->get_name_display();
+        // //
+        // $mail = new PHPMailer();
+        // // this is a temporary config item until the rest of the per practice billing settings make their way in
+        // $mail->From = $fromEmail;
+        // $mail->FromName = $fromName;
+        // $mail->isMail();
+        // $mail->Host = $mailHost;
+        // $mail->Mailer = "mail";
+        // $mail->Body = $mailData['body'];
+        // $mail->Subject = $mailData['subject'];
+        // $mail->AddAddress($to);
+        // //
+        // if ($mail->Send()) {
+        // $this->assign("process_result", "Email was successfully sent to: " . $email);
+        // return;
+        // } else {
+        // $this->assign("process_result", "There has been a mail error sending to " . $_POST['email_to'] . " " . $mail->ErrorInfo);
+        return true;
+        // }
     }
 }
 
 /**
+ * returns subjetc, body and sender email to send
  *
- * @param unknown $data            
+ * @param array $constationData            
  * @param string $for            
- * @return string[]
+ * @return string[]|unknown[]
  */
-function emailMessageFor($data, $for = 'doc')
+function emailMessageFor($constationData, $for = 'pac')
 {
-    // $patientFullName,$encounterDate,
+    $patientFullName = $constationData['patientFullName'];
+    $medicFullName = $constationData['medicFullName'];
+    //
+    $encounterDate = $constationData['encounterDate'];
+    $encounterTime = $constationData['encounterTime'];
+    //
+    $medicEncounterUrl = $constationData['medicEncounterUrl'];
+    $patientEncounterUrl = $constationData['patientEncounterUrl'];
+    //
     // We build the body to patient y doctor
     if ($for == 'doc') {
         $result = [
+            'to' => $constationData['medicEmail'],
             'subject' => "[All in One OPS ] - Nueva video consulta con el Paciente {$patientFullName}",
-            'body' => "Hola, se ha agendado una video consulta médica con el paciente {$patientFullName} el día {$encounterDate} a las {$encounterTime}. <br> <br> Para acceder a la video consulta ingrese al siguiente enlace: <br> <a href='{$doctorEncounterUrl}' target='_blank'>{$doctorEncounterUrl}</a>"
+            'body' => "Hola, se ha agendado una video consulta médica con el paciente {$patientFullName} el día {$encounterDate} a las {$encounterTime}. <br> <br> Para acceder a la video consulta ingrese al siguiente enlace: <br> <a href='{$medicEncounterUrl}' target='_blank'>{$medicEncounterUrl}</a>"
         ];
     } else {
         $result = [
+            'to' => $constationData['patientEmail'],
             'subject' => "[All in One OPS ] - Usted tiene una video consulta para el {$encounterDate} a las {$encounterTime}",
-            'body' => "Hola, {$patientFullName} usted tiene una video consulta médica con el médico {$fullName} para el día {$encounterDate} a las {$encounterTime}. <br> <br> Para acceder a la video consulta médica ingrese al siguiente enlace: <br> <a href='{$encounterUrl}' target='_blank'>{$encounterUrl}</a>"
+            'body' => "Hola, {$patientFullName} usted tiene una video consulta médica con el médico {$medicFullName} para el día {$encounterDate} a las {$encounterTime}. <br> <br> Para acceder a la video consulta médica ingrese al siguiente enlace: <br> <a href='{$patientEncounterUrl}' target='_blank'>{$patientEncounterUrl}</a>"
         ];
     }
     return $result;
