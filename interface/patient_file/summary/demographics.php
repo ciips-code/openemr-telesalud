@@ -1816,7 +1816,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
             data: {
                 action: 'vcButton',
                 pc_aid: <?php echo $_SESSION['authUserID']; ?>,
-                pc_pid: <?php echo $_GET['set_pid']; ?>,
+                pc_pid: <?php echo $pid; ?>,
             },
             //dataType: 'json',
             success: function(data) {            
