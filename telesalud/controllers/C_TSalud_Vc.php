@@ -1,4 +1,6 @@
 <?php
+
+
 // C_TSalud_Vc.php
 /**
  * - Mostrar link iniciar teleconsutla en encabezado de resumen de paciente.
@@ -321,12 +323,13 @@ function updateLinksToAgenda($pc_eid, $vc_data)
 {
     $patient_url = $vc_data['data']['patient_url'];
     $medic_url = $vc_data['data']['medic_url'];
-    $pc_hometext = "Accesos a la video consulta:
+    $conn = dbConn();
+    $pc_hometext = mysqli_real_escape_string($conn, "Accesos a la video consulta:
 <ul>
-<li>Profesional: <a href=\"{$medic_url}\" target=\"_blank\">{$medic_url}</a></li>
-<li>Paciente: <a href=\"{$patient_url}\" target=\"_blank\">{$patient_url}</a></li>
+<li>Profesional: <a href=\"{$medic_url}\" target=\"_blank\" id=\"medicButton\">{$medic_url}</a></li>
+<li>Paciente: <a href=\"{$patient_url}\" target=\"_blank\" id=\"patientButton\">{$patient_url}</a></li>
 </ul>
-";
+");
     $sql_update_pc_hometext = "update openemr_postcalendar_events set
 pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
     // echo
