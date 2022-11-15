@@ -467,9 +467,12 @@ pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
 function updateScheduleStatus($pc_eid, $status)
 {
     $conn = dbConn();
-    $sql = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
-    echo $sql;
-    return sqlStatement($sql);
+    if ($conn) {
+        $sql = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
+        // echo $sql;
+        $result = $conn->query($sql) or trigger_error($conn->error . " " . $sql);
+        $conn->close();
+    }
 }
 
 /**
@@ -594,6 +597,7 @@ function saveNotify()
     $r = array(
         'success' => 'nada'
     );
+    echo "saving notification...";
     $data = json_decode(file_get_contents('php://input'), true);
     // print_r($data);
     if (isset($data['topic'])) {
@@ -604,7 +608,6 @@ function saveNotify()
         $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
         // echo $sql;
         $records = sqlS($sql);
-        //
         // print_r($records);
         if ($records) {
             $pc_eid = $records['pc_eid'];
