@@ -18,7 +18,7 @@ use PHPMailer\PHPMailer\PHPMailer;
  * - patient-set-attendance: El paciente anuncia su presencia
  * -Enviar mail al medico y acitavar color de que el paciente esta presente
  */
-require_once ($p = $_SERVER['DOCUMENT_ROOT'] . "/telesalud/globals.php");
+// require_once ($p = $_SERVER['DOCUMENT_ROOT'] . "/telesalud/globals.php");
 
 /**
  *
@@ -181,8 +181,9 @@ WHERE
 c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
     // echo $sql_vc_calender;
     try {
-        $res = sqlStatement($sql_vc_calender);
-        $calendar_data = sqlFetchArray($res);
+        // $res = sqlStatement($sql_vc_calender);
+        // $calendar_data = sqlFetchArray($res);
+        $calendar_data = sqlS($sql_vc_calender);
         $extra_data = array(
             'saludo' => 'Hola'
         );
@@ -467,7 +468,7 @@ function updateScheduleStatus($pc_eid, $status)
 {
     $conn = dbConn();
     $sql = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
-    // echo $sql;
+    echo $sql;
     return sqlStatement($sql);
 }
 
@@ -568,53 +569,40 @@ function requestAPI($data, $method, $api_url = 'https://srv3.integrandosalud.com
     return $result;
 }
 
-function saveNotify($response)
-{
-    $json = json_decode($response, TRUE);
-/**
- * * `pc_eid` int(11) unsigned
- * NOT NULL, * `vc_secret` varchar(1024) DEFAULT NULL, * `vc_medic_secret`
- * varchar(1024) DEFAULT NULL, * `vc_status` varchar(1024) DEFAULT NULL, *
- * `vc_medic_attendance_date` varchar(1024) DEFAULT NULL, *
- * `vc_patient_attendance_date` varchar(1024) DEFAULT NULL, *
- * `vc_start_date` varchar(1024) DEFAULT NULL, * `vc_finish_date`
- * varchar(1024) DEFAULT NULL, * `vc_extra` varchar(1024) DEFAULT NULL, *
- * `topic` varchar(1024) DEFAULT NULL
- */
-}
+// function saveNotify($response)
+// {
+// $json = json_decode($response, TRUE);
+// /**
+// * * `pc_eid` int(11) unsigned
+// * NOT NULL, * `vc_secret` varchar(1024) DEFAULT NULL, * `vc_medic_secret`
+// * varchar(1024) DEFAULT NULL, * `vc_status` varchar(1024) DEFAULT NULL, *
+// * `vc_medic_attendance_date` varchar(1024) DEFAULT NULL, *
+// * `vc_patient_attendance_date` varchar(1024) DEFAULT NULL, *
+// * `vc_start_date` varchar(1024) DEFAULT NULL, * `vc_finish_date`
+// * varchar(1024) DEFAULT NULL, * `vc_extra` varchar(1024) DEFAULT NULL, *
+// * `topic` varchar(1024) DEFAULT NULL
+// */
+// }
 
 // include_once
 
 /**
  * Capture VC notifications
  */
-function getNotinfy()
+function saveNotify()
 {
-    // try {
     $r = array(
         'success' => 'nada'
     );
-    // echo 'recibiendo notificaciones';
-    // get POST
-    // $post_json = '{"vc":{"secret":"172a73071f4418badd8852de5d38547bd37028e0",
-    // "medic_secret":"dBk55KtSpz",
-    // "status":"Valid",
-    // "medic_attendance_date":"2022-11-15T13:46:29.000000Z",
-    // "patient_attendance_date":null,
-    // "start_date":null,
-    // "finish_date":null,
-    // "extra":{"saludo":"Hola"}},
-    // "topic":"medic-set-attendance"}';
-    // $data = json_decode($post_json);
-    //
-    $data = json_decode($_POST);
-    if (isset($data->topic)) {
-        $topic = $data->topic;
-        // $data_id = 'd39b03a01ab5aa5d7bb36487c840638ac435d36c';
-        $data_id = $data->vc->secret;
+    $data = json_decode(file_get_contents('php://input'), true);
+    // print_r($data);
+    if (isset($data['topic'])) {
+        $topic = $data['topic'];
+        $data_id = $data['vc']['secret'];
         $appstatus = getappStatus($topic);
         //
         $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
+        // echo $sql;
         $records = sqlS($sql);
         //
         // print_r($records);
@@ -626,12 +614,24 @@ function getNotinfy()
             'success' => 'ok'
         );
     }
-    // } catch (Exception $e) {
-    // $r = array(
-    // 'error' => $e->getMessage()
-    // );
-    // }
     return $r;
+}
+
+function getPost()
+{
+    if (! empty($_POST)) {
+        // when using application/x-www-form-urlencoded or multipart/form-data as the HTTP Content-Type in the request
+        // NOTE: if this is the case and $_POST is empty, check the variables_order in php.ini! - it must contain the letter P
+        return $_POST;
+    }
+    
+    // when using application/json as the HTTP Content-Type in the request
+    $post = json_decode(file_get_contents('php://input'), true);
+    if (json_last_error() == JSON_ERROR_NONE) {
+        return $post;
+    }
+    
+    return [];
 }
 
 /**
@@ -644,8 +644,7 @@ function getappStatus($topic)
 {
     $sql_appstatus = "SELECT * FROM openemr.tsalud_vc_topic where topic='$topic';";
     $records_appstatus = sqlS($sql_appstatus);
-    $appstatus = $records_appstatus['value'];
-    return $appstatus;
+    return $records_appstatus['value'];
 }
 
 '../globals.php';
@@ -664,7 +663,7 @@ if (isset($_GET['action'])) {
             echo showVCButtonlink($pc_aid, $pc_pid);
             break;
         case 'vcNotify':
-            getNotinfy();
+            saveNotify();
         default:
             break;
     }
