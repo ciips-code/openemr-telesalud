@@ -241,7 +241,6 @@ $esignApi = new Api();
         }
     </script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/i18n/es.js"></script> 
     <script src="js/custom_bindings.js?v=<?php echo $v_js_includes; ?>"></script>
     <script src="js/user_data_view_model.js?v=<?php echo $v_js_includes; ?>"></script>
     <script src="js/patient_data_view_model.js?v=<?php echo $v_js_includes; ?>"></script>
