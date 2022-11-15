@@ -57,10 +57,8 @@ if (isset($_GET['set_pid'])) {
         $encounter = (int)$_GET['set_encounterid'];
         SessionUtil::setSession('encounter', $encounter);
     }
-   
-  
-    }
- //}
+}
+//}
 
 // Note: it would eventually be a good idea to move this into
 // it's own module that people can remove / add if they don't
@@ -167,14 +165,11 @@ function portalAuthorized($pid)
     }
 
     $return = [
-        'isAllowed' => false
-        ,'allowed' => [
-                'api' => false
-                ,'portal' => false
+        'isAllowed' => false, 'allowed' => [
+            'api' => false, 'portal' => false
         ],
         'credentials' => [
-                'created' => false
-                ,'date' => null
+            'created' => false, 'date' => null
         ]
     ];
 
@@ -294,7 +289,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
         function referentialCdsClick(codetype, codevalue) {
             top.restoreSession();
             // Force a new window instead of iframe to address cross site scripting potential
-            dlgopen('../education.php?type=' + encodeURIComponent(codetype) + '&code=' + encodeURIComponent(codevalue), '_blank', 1024, 750,true);
+            dlgopen('../education.php?type=' + encodeURIComponent(codetype) + '&code=' + encodeURIComponent(codevalue), '_blank', 1024, 750, true);
         }
 
         function oldEvt(apptdate, eventid) {
@@ -528,7 +523,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     if ($GLOBALS['erx_import_status_message']) { ?>
                         if (msg_updation)
                             alert(msg_updation);
-                        <?php
+            <?php
                     }
                 }
             }
@@ -725,7 +720,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                 //  3. The notification has not been turned off (or shown depending on global selection) for this year
                 $birthdayAlert = new BirthdayReminder($pid, $_SESSION['authUserID']);
                 if ($birthdayAlert->isDisplayBirthdayAlert()) {
-                    ?>
+            ?>
                     // show the active reminder modal
                     dlgopen('', 'bdayreminder', 300, 170, '', false, {
                         allowResize: false,
@@ -796,14 +791,14 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                 if (!empty($date_of_death)) {
                     $date_of_death = $date_of_death['date_deceased'];
                 }
-                ?>
+            ?>
                 parent.left_nav.setPatient(<?php echo js_escape($result['fname'] . " " . $result['lname']) .
                                                 "," . js_escape($pid) . "," . js_escape($result['pubpid']) . ",'',";
-                if (empty($date_of_death)) {
-                    echo js_escape(" " . xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age') . ": " . getPatientAgeDisplay($result['DOB_YMD']));
-                } else {
-                    echo js_escape(" " . xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age at death') . ": " . oeFormatAge($result['DOB_YMD'], $date_of_death));
-                } ?>);
+                                            if (empty($date_of_death)) {
+                                                echo js_escape(" " . xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age') . ": " . getPatientAgeDisplay($result['DOB_YMD']));
+                                            } else {
+                                                echo js_escape(" " . xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age at death') . ": " . oeFormatAge($result['DOB_YMD'], $date_of_death));
+                                            } ?>);
                 var EncounterDateArray = new Array;
                 var CalendarCategoryArray = new Array;
                 var EncounterIdArray = new Array;
@@ -818,12 +813,12 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         EncounterDateArray[Count] = <?php echo js_escape(oeFormatShortDate(date("Y-m-d", strtotime($rowresult4['date'])))); ?>;
                         CalendarCategoryArray[Count] = <?php echo js_escape(xl_appt_category($rowresult4['pc_catname'])); ?>;
                         Count++;
-                        <?php
+                <?php
                     }
                 }
                 ?>
                 parent.left_nav.setPatientEncounter(EncounterIdArray, EncounterDateArray, CalendarCategoryArray);
-                <?php
+            <?php
             } // end setting new pid
             ?>
             parent.left_nav.syncRadios();
@@ -854,25 +849,25 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
         }
 
         <?php
-        if (!empty($GLOBALS['right_justify_labels_demographics']) && ($_SESSION['language_direction'] == 'ltr')) { ?>
-        div.tab td.label_custom, div.label_custom {
+        if (!empty($GLOBALS['right_justify_labels_demographics']) && ($_SESSION['language_direction'] == 'ltr')) { ?>div.tab td.label_custom,
+        div.label_custom {
             text-align: right !important;
         }
 
-        div.tab td.data, div.data {
+        div.tab td.data,
+        div.data {
             padding-left: 0.5em;
             padding-right: 2em;
         }
-            <?php
-        } ?>
 
         <?php
-        // This is for layout font size override.
-        $grparr = array();
-        getLayoutProperties('DEM', $grparr, 'grp_size');
-        if (!empty($grparr['']['grp_size'])) {
-            $FONTSIZE = round($grparr['']['grp_size'] * 1.333333);
-            $FONTSIZE = round($FONTSIZE * 0.0625, 2);
+        } ?><?php
+            // This is for layout font size override.
+            $grparr = array();
+            getLayoutProperties('DEM', $grparr, 'grp_size');
+            if (!empty($grparr['']['grp_size'])) {
+                $FONTSIZE = round($grparr['']['grp_size'] * 1.333333);
+                $FONTSIZE = round($FONTSIZE * 0.0625, 2);
             ?>
 
         /* Override font sizes in the theme. */
@@ -939,7 +934,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
             }
         }
 
-        if ($thisauth) :            
+        if ($thisauth) :
             require_once("$include_root/patient_file/summary/dashboard_header.php");
         endif;
 
@@ -1788,44 +1783,29 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     endif;
                     ?>
                 </div> <!-- end right column div -->
-                </div> <!-- end div.main > row:first  -->
-            </div> <!-- end main content div -->
-        </div><!-- end container div -->
-        <?php $oemr_ui->oeBelowContainerDiv(); ?>
-        <script>
-            // Array of skip conditions for the checkSkipConditions() function.
-            var skipArray = [
-                <?php echo ($condition_str ?? ''); ?>
-            ];
-            checkSkipConditions();
+            </div> <!-- end div.main > row:first  -->
+        </div> <!-- end main content div -->
+    </div><!-- end container div -->
+    <?php $oemr_ui->oeBelowContainerDiv(); ?>
+    <script>
+        // Array of skip conditions for the checkSkipConditions() function.
+        var skipArray = [
+            <?php echo ($condition_str ?? ''); ?>
+        ];
+        checkSkipConditions();
 
-            var isPost = <?php echo js_escape($showEligibility ?? false); ?>;
-            var listId = '#' + <?php echo js_escape($list_id); ?>;
-            $(function() {
-                $(listId).addClass("active");
-                if (isPost === true) {
-                    $("#eligibility").click();
-                    $("#eligibility").get(0).scrollIntoView();
-                }
-            });
-            // TELESALUD
-
-        $.ajax({
-            type: 'GET',
-            url: '/telesalud/controllers/C_TSalud_Vc.php',
-            data: {
-                action: 'vcButton',
-                pc_aid: <?php echo $_SESSION['authUserID']; ?>,
-                pc_pid: <?php echo $_GET['set_pid']; ?>,
-            },
-            //dataType: 'json',
-            success: function(data) {            
-            // replace the contents of the div with the link teleconsultation 
-            $('#vcButton', window.parent.document).html(data);
-            
+        var isPost = <?php echo js_escape($showEligibility ?? false); ?>;
+        var listId = '#' + <?php echo js_escape($list_id); ?>;
+        $(function() {
+            $(listId).addClass("active");
+            if (isPost === true) {
+                $("#eligibility").click();
+                $("#eligibility").get(0).scrollIntoView();
             }
         });
-        </script>
+        // show vide consultation button
+        window.parent.showVCButton(<?php echo $_SESSION['authUserID']?>, <?php echo $pid?>)
+    </script>
 
 </body>
 

@@ -1,4 +1,6 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+
 // C_TSalud_Vc.php
 /**
  * - Mostrar link iniciar teleconsutla en encabezado de resumen de paciente.
@@ -75,7 +77,7 @@ function sqlS($sql)
  * @param string $url_field_name            
  * @return string
  */
-function showVCButtonlink($authUserID, $patientID, $url_field_name = 'data_medic_url', $vcCatList = '16')
+function showVCButtonlink($authUserID, $patientID, $url_field_name = 'medic_url', $vcCatList = '16')
 {
     try {
         $r = '';
@@ -90,7 +92,7 @@ SELECT cal.pc_eid,
     pc_endTime,
     vcdata.*
 FROM `openemr_postcalendar_events` as cal
-    inner join tsalud_vc as vcdata on cal.pc_eid = vcdata.pc_eid
+    INNER join tsalud_vc as vcdata on cal.pc_eid = vcdata.pc_eid
     INNER JOIN patient_data AS p ON cal.pc_pid = p.id
 where pc_eventDate = current_date()
     and CURRENT_TIME BETWEEN cal.pc_startTime and cal.pc_endTime
@@ -99,8 +101,8 @@ where pc_eventDate = current_date()
     and cal.pc_pid = $patientID";
         
         $row = sqlS($sql);
-        if (isset($row['data_medic_url'])) {
-            $url = $row['data_medic_url'];
+        if (isset($row[$url_field_name])) {
+            $url = $row[$url_field_name];
             $r .= vcButton($url, $url_field_name);
         }
         // }
@@ -119,7 +121,7 @@ where pc_eventDate = current_date()
 function vcButton($url, $url_field_name)
 {
     $button = '';
-    if ($url_field_name == 'data_medic_url') {
+    if ($url_field_name == 'medic_url') {
         // xlt("Medic Teleconsultation");
         $title = 'Start video consultation';
     } else {
@@ -156,14 +158,28 @@ function createVc($pc_eid)
      *      - datos a enviar al SCV
      *      - emails del paciente y del medico
      */
-    $sql_vc_calender = "SELECT c.pc_eid, c.pc_catid, c.pc_aid, c.pc_pid,
-c.pc_title, c.pc_time, c.pc_eventDate, c.pc_endDate, c.pc_startTime,
-c.pc_endTime, c.pc_duration, CONCAT_WS( p.fname, p.mname, p.lname ) AS
-patient_name, CONCAT_WS( m.fname, m.mname, m.lname ) AS medic_name FROM
-openemr_postcalendar_events AS c INNER JOIN patient_data AS p ON
-c.pc_pid = p.id INNER JOIN users AS m ON c.pc_aid = m.id WHERE
+    $sql_vc_calender = "
+SELECT c.pc_eid, c.pc_catid, c.pc_aid, c.pc_pid,
+c.pc_title, c.pc_time, c.pc_eventDate as encounterDate,
+c.pc_endDate, c.pc_startTime as encounterTime,
+c.pc_endTime, c.pc_duration, 
+CONCAT_WS( p.fname, p.mname, p.lname ) AS patientFullName, 
+CONCAT_WS( m.fname, m.mname, m.lname ) AS medicFullName
+, p.email as patientEmail
+,  vc.patient_url as patientEncounterUrl
+,  vc.medic_url as medicEncounterUrl
+, m.email as medicEmail
+
+FROM
+openemr_postcalendar_events AS c 
+INNER JOIN patient_data AS p ON
+c.pc_pid = p.id 
+INNER JOIN users AS m ON c.pc_aid = m.id 
+left join tsalud_vc as vc on c.pc_eid =vc.pc_eid
+
+WHERE
 c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
-    
+    // echo $sql_vc_calender;
     try {
         $res = sqlStatement($sql_vc_calender);
         $calendar_data = sqlFetchArray($res);
@@ -172,7 +188,7 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
         );
         
         // preparar datos a enviar al SCV
-        $appoinment_date = $calendar_data['pc_eventDate'] . ' ' . $calendar_data['pc_startTime'];
+        $appoinment_date = $calendar_data['encounterDate'] . ' ' . $calendar_data['encounterTime'];
         /**
          *
          * @var array $vc_data -
@@ -185,8 +201,8 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
          *      extra[]:hola
          */
         $data = array(
-            "medic_name" => $calendar_data['medic_name'],
-            "patient_name" => $calendar_data['patient_name'],
+            "medic_name" => $calendar_data['medicFullName'],
+            "patient_name" => $calendar_data['patientFullName'],
             "days_before_expiration" => '1',
             "appointment_date" => "$appoinment_date",
             "extra" => $extra_data
@@ -205,10 +221,10 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
         if ($vc_data['success']) {
             // agregar video consulta a la bd
             insertVc($pc_eid, $vc_data);
+            // actualizar links de acceso a video consulta en evento
             updateLinksToAgenda($pc_eid, $vc_data);
             // enviar email de la video consulta al medico
-            // sendVcMedicEmail
-            // enviar email a paciente // sendVcPatientEmail
+            // sendEmail($calendar_data);
         } else {
             echo "Errores en respuesta API Datos devueltos: " . print_r($vc_data, true);
         }
@@ -218,29 +234,201 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
 }
 
 /**
- * * * @param unknown
- * $p * @param unknown $email
+ *
+ * @param unknown $calendar_data            
  */
-function sendEmail($p, $email)
+function sendEmail($calendar_data)
 {
-    // //
-    // if
-    // (empty($email)) {
-    // // $this->assign("process_result", "Email could not be
-    // sent, the address supplied: '$email' was empty or invalid."); // return;
-    // // } // $mail->From = $from; // $mail = new PHPMailer(); // // this is a
-    // temporary config item until the rest of the per practice billing
-    // settings make their way in // $from =
-    // $GLOBALS['practice_return_email_path']; // $mail->FromName =
-    // $p->provider->get_name_display(); // $mail->isMail(); // $mail->Host =
-    // "localhost"; // $mail->Mailer = "mail"; // $text_body =
-    // $p->get_prescription_display(); // $mail->Body = $text_body; //
-    // $mail->Subject = "Prescription for: " . $p->patient->get_name_display();
-    // // $mail->AddAddress($email); // if ($mail->Send()) { //
-    // $this->assign("process_result", "Email was successfully sent to: " .
-    // $email); // return; // } else { // $this->assign("process_result",
-    // "There has been a mail error sending to " . $_POST['email_to'] . " " .
-    // $mail->ErrorInfo); // return; // } }
+    echo 'enviando mail...';
+    $mailData = emailMessageFor($calendar_data);
+    $to = $mailData['to'];
+    print_r($mailData);
+    //
+    if (empty($to)) {
+        echo "Email could not be
+        sent, the address supplied: '$to' was empty or invalid.";
+        return false;
+    } else {
+        // $mail->Host = $mailHost;
+        // $mail->Mailer = "mail";
+        $body = $mailData['body'];
+        $subject = $mailData['subject'];
+        $from = 'yois@zoomtecnologias.com';
+        $fromName = 'All in One OPS';
+        $mailHost = "lugaronline.com";
+        //
+        $mail = new PHPMailer();
+        /**
+         * Username:
+         * yois@zoomtecnologias.com
+         * Password:
+         * OntnnVus9c
+         * IMAP hostname:
+         * s1031.lugaronline.com
+         * IMAP port:
+         * 143
+         * IMAP security:
+         * STARTTLS
+         * IMAP auth method:
+         * Normal password
+         * SMTP hostname:
+         * s1031.lugaronline.com
+         * SMTP port:
+         * 587
+         * SMTP security:
+         * STARTTLS
+         * SMTP auth method:
+         * Normal password
+         * Webmail URL:
+         * /webmail/
+         *
+         * @var Ambiguous $mailData
+         */
+        // mail server
+        // $mail->IsSMTP();
+        // $mail->Host = "s1031.lugaronline.com";
+        // $mail->SMTPAuth = true;
+        // $mail->Username = 'mails.sending@lugaÏronline.com';
+        // $mail->Password = 'OntnnVus9c';
+        // // this is a temporary config item until the rest of the per practice billing settings make their way in
+        // $mail->From = $fromEmail;
+        // $mail->FromName = $fromName;
+        // $mail->isMail();
+        // $mail->Body = $body;
+        // $mail->Subject = $subject;
+        // $mail->AddAddress($to);
+        // //
+        // if ($mail->Send()) {
+        // echo "Email was successfully sent to: " . $email;
+        // return false;
+        // } else {
+        // echo "There has been a mail error sending to " . $to . " " . $mail->ErrorInfo;
+        // return true;
+        // }
+        $headers = array(
+            'From' => $from,
+            'Reply-To' => $from,
+            'X-Mailer' => 'PHP/' . phpversion()
+        );
+        if (xxmail($from, $to, $subject, $body, $headers)) {
+            echo 'todo ok';
+        } else {
+            echo 'no  ok';
+        }
+        // ,
+        // array|string $additional_headers = [],
+        // string $additional_params = ""
+        ;
+    }
+}
+
+function xxmail($from, $to, $subject, $body, $headers)
+{
+    
+    // Login email and password
+    $login = "yois@zoomtecnologias.com";
+    $pass = "2vIXKmPKEz";
+    
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+    
+    $ctx = stream_context_create();
+    stream_context_set_option($ctx, 'ssl', 'verify_peer', false);
+    stream_context_set_option($ctx, 'ssl', 'verify_peer_name', false);
+    try {
+        // echo $socket = stream_socket_client('ssl://s1031.lugaronline.com:587', $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
+        echo $socket = stream_socket_client('tcp://s1031.lugaronline.com:587', $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
+        if (! $socket) {
+            print "Failed to connect $err $errstr\n";
+            return;
+        } else {
+            // Http
+            // fwrite($socket, "GET / HTTP/1.0\r\nHost: www.example.com\r\nAccept: */*\r\n\r\n");
+            // Smtp
+            $buffer = 8192;
+            $host = 'mac-yois.lugaronline.com';
+            echo fread($socket, $buffer);
+            echo fwrite($socket, "EHLO $host\r\n");
+            echo fread($socket, $buffer);
+            
+            // Start tls connection
+            echo fwrite($socket, "STARTTLS\r\n");
+            echo fread($socket, $buffer);
+            
+            echo stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
+            
+            // Send ehlo
+            echo fwrite($socket, "EHLO $host\r\n");
+            echo fread($socket, $buffer);
+            
+            // echo fwrite($socket, "MAIL FROM: <hello@cool.com>\r\n");
+            // echo fread($socket,8192);
+            
+            echo fwrite($socket, "AUTH LOGIN\r\n");
+            echo fread($socket, $buffer);
+            
+            echo fwrite($socket, base64_encode($login) . "\r\n");
+            echo fread($socket, $buffer);
+            
+            echo fwrite($socket, base64_encode($pass) . "\r\n");
+            echo fread($socket, $buffer);
+            
+            echo fwrite($socket, "rcpt to: <$to>\r\n");
+            echo fread($socket, $buffer);
+            
+            echo fwrite($socket, "DATA\n");
+            echo fread($socket, $buffer);
+            
+            echo fwrite($socket, "Date: " . time() . "\r\nTo: <$to>\r\nFrom:<$from\r\nSubject:$subject\r\n.\r\n");
+            echo fread($socket, $buffer);
+            
+            echo fwrite($socket, "quit \n");
+            echo fread($socket, $buffer);
+            
+            /* Turn off encryption for the rest */
+            // stream_socket_enable_crypto($fp, false);
+            
+            fclose($socket);
+        }
+    } catch (Exception $e) {
+        echo $e;
+    }
+}
+
+/**
+ * returns subjetc, body and sender email to send
+ *
+ * @param array $consultationData            
+ * @param string $for            
+ * @return string[]|unknown[]
+ */
+function emailMessageFor($consultationData, $for = 'pac')
+{
+    $patientFullName = $consultationData['patientFullName'];
+    $medicFullName = $consultationData['medicFullName'];
+    //
+    $encounterDate = $consultationData['encounterDate'];
+    $encounterTime = $consultationData['encounterTime'];
+    //
+    $medicEncounterUrl = $consultationData['medicEncounterUrl'];
+    $patientEncounterUrl = $consultationData['patientEncounterUrl'];
+    //
+    // We build the body to patient y doctor
+    if ($for == 'doc') {
+        $result = [
+            'to' => $consultationData['medicEmail'],
+            'subject' => "[All in One OPS ] - Nueva video consulta con el Paciente {$patientFullName}",
+            'body' => "Hola, se ha agendado una video consulta médica con el paciente {$patientFullName} el día {$encounterDate} a las {$encounterTime}. <br> <br> Para acceder a la video consulta ingrese al siguiente enlace: <br> <a href='{$medicEncounterUrl}' target='_blank'>{$medicEncounterUrl}</a>"
+        ];
+    } else {
+        $result = [
+            'to' => $consultationData['patientEmail'],
+            'subject' => "[All in One OPS ] - Nueva video consulta para el {$encounterDate} a las {$encounterTime}",
+            'body' => "Hola, {$patientFullName} usted tiene una video consulta médica con el médico {$medicFullName} para el día {$encounterDate} a las {$encounterTime}. <br> <br> Para acceder a la video consulta médica ingrese al siguiente enlace: <br> <a href='{$patientEncounterUrl}' target='_blank'>{$patientEncounterUrl}</a>"
+        ];
+    }
+    return $result;
 }
 
 /**
@@ -255,14 +443,33 @@ function updateLinksToAgenda($pc_eid, $vc_data)
 {
     $patient_url = $vc_data['data']['patient_url'];
     $medic_url = $vc_data['data']['medic_url'];
-    $pc_hometext = "Accesos a la video consulta:
+    $conn = dbConn();
+    $pc_hometext = mysqli_real_escape_string($conn, "Accesos a la video consulta:
 <ul>
-<li>Profesional: <a href=\"{$medic_url}\" target=\"_blank\">{$medic_url}</a></li>
-<li>Paciente: <a href=\"{$patient_url}\" target=\"_blank\">{$patient_url}</a></li>
+<li>Profesional: <a href=\"{$medic_url}\" target=\"_blank\" id=\"medicButton\">{$medic_url}</a></li>
+<li>Paciente: <a href=\"{$patient_url}\" target=\"_blank\" id=\"patientButton\">{$patient_url}</a></li>
 </ul>
-";
+");
     $sql_update_pc_hometext = "update openemr_postcalendar_events set
-pc_hometext='$pc_hometext' where pc_eid=$pc_eid;"; // echo
+pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
+    // echo
+    $sql_update_pc_hometext;
+    return sqlStatement($sql_update_pc_hometext);
+}
+
+/**
+ *
+ * @param unknown $pc_eid            
+ * @param unknown $status            
+ * @return recordset
+ */
+function updateScheduleStatus($pc_eid, $status)
+{
+    $patient_url = $vc_data['data']['patient_url'];
+    $medic_url = $vc_data['data']['medic_url'];
+    $conn = dbConn();
+    $sql_update_pc_hometext = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
+    // echo
     $sql_update_pc_hometext;
     return sqlStatement($sql_update_pc_hometext);
 }
@@ -294,8 +501,13 @@ function insertVc($pc_eid, $vc_data)
         // Save new vc on Database
         $query = "INSERT INTO tsalud_vc ";
         $query .= "( pc_eid,
-success,message,data_id,data_valid_from,data_valid_to, data_patient_url,
-data_medic_url, data_data_url,medic_secret ) ";
+success,message,
+data_id,
+valid_from,
+valid_to,
+patient_url,
+medic_url,
+url,medic_secret ) ";
         $query .= " VALUES (
 $pc_eid, '$success','$message','$id',
 '$valid_from','$valid_to','$patient_url','$medic_url','$data_url','$medic_secret')";
@@ -320,12 +532,11 @@ $pc_eid, '$success','$message','$id',
  * @return string -
  *         respuesta del servicio de video consulta
  */
-function requestAPI($data, $method)
+function requestAPI($data, $method, $api_url = 'https://srv3.integrandosalud.com/os-telesalud/api/videoconsultation?')
 
 {
     $bearToken = "1|hqg8cSkfrmLVwq12jK6yAv03HHGyP6BYJNpH84Wg";
     $authorization = "Authorization: Bearer $bearToken";
-    $api_url = 'https://srv3.integrandosalud.com/os-telesalud/api/videoconsultation?';
     
     try {
         // Create VC
@@ -373,8 +584,20 @@ function saveNotify($response)
  * varchar(1024) DEFAULT NULL, * `vc_extra` varchar(1024) DEFAULT NULL, *
  * `topic` varchar(1024) DEFAULT NULL
  */
-} // include_once
-'../globals.php'; // print_r($GLOBALS["pid"]); /** * Only for demo */
+}
+
+// include_once
+
+/**
+ * Capture VC notifications
+ */
+function getNotinfy()
+{
+    echo 'recibiendo notificaciones';
+}
+
+'../globals.php';
+// print_r($GLOBALS["pid"]); /** * Only for demo */
 $pc_aid = 5;
 $pc_pid = 1;
 if (isset($_GET['action'])) {
@@ -386,10 +609,10 @@ if (isset($_GET['action'])) {
             $pc_aid = $_GET['pc_aid'];
             $pc_pid = $_GET['pc_pid'];
             // $links =
-            echo showVCButtonlink($pc_aid, $pc_pid); // print_r($links); // $patient_l =
-                                                     // $links['patient_url'];
-                                                     // echo $links['medic_url'];
+            echo showVCButtonlink($pc_aid, $pc_pid);
             break;
+        case 'vcNotify':
+            getNotinfy();
         default:
             break;
     }
