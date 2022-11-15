@@ -465,13 +465,10 @@ pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
  */
 function updateScheduleStatus($pc_eid, $status)
 {
-    $patient_url = $vc_data['data']['patient_url'];
-    $medic_url = $vc_data['data']['medic_url'];
     $conn = dbConn();
-    $sql_update_pc_hometext = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
-    // echo
-    $sql_update_pc_hometext;
-    return sqlStatement($sql_update_pc_hometext);
+    $sql = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
+    // echo $sql;
+    return sqlStatement($sql);
 }
 
 /**
@@ -593,7 +590,62 @@ function saveNotify($response)
  */
 function getNotinfy()
 {
-    echo 'recibiendo notificaciones';
+    // try {
+    $r = array(
+        'success' => 'nada'
+    );
+    // echo 'recibiendo notificaciones';
+    // get POST
+    // $post_json = '{"vc":{"secret":"172a73071f4418badd8852de5d38547bd37028e0",
+    // "medic_secret":"dBk55KtSpz",
+    // "status":"Valid",
+    // "medic_attendance_date":"2022-11-15T13:46:29.000000Z",
+    // "patient_attendance_date":null,
+    // "start_date":null,
+    // "finish_date":null,
+    // "extra":{"saludo":"Hola"}},
+    // "topic":"medic-set-attendance"}';
+    // $data = json_decode($post_json);
+    //
+    $data = json_decode($_POST);
+    if (isset($data->topic)) {
+        $topic = $data->topic;
+        // $data_id = 'd39b03a01ab5aa5d7bb36487c840638ac435d36c';
+        $data_id = $data->vc->secret;
+        $appstatus = getappStatus($topic);
+        //
+        $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
+        $records = sqlS($sql);
+        //
+        // print_r($records);
+        if ($records) {
+            $pc_eid = $records['pc_eid'];
+            updateScheduleStatus($pc_eid, $appstatus);
+        }
+        $r = array(
+            'success' => 'ok'
+        );
+    }
+    // } catch (Exception $e) {
+    // $r = array(
+    // 'error' => $e->getMessage()
+    // );
+    // }
+    return $r;
+}
+
+/**
+ * get topic appointment status from list_options
+ *
+ * @param unknown $topic            
+ * @return NULL
+ */
+function getappStatus($topic)
+{
+    $sql_appstatus = "SELECT * FROM openemr.tsalud_vc_topic where topic='$topic';";
+    $records_appstatus = sqlS($sql_appstatus);
+    $appstatus = $records_appstatus['value'];
+    return $appstatus;
 }
 
 '../globals.php';
