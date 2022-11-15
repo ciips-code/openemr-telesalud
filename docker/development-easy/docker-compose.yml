@@ -1,6 +1,11 @@
 # Docker Compose for TeleSalud project based on OpenEmr
 # Service naming structure project-framework-service
 # Container naming structure project_framework_service
+# nomeclatura de puertos
+# xxx0 app
+# xxx1 bd
+# xxx2 backend
+# xxx3 etc
 # Maintanied by yois <sioy23@gmail.com>
 version: '3.1'
 services:
@@ -17,7 +22,7 @@ services:
                 '--ssl_key=/etc/ssl/server-key.pem'
             ]
         ports:
-            - 8320:3306
+            - 8301:3306
         volumes:
             - ../library/sql-ssl-certs-keys/easy/ca.pem:/etc/ssl/ca.pem:ro
             - ../library/sql-ssl-certs-keys/easy/server-cert.pem:/etc/ssl/server-cert.pem:ro
@@ -99,33 +104,33 @@ services:
             - 8310:80
         environment:
             PMA_HOSTS: telesalud-openemr-mysql
-    # telesalud-openemr-couchdb:
-    #     container_name: telesalud_openemr_couchdb
-    #     restart: always
-    #     image: couchdb
-    #     ports:
-    #         - 5984:5984
-    #         - 6984:6984
-    #     volumes:
-    #         - ../library/couchdb-config-ssl-cert-keys/local.ini:/opt/couchdb/etc/local.ini:rw
-    #         - ../library/couchdb-config-ssl-cert-keys/easy/ca.pem:/etc/ssl/ca.pem:ro
-    #         - ../library/couchdb-config-ssl-cert-keys/easy/server-cert.pem:/etc/ssl/server-cert.pem:ro
-    #         - ../library/couchdb-config-ssl-cert-keys/easy/server-key.pem:/etc/ssl/server-key.pem:ro
-    #         - ../../../data/couchdb:/opt/couchdb/data
-    #     environment:
-    #         COUCHDB_USER: admin
-    #         COUCHDB_PASSWORD: password
-    # telesalud-openemr-openldap:
-    #     container_name: telesalud_openemr_openldap
-    #     restart: always
-    #     image: openemr/dev-ldap:easy
-    #     ports:
-    #         - 8389:389
-    #     environment:
-    #         LDAP_TLS_VERIFY_CLIENT: try
-    #         LDAP_TLS_CA_CRT_FILENAME: ca.pem
-    #         LDAP_TLS_CRT_FILENAME: server-cert.pem
-    #         LDAP_TLS_KEY_FILENAME: server-key.pem
+    telesalud-openemr-couchdb:
+        container_name: telesalud_openemr_couchdb
+        restart: always
+        image: couchdb
+        ports:
+            - 5984:5984
+            - 6984:6984
+        volumes:
+            - ../library/couchdb-config-ssl-cert-keys/local.ini:/opt/couchdb/etc/local.ini:rw
+            - ../library/couchdb-config-ssl-cert-keys/easy/ca.pem:/etc/ssl/ca.pem:ro
+            - ../library/couchdb-config-ssl-cert-keys/easy/server-cert.pem:/etc/ssl/server-cert.pem:ro
+            - ../library/couchdb-config-ssl-cert-keys/easy/server-key.pem:/etc/ssl/server-key.pem:ro
+            - ../../../data/couchdb:/opt/couchdb/data
+        environment:
+            COUCHDB_USER: admin
+            COUCHDB_PASSWORD: password
+    telesalud-openemr-openldap:
+        container_name: telesalud_openemr_openldap
+        restart: always
+        image: openemr/dev-ldap:easy
+        ports:
+            - 8389:389
+        environment:
+            LDAP_TLS_VERIFY_CLIENT: try
+            LDAP_TLS_CA_CRT_FILENAME: ca.pem
+            LDAP_TLS_CRT_FILENAME: server-cert.pem
+            LDAP_TLS_KEY_FILENAME: server-key.pem
     telesalud-xdebug-nginx:
         container_name: telesalud_xdebug_nginx
         build:
@@ -149,18 +154,18 @@ services:
             XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
         volumes:
             - ../..:/var/www/html
-    # Laravel service
+    # Telesalud API RESTFul
     telesalud-api:
         container_name: telesalud_api
-        image: docker.io/bitnami/laravel:8
+        image: docker.io/bitnami/laravel:9
         ports:
-            - 8490:8000
+        - '8302:8000'
         environment:
-            - DB_HOST=telesalud-openemr-mysql
-            - DB_PORT=3306
-            - DB_USERNAME=openemr
-            - DB_PASSWORD=openemr
-            - DB_DATABASE=openemr
+        - DB_HOST=telesalud-openemr-mysql
+        - DB_PORT=3306
+        - DB_USERNAME=openemr
+        - DB_DATABASE=openemr
+        - DB_PASSWORD=openemr
         volumes:
             - '../../telesalud/api/v1:/app'
         depends_on:
