@@ -533,10 +533,10 @@ $pc_eid, '$success','$message','$id',
  * @return string -
  *         respuesta del servicio de video consulta
  */
-function requestAPI($data, $method, $api_url = 'https://srv3.integrandosalud.com/os-telesalud/api/videoconsultation?')
+function requestAPI($data, $method, $api_url = 'https://meet.telesalud.iecs.org.ar:32443/api/videoconsultation?')
 
 {
-    $bearToken = "1|hqg8cSkfrmLVwq12jK6yAv03HHGyP6BYJNpH84Wg";
+    $bearToken = "1|OB00LDC8eGEHCAhKMjtDRUXu9buxOm2SREHzQqPz";
     $authorization = "Authorization: Bearer $bearToken";
     
     try {
