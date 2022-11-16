@@ -604,28 +604,34 @@ function requestAPI($data, $method, $api_url = 'https://meet.telesalud.iecs.org.
  */
 function saveNotify()
 {
-    $r = array(
-        'success' => 'nada'
-    );
-    // echo "saving notification...";
-    $data = json_decode(file_get_contents('php://input'), true);
-    // print_r($data);
-    if (isset($data['topic'])) {
-        $topic = $data['topic'];
-        $data_id = $data['vc']['secret'];
-        $appstatus = getappStatus($topic);
-        //
-        $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
-        // echo $sql;
-        $records = sqlS($sql);
-        // print_r($records);
-        if ($records) {
-            $pc_eid = $records['pc_eid'];
-            updateScheduleStatus($pc_eid, $appstatus);
-        }
+    try {
         $r = array(
-            'success' => 'ok'
+            'success' => 'nada'
         );
+        echo "start saving notification...";
+        $data = json_decode(file_get_contents('php://input'), true);
+        // print_r($data);
+        if (isset($data['topic'])) {
+            echo "getting status from stautus table...";
+            $topic = $data['topic'];
+            $data_id = $data['vc']['secret'];
+            $appstatus = getappStatus($topic);
+            //
+            $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
+            // echo $sql;
+            $records = sqlS($sql);
+            // print_r($records);
+            if ($records) {
+                echo "updating appointment status...";
+                $pc_eid = $records['pc_eid'];
+                updateScheduleStatus($pc_eid, $appstatus);
+            }
+            $r = array(
+                'success' => 'ok'
+            );
+        }
+    } catch (Exception $e) {
+        echo "ups... an erorr ocurred. Is about this {$e->getMessage()}";
     }
     return json_encode($r);
 }
