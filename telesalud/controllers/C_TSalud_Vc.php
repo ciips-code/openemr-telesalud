@@ -594,30 +594,34 @@ function requestAPI($data, $method, $api_url = 'https://srv3.integrandosalud.com
  */
 function saveNotify()
 {
-    $r = array(
-        'success' => 'nada'
-    );
-    echo "saving notification...";
-    $data = json_decode(file_get_contents('php://input'), true);
-    // print_r($data);
-    if (isset($data['topic'])) {
-        $topic = $data['topic'];
-        $data_id = $data['vc']['secret'];
-        $appstatus = getappStatus($topic);
-        //
-        $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
-        // echo $sql;
-        $records = sqlS($sql);
-        // print_r($records);
-        if ($records) {
-            $pc_eid = $records['pc_eid'];
-            updateScheduleStatus($pc_eid, $appstatus);
-        }
-        $r = array(
-            'success' => 'ok'
-        );
-    }
-    return $r;
+    // $r = array(
+    // 'success' => 'nada'
+    // );
+    // echo "saving notification...";
+    // $data = json_decode(file_get_contents('php://input'), true);
+    // // print_r($data);
+    // if (isset($data['topic'])) {
+    // $topic = $data['topic'];
+    // $data_id = $data['vc']['secret'];
+    // $appstatus = getappStatus($topic);
+    // //
+    // $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
+    // // echo $sql;
+    // $records = sqlS($sql);
+    // // print_r($records);
+    // if ($records) {
+    // $pc_eid = $records['pc_eid'];
+    // updateScheduleStatus($pc_eid, $appstatus);
+    // }
+    // $r = array(
+    // 'success' => 'ok'
+    // );
+    // }
+    // return $r;
+    echo 'saving post data in file...';
+    $file = 'post-data.txt';
+    file_put_contents($file, file_get_contents('php://input'));
+    echo "saving post data saved in $file";
 }
 
 function getPost()
