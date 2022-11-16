@@ -26,10 +26,17 @@ use PHPMailer\PHPMailer\PHPMailer;
  */
 function dbConn()
 {
-    $servername = "telesalud-openemr-mysql";
-    $username = "openemr";
-    $password = "openemr";
-    $database = "openemr";
+    // localserver
+    // $servername = "telesalud-openemr-mysql";
+    // $username = "openemr";
+    // $password = "openemr";
+    // $database = "openemr";
+    // dev server
+    $servername = "localhost";
+    $username = "admin_devopenemr";
+    $password = "BxX7vZb27z";
+    $database = "admin_devopenemr";
+    //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
     
