@@ -616,6 +616,7 @@ function saveNotify()
             $topic = $data['topic'];
             $data_id = $data['vc']['secret'];
             $appstatus = getappStatus($topic);
+            echo "satus ok and is $appstatus ";
             //
             $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
             // echo $sql;
