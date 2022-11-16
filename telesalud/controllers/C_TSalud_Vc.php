@@ -26,10 +26,10 @@ use PHPMailer\PHPMailer\PHPMailer;
  */
 function dbConn()
 {
-    $servername = "localhost";
-    $username = "admin_devopenemr";
-    $password = "BxX7vZb27z";
-    $database = "admin_devopenemr";
+    $servername = "telesalud-openemr-mysql";
+    $username = "openemr";
+    $password = "openemr";
+    $database = "openemr";
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
     
@@ -179,7 +179,8 @@ left join tsalud_vc as vc on c.pc_eid =vc.pc_eid
 
 WHERE
 c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
-    // echo $sql_vc_calender;
+    $br = '<br>';
+    echo $sql_vc_calender . $br;
     try {
         // $res = sqlStatement($sql_vc_calender);
         // $calendar_data = sqlFetchArray($res);
@@ -208,6 +209,7 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
             "appointment_date" => "$appoinment_date",
             "extra" => $extra_data
         );
+        print_r($data);
         /**
          *
          * @var string $vc_response -
@@ -218,6 +220,7 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
          * * * @var array $vc_data datos devueltos por el SCV
          */
         $vc_data = json_decode($svc_response, TRUE);
+        print_r($vc_data);
         // si hay respuesta
         if ($vc_data['success']) {
             // agregar video consulta a la bd
@@ -227,7 +230,7 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
             // enviar email de la video consulta al medico
             // sendEmail($calendar_data);
         } else {
-            echo "Errores en respuesta API Datos devueltos: " . print_r($vc_data, true);
+            echo "$br Errores en respuesta API Datos devueltos: " . print_r($vc_data, true);
         }
     } catch (Exception $e) {
         // ehco $e
@@ -594,34 +597,30 @@ function requestAPI($data, $method, $api_url = 'https://meet.telesalud.iecs.org.
  */
 function saveNotify()
 {
-    // $r = array(
-    // 'success' => 'nada'
-    // );
+    $r = array(
+        'success' => 'nada'
+    );
     // echo "saving notification...";
-    // $data = json_decode(file_get_contents('php://input'), true);
-    // // print_r($data);
-    // if (isset($data['topic'])) {
-    // $topic = $data['topic'];
-    // $data_id = $data['vc']['secret'];
-    // $appstatus = getappStatus($topic);
-    // //
-    // $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
-    // // echo $sql;
-    // $records = sqlS($sql);
-    // // print_r($records);
-    // if ($records) {
-    // $pc_eid = $records['pc_eid'];
-    // updateScheduleStatus($pc_eid, $appstatus);
-    // }
-    // $r = array(
-    // 'success' => 'ok'
-    // );
-    // }
-    // return $r;
-    echo 'saving post data in file...';
-    $file = 'post-data.txt';
-    file_put_contents($file, file_get_contents('php://input'));
-    echo "saving post data saved in $file";
+    $data = json_decode(file_get_contents('php://input'), true);
+    // print_r($data);
+    if (isset($data['topic'])) {
+        $topic = $data['topic'];
+        $data_id = $data['vc']['secret'];
+        $appstatus = getappStatus($topic);
+        //
+        $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
+        // echo $sql;
+        $records = sqlS($sql);
+        // print_r($records);
+        if ($records) {
+            $pc_eid = $records['pc_eid'];
+            updateScheduleStatus($pc_eid, $appstatus);
+        }
+        $r = array(
+            'success' => 'ok'
+        );
+    }
+    return json_encode($r);
 }
 
 function getPost()
