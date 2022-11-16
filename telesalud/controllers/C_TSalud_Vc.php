@@ -618,7 +618,7 @@ function saveNotify()
             $appstatus = getappStatus($topic);
             echo "satus ok and is $appstatus ";
             //
-            $sql = "SELECT * FROM openemr.tsalud_vc where data_id='$data_id';";
+            $sql = "SELECT * FROM tsalud_vc where data_id='$data_id';";
             // echo $sql;
             $records = sqlS($sql);
             // print_r($records);
@@ -662,7 +662,7 @@ function getPost()
  */
 function getappStatus($topic)
 {
-    $sql_appstatus = "SELECT * FROM openemr.tsalud_vc_topic where topic='$topic';";
+    $sql_appstatus = "SELECT * FROM tsalud_vc_topic where topic='$topic';";
     $records_appstatus = sqlS($sql_appstatus);
     return $records_appstatus['value'];
 }
