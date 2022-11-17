@@ -407,6 +407,7 @@ function getCodeText($code)
         var codeTexts = new Map()
         <?php
         $i = 0;
+        /*
         foreach ($ISSUE_TYPES as $key => $value) {
             echo " aitypes[" . attr($i) . "] = " . js_escape($value[3]) . ";\n";
             echo " aopts[" . attr($i) . "] = new Array();\n";
@@ -434,6 +435,7 @@ function getCodeText($code)
 
             ++$i;
         }
+        */
 
         ///////////
         ActiveIssueCodeRecycleFn($thispid, $ISSUE_TYPES);
@@ -735,10 +737,12 @@ function getCodeText($code)
                 alert(<?php echo xlj('Please Enter End Date greater than Begin Date!'); ?>);
                 return false;
             }
+            /*
             if (!f.form_title.value) {
                 alert(<?php echo xlj('Please enter a title!'); ?>);
                 return false;
             }
+            */
             top.restoreSession();
             return true;
         }
@@ -776,29 +780,6 @@ function getCodeText($code)
             <?php
             // Build html tab data for each visit form linked to this issue.
             $tabcontents = '';
-            /*
-            if ($issue) {
-                $vres = sqlStatement(
-                    "SELECT f.id, f.encounter, f.form_name, f.form_id, f.formdir, fe.date " .
-                        "FROM forms AS f, form_encounter AS fe WHERE " .
-                        "f.pid = ? AND f.issue_id = ? AND f.deleted = 0 AND " .
-                        "fe.pid = f.pid and fe.encounter = f.encounter " .
-                        "ORDER BY fe.date DESC, f.id DESC",
-                    array($thispid, $issue)
-                );
-                while ($vrow = sqlFetchArray($vres)) {
-                    $formdir = $vrow['formdir'];
-                    $formid  = $vrow['form_id'];
-                    $visitid = $vrow['encounter'];
-                    echo " <li><a href='#'>" . text(oeFormatShortDate(substr($vrow['date'], 0, 10))) . ' ' .
-                        text($vrow['form_name']) . "</a></li>\n";
-                    $tabcontents .= "<div class='tab' style='height:90%;width:98%;'>\n";
-                    $tabcontents .= "<iframe frameborder='0' class='h-100 w-100' " .
-                        "src='../../forms/LBF/new.php?formname=" . attr_url($formdir) . "&id=" . attr_url($formid) . "&visitid=" . attr_url($visitid) . "&from_issue_form=1'" .
-                        ">Oops</iframe>\n";
-                    $tabcontents .= "</div>\n";
-                }
-            } */
             ?>
         </ul>
 
@@ -844,7 +825,7 @@ function getCodeText($code)
                         </div>
                         <div class="form-group col-12" id='row_titles'>
                             <label for="form_titles" class="col-form-label"> </label>
-                            <select name='form_titles' id='form_titles' class="form-control"> 
+                            <select name='form_titles' id='form_titles' class="form-control">
                             </select>
                             <!-- <p><?php echo xlt('(Select one of these, or type your own title)'); ?></p> -->
                         </div>
@@ -1066,19 +1047,36 @@ function getCodeText($code)
 
             $('#form_titles').select2({
                 theme: 'bootstrap4',
-                placeholder: "Seleccione un problema",
-                allowClear: true,
+                multiple: true,
+                tags: true,
+                tokenSeparators: [","],
+                maximumSelectionSize: 10,
+                minimumResultsForSearch: Infinity,
+                minimumInputLength: 1,
+                placeholder: "Buscar problema CIE-11",
                 ajax: {
                     url: "<?php echo $webroot ?>/interface/patient_file/summary/search_icd11.php",
+                    type: "post",
                     dataType: 'json',
-                    delay: 1000,
-                    processResults: function(data) {
+                    delay: 500,
+                    quietMillis: 100,
+                    params: {
+                        contentType: "application/json"
+                    },
+                    data: function (params) {
                         return {
-                            results: data
+                            searchTerm: params.term, // search term
+                            delay: 0
                         }
                     },
-                },
-                minimumInputLength: 1
+                    processResults: function(response) {
+                        
+                        return {
+                            results: response
+                        }
+                    },
+                    cache: true
+                }
             });
 
             onCodeSelectionChange()

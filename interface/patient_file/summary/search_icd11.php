@@ -21,7 +21,7 @@ require_once $GLOBALS['srcdir'] . '/options.inc.php';
 require_once $GLOBALS['fileroot'] . '/custom/code_types.inc.php';
 require_once $GLOBALS['srcdir'] . '/csv_like_join.php';
 
-$term = $_REQUEST['q'];
+$term = $_POST['searchTerm'];
 $response = [];
 
 $query = sqlStatement(
@@ -30,8 +30,8 @@ $query = sqlStatement(
     WHERE 
         list_id = 'medical_problem_issue_list' AND 
         activity = 1 AND 
-        (title LIKE '%$term%' OR codes LIKE '%$term%') 
-    ORDER BY title LIMIT 50");
+        (title LIKE '$term%' OR codes LIKE '$term%') 
+    ORDER BY CHAR_LENGTH(title) LIMIT 100");
 
 while ($row = sqlFetchArray($query)) {
     $response[] = $row;
