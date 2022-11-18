@@ -327,14 +327,22 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                 if ($row['diagnosis'] != "") {
                                     $diags = explode(";", $row['diagnosis']);
                                     foreach ($diags as $diag) {
-                                        $codedesc = lookup_code_descriptions($diag);
-                                        list($codetype, $code) = explode(':', $diag);
+                                        // $codedesc = lookup_code_descriptions($diag);
+                                        list($codetype, $code) = explode(':', trim($diag));
+                                        $sql = "SELECT codes, title FROM list_options WHERE codes = '$codetype:{$code}'";
+                                        $queryDiag = sqlStatement($sql);
+                                        
+                                        $codedesc = 'Not found';
+                                        while ($rowDiag = sqlFetchArray($queryDiag)) {
+                                            $codedesc = $rowDiag['title'];
+                                        }
+
                                         if ($codetext) {
                                             $codetext .= "<br />";
                                         }
 
-                                        $codetext .= "<a href='javascript:educlick(" . attr_js($codetype) . "," . attr_js($code) . ")' $colorstyle>" .
-                                        text($diag . " (" . $codedesc . ")") . "</a>";
+                                        $codetext .= "<a href='javascript:educlick(" . attr_js($codetype) . "," . attr_js($code) . ")' $colorstyle>" . text($diag . " (" . $codedesc . ")") . "</a>";
+                                        
                                     }
                                 }
 
@@ -362,10 +370,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
 
                                 echo " <tr class='" . attr($bgclass) . " detail' $colorstyle>\n";
                                 if ($canSelect) {
-                                    echo "  <td><input type='checkbox' class='selection-check' id='sel_" . attr($rowid) . "'
-                                        onclick='rowSelectionChanged(" . attr_js($focustype) . ");'/></td>\n";
+                                    echo "  <td><input type='checkbox' class='selection-check' id='sel_" . attr($rowid) . "'/></td>\n";
                                 }
-                                echo "  <td class='text-left " . attr($click_class) . "' style='text-decoration: underline' id='" . attr($rowid) . "'>" . text($disptitle) . "</td>\n";
+                                echo "  <td class='text-left' id='" . attr($rowid) . "'>" . text($disptitle) . "</td>\n";
                                 echo "  <td>" . text(trim(oeFormatDateTime($row['begdate']))) . "&nbsp;</td>\n";
                                 echo "  <td>" . text(trim(oeFormatDateTime($row['enddate']))) . "&nbsp;</td>\n";
                                 // both codetext and statusCompute have already been escaped above with htmlspecialchars)

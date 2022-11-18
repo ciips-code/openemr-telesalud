@@ -264,7 +264,9 @@ if (!empty($_POST['form_save'])) {
         'udi' => 'form_udi',
         'udi_data' => 'udi_data',
         'comments' => 'form_comments',
-        'diagnosis' => 'form_diagnosis',
+        // TELESALUD
+        'diagnosis' => 'form_titles',
+        // END TELESALUD
         'occurrence' => 'form_occur',
         'classification' => 'form_classification',
         'reinjury_id' => 'form_reinjury_id',
@@ -505,10 +507,9 @@ function getCodeText($code)
                 document.getElementById('row_severity').style.display = 'none';
                 document.getElementById('row_reaction').style.display = alldisp;
                 document.getElementById('row_verification').style.display = verificationdisp;
-                document.getElementById('row_form_title').style.display = 'none';
 
-                let element = document.getElementById('form_title');
-                if (typeof(element) != 'undefined' && element != null) { document.getElementById('form_title').style.display = 'none';}
+                // let element = document.getElementById('form_title');
+                // if (typeof(element) != 'undefined' && element != null) { document.getElementById('form_title').style.display = 'none';}
                 
 
                document.getElementById('row_referredby').style.display = 'none';
@@ -541,7 +542,7 @@ function getCodeText($code)
 
             var str = sel.getAttribute('codes')
             if (str) {
-                var codes = str.split(";")
+                var codes = str.split(",")
                 for (i = 0; i < codes.length; i++) {
                     addSelectedCode(codes[i], codeTexts.has(codes[i]) ? codeTexts.get(codes[i]) : codes[i])
                 }
@@ -737,12 +738,12 @@ function getCodeText($code)
                 alert(<?php echo xlj('Please Enter End Date greater than Begin Date!'); ?>);
                 return false;
             }
-            /*
+            
             if (!f.form_title.value) {
                 alert(<?php echo xlj('Please enter a title!'); ?>);
                 return false;
             }
-            */
+            
             top.restoreSession();
             return true;
         }
@@ -796,6 +797,13 @@ function getCodeText($code)
                             printf('<input name="%s" type="hidden" value="%s"/>%s', attr($fldName), attr($fldVal), PHP_EOL);
                         }
                         ?>
+                        
+                        <div class="form-group col-12" id='row_form_title'>
+                            <label class="col-form-label" for="title_diagnosis"><?php echo xlt('Title'); /* echo xlt('Title'); */ ?>:</label>
+                            <input type='text' class="form-control" name='form_title' id='form_title' value='<?php echo attr($irow['title'] ?? '') ?>' autocomplete="off" />
+                            <input type='hidden' name='form_title_id' value='<?php echo attr($irow['list_option_id'] ?? '') ?>'>
+                        </div>
+
                         <div class="form-group col-12">
                             <label class="col-form-label"><?php echo xlt('Type'); ?>:</label>
                             <?php
@@ -823,9 +831,10 @@ function getCodeText($code)
                             }
                             ?>
                         </div>
+                        
                         <div class="form-group col-12" id='row_titles'>
                             <label for="form_titles" class="col-form-label"> </label>
-                            <select name='form_titles' id='form_titles' class="form-control">
+                            <select name='form_titles[]' id='form_titles' class="form-control">
                             </select>
                             <!-- <p><?php echo xlt('(Select one of these, or type your own title)'); ?></p> -->
                         </div>
@@ -846,12 +855,6 @@ function getCodeText($code)
                             </div>
                         <?php } ?>
                         
-                        
-                        <div class="form-group col-12" id='row_form_title'>
-                            <label class="col-form-label" for="title_diagnosis"><?php echo xlt('Otro Problema'); /* echo xlt('Title'); */ ?>:</label>
-                            <input type='text' class="form-control" name='form_title' id='form_title' value='<?php echo attr($irow['title'] ?? '') ?>' />
-                            <input type='hidden' name='form_title_id' value='<?php echo attr($irow['list_option_id'] ?? '') ?>'>
-                        </div>
                         
                         <div class="form-group col-12" id='row_active_codes'>
                             <label for="form_active_codes" class="col-form-label"><?php echo xlt('Active Issue Codes'); ?>:</label>
@@ -883,12 +886,12 @@ function getCodeText($code)
                         
                         <div class="form-group col-12">
                             <label class="col-form-label" for="form_begin"><?php echo ('Fecha de inicio') /*echo xlt('Begin Date and Time');*/ ?>:</label>
-                            <input type='text' class='datepicker form-control' name='form_begin' id='form_begin' value='<?php echo attr(trim(oeFormatDateTime($irow['begdate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd date of onset, surgery or start of medication'); ?>' />
+                            <input type='text' class='datepicker form-control' name='form_begin' id='form_begin' value='<?php echo attr(trim(oeFormatDateTime($irow['begdate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd date of onset, surgery or start of medication'); ?>' autocomplete="off" />
                         </div>
 					
                         <div class="form-group col-12" id='row_enddate'>
                             <label class="col-form-label" for="form_begin"><?php echo ('Fecha de resolución') /*xlt('End Date and Time');*/ ?>:</label>
-                            <input type='text' class='datepicker form-control' name='form_end' id='form_end' value='<?php echo attr(trim(oeFormatDateTime($irow['enddate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd HH:MM date of recovery or end of medication'); ?>' />
+                            <input type='text' class='datepicker form-control' name='form_end' id='form_end' value='<?php echo attr(trim(oeFormatDateTime($irow['enddate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd HH:MM date of recovery or end of medication'); ?>' autocomplete="off" />
                             &nbsp;(<?php echo xlt('leave blank if still active'); ?>)
                         </div>
                         
@@ -1045,6 +1048,9 @@ function getCodeText($code)
             // Include bs3 / bs4 classes here.  Keep html tags functional.
             $('table').addClass('table table-sm');
 
+            /**
+             * TODO: Precargar: https://select2.org/programmatic-control/add-select-clear-items#preselecting-options-in-an-remotely-sourced-ajax-select2
+             */
             $('#form_titles').select2({
                 theme: 'bootstrap4',
                 multiple: true,
