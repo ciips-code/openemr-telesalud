@@ -21,7 +21,7 @@ use OpenEMR\Common\Logging\EventAuditLogger;
  * Variables globales usadas dentro del modulo
  */
 //
-$telesalud_path = $p . '/telesalud';
+$ops_path = $p . '/telehealth';
 //
 $GLOBALS['OE_SITE_DIR'] = "$p/sites/default";
 set_include_path(get_include_path() . PATH_SEPARATOR . $p);

@@ -8,7 +8,7 @@ SELECT cal.pc_eid,
     pc_endTime,
     vcdata.*
 FROM `openemr_postcalendar_events` as cal
-    inner join tsalud_vc as vcdata on cal.pc_eid = vcdata.pc_eid
+    inner join telehealth_vc as vcdata on cal.pc_eid = vcdata.pc_eid
     INNER JOIN patient_data AS p ON cal.pc_pid = p.id
     INNER join users as u on cal.pc_aid = u.id
 where pc_eventDate = current_date()
@@ -18,5 +18,5 @@ where pc_eventDate = current_date()
     and cal.pc_pid = 6 -- 
     -- limpiar tablas de video consultas y calendarioß
     --
-    TRUNCATE TABLE tsalud_vc;
+    TRUNCATE TABLE telehealth_vc;
     TRUNCATE TABLE openemr_postcalendar_events;

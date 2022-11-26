@@ -1143,7 +1143,7 @@
         "label": "Users",
         "menu_id": "adm0",
         "target": "adm",
-        "url": "/telesalud/usergroup/usergroup_admin.php",
+        "url": "/telehealth/usergroup/usergroup_admin.php",
         "children": [
 
         ],

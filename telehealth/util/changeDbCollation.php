@@ -11,7 +11,7 @@ function MysqlError($mysqli)
 // $password = "openemr";
 // $db = "openemr";
 // $host = "localhost";
-$host = 'telesalud-openemr-mysql';
+$host = 'ops-openemr-mysql';
 $port = '3306';
 $username = 'openemr';
 $password = 'openemr';
