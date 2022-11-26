@@ -8,9 +8,10 @@
 # xxx3 etc
 # Maintanied by yois <sioy23@gmail.com>
 version: '3.1'
+name: ops
 services:
-    telesalud-openemr-mysql:
-        container_name: telesalud_openemr_mysql
+    ops-openemr-mysql:
+        container_name: ops_openemr_mysql
         restart: always
         image: mariadb:10.6
         command:
@@ -32,9 +33,9 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: root
             TZ : America/Argentina/Buenos_Aires
-    telesalud-openemr:
+    ops-openemr:    
         # build: .
-        container_name: telesalud_openemr
+        container_name: ops_openemr
         restart: always
         image: openemr/openemr:flex
         ports:
@@ -60,7 +61,7 @@ services:
             DEBUG_COLORS: "true"
             TERM: xterm-256color
             COLORTERM: truecolor
-            MYSQL_HOST: telesalud-openemr-mysql
+            MYSQL_HOST: ops-openemr-mysql
             MYSQL_ROOT_PASS: root
             MYSQL_USER: openemr
             MYSQL_PASS: openemr
@@ -84,28 +85,28 @@ services:
             OPENEMR_SETTING_rest_portal_api: 1
             OPENEMR_SETTING_portal_onsite_two_enable: 1
             OPENEMR_SETTING_ccda_alt_service_enable: 3
-            OPENEMR_SETTING_couchdb_host: telesalud-openemr-couchdb
+            OPENEMR_SETTING_couchdb_host: ops-openemr-couchdb
             OPENEMR_SETTING_couchdb_port: 6984
             OPENEMR_SETTING_couchdb_user: admin
             OPENEMR_SETTING_couchdb_pass: password
             OPENEMR_SETTING_couchdb_dbase: example
             OPENEMR_SETTING_couchdb_ssl_allow_selfsigned: 1
-            OPENEMR_SETTING_gbl_ldap_host: 'ldap://telesalud-openemr-openldap:389'
+            OPENEMR_SETTING_gbl_ldap_host: 'ldap://ops-openemr-openldap:389'
             OPENEMR_SETTING_gbl_ldap_dn: 'cn={login},dc=example,dc=org'
         depends_on:
-            - telesalud-openemr-mysql
+            - ops-openemr-mysql
         # networks:
         #     - internal
-    telesalud-openemr-phpmyadmin:
-        container_name: telesalud_openemr_phpmyadmin
+    ops-openemr-phpmyadmin:
+        container_name: ops_openemr_phpmyadmin
         restart: always
         image: phpmyadmin
         ports:
             - 8310:80
         environment:
-            PMA_HOSTS: telesalud-openemr-mysql
-    telesalud-openemr-couchdb:
-        container_name: telesalud_openemr_couchdb
+            PMA_HOSTS: ops-openemr-mysql
+    ops-openemr-couchdb:
+        container_name: ops_openemr_couchdb
         restart: always
         image: couchdb
         ports:
@@ -120,8 +121,8 @@ services:
         environment:
             COUCHDB_USER: admin
             COUCHDB_PASSWORD: password
-    telesalud-openemr-openldap:
-        container_name: telesalud_openemr_openldap
+    ops-openemr-openldap:
+        container_name: ops_openemr_openldap
         restart: always
         image: openemr/dev-ldap:easy
         ports:
@@ -131,8 +132,8 @@ services:
             LDAP_TLS_CA_CRT_FILENAME: ca.pem
             LDAP_TLS_CRT_FILENAME: server-cert.pem
             LDAP_TLS_KEY_FILENAME: server-key.pem
-    telesalud-xdebug-nginx:
-        container_name: telesalud_xdebug_nginx
+    ops-openemr-xdebug-nginx:
+        container_name: ops_xdebug_nginx
         build:
             context: .
             dockerfile: nginx/Dockerfile
@@ -142,8 +143,8 @@ services:
         #     - internal
         volumes:
             - ../..:/var/www/html
-    telesalud-xdebug-php:
-        container_name: telesalud_xdebug_php
+    ops-openemr-xdebug-php:
+        container_name: ops_xdebug_php
         build:
             context: .
             dockerfile: php/Dockerfile
@@ -155,21 +156,21 @@ services:
         volumes:
             - ../..:/var/www/html
     # Telesalud API RESTFul
-    telesalud-api:
-        container_name: telesalud_api
+    ops-openemr-api:
+        container_name: ops_api
         image: docker.io/bitnami/laravel:9
         ports:
         - '8302:8000'
         environment:
-        - DB_HOST=telesalud-openemr-mysql
+        - DB_HOST=ops-openemr-mysql
         - DB_PORT=3306
         - DB_USERNAME=openemr
         - DB_DATABASE=openemr
         - DB_PASSWORD=openemr
         volumes:
-            - '../../telesalud/api/v1:/app'
+            - '../../telehealth/api/v1:/app'
         depends_on:
-            - telesalud-openemr-mysql
+            - ops-openemr-mysql
 # networks:
 #     internal:
 #         driver: bridge
