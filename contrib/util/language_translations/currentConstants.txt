@@ -4101,7 +4101,7 @@ External Database Import Utility
 External Draw Panel
 External Exam
 External Exam Default Values
-External ID
+Identification document type
 External Id
 External identifier
 External Lab
