@@ -11,5 +11,5 @@
 -- ORDER BY pc_eid DESC
 -- LIMIT 10
 -- ;
-truncate TABLE `openemr_postcalendar_events`;
+-- truncate TABLE `openemr_postcalendar_events`;
 truncate TABLE `telehealth_vc`;
