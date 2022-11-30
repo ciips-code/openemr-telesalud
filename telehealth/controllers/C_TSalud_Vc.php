@@ -36,7 +36,7 @@ define('JITSI_API_AUTH', "Authorization: Bearer " . JITSI_API_TOKEN);
 // $bearToken = ;
 // $authorization = ;
 
-require_once(MAIN_DIR . "interface/globals.php");
+// require_once(MAIN_DIR . "interface/globals.php");
 
 
 /**
@@ -840,7 +840,7 @@ function saveNotify()
         echo  "start saving notification...";
         //getting POS from API
         $data = json_decode(file_get_contents('php://input'), true);
-        print_r($data);
+        echo  "<br>POST Data: ".print_r($data,true);
         if (isset($data['topic'])) {
             echo  "<br>getting status from stautus table...";
             $topic = $data['topic'];
