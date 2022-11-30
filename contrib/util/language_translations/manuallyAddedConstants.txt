@@ -386,7 +386,7 @@ Left Vastus Lateralis
 Less Than
 Less Than or Equal To
 Level of urgency
-License/ID
+Identification document number
 Life partner
 Life threatening severity
 Logging

@@ -6029,7 +6029,7 @@ LH{{left hertel measurement}}
 Liability
 Liability Medical
 Library
-License/ID
+Identification document number
 Licensed Prescriber
 Licensed Prescriber First Name
 Licensed Prescriber Last Name
