@@ -201,7 +201,7 @@ class PatientMenuRole extends MenuRole
         foreach ($menu_restrictions as $key => $value) {
 
             // TELESALUD
-            if (in_array($value->menu_id, ['report', 'documents', 'transactions', 'ledger', 'external_data'])) {
+            if (in_array($value->menu_id, ['report', 'transactions', 'ledger', 'external_data'])) {
                 continue;
             }
             // ./TELESALUD
