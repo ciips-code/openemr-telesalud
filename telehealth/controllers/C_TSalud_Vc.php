@@ -164,11 +164,11 @@ if (isset($_GET['action'])) {
 function dbConn()
 {
     // localserver
-    $servername = "ops-openemr-mysql";
-    // $servername = 'localhost';
-    $username = "openemr";
-    $password = "openemr";
-    $database = "openemr";
+    // $servername = "ops-openemr-mysql";
+    // // $servername = 'localhost';
+    // $username = "openemr";
+    // $password = "openemr";
+    // $database = "openemr";
     // dev server
     $servername = "localhost";
     $username = "admin_devopenemr";
