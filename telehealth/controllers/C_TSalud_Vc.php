@@ -84,16 +84,16 @@ Autoloader::register();
 function dbConn()
 {
     // localserver
-    // $servername = "ops-openemr-mysql";
-    // // $servername = 'localhost';
-    // $username = "openemr";
-    // $password = "openemr";
-    // $database = "openemr";
+    $servername = "ops-openemr-mysql";
+    // $servername = 'localhost';
+    $username = "openemr";
+    $password = "openemr";
+    $database = "openemr";
     // dev server
-    $servername = "localhost";
-    $username = "admin_devopenemr";
-    $password = "BxX7vZb27z";
-    $database = "admin_devopenemr";
+    // $servername = "localhost";
+    // $username = "admin_devopenemr";
+    // $password = "BxX7vZb27z";
+    // $database = "admin_devopenemr";
     //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -976,7 +976,17 @@ function installTelehealh()
     // DELETE FROM registry WHERE `directory`='telehealth_vc';
     return true;
 }
-
+//functions from globals
+// If the label contains any illegal characters, then the script will die.
+function check_file_dir_name($label)
+{
+    if (empty($label) || preg_match('/[^A-Za-z0-9_.-]/', $label)) {
+        error_log("ERROR: The following variable contains invalid characters:" . errorLogEscape($label));
+        die(xlt("ERROR: The following variable contains invalid characters") . ": " . attr($label));
+    } else {
+        return $label;
+    }
+}
 /**
  * For unit testing
  */
