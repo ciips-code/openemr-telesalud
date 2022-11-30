@@ -1,4 +1,4 @@
-// Show Teleconsultation button 
+// Show Videoconsultation button 
 function showVCButton(authUserID, pid) {
     $.ajax({
         type: 'GET',
