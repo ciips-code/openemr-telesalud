@@ -288,7 +288,7 @@ if ($fres) {
 </select></td>
 </tr>
 <tr>
-<td><span class="text"><?php echo xlt('Federal Tax ID'); ?>: </span></td><td><input type="text" name='federaltaxid' style="width:120px;" class="form-control"></td>
+<td><span class="text"><?php echo xlt('Professional identification type'); ?>: </span></td><td><input type="text" name='federaltaxid' style="width:120px;" class="form-control"></td>
 <td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
 <td><input type="text" name="state_license_number" style="width:120px;" class="form-control"></td>
 </tr>

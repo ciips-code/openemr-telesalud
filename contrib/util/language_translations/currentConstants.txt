@@ -4229,7 +4229,7 @@ February
 FECA
 Federal Drug ID
 Federal EIN
-Federal Tax ID
+Professional identification type
 Federally Qualified Health Center
 Fee
 fee

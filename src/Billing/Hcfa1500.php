@@ -651,7 +651,7 @@ class Hcfa1500
             $this->putHcfa($lino, 68, 10, $claim->providerNPI($this->hcfa_proc_index));
         }
 
-        // 25. Federal Tax ID Number
+        // 25. Professional identification type Number
         $this->putHcfa(56, 1, 15, $claim->billingFacilityETIN());
         if ($claim->federalIdType() == 'SY') {
             $this->putHcfa(56, 17, 1, 'X'); // The SSN checkbox

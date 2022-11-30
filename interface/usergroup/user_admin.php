@@ -388,7 +388,7 @@ if ($fres) {
 <?php } ?>
 
 <TR>
-<TD><span class=text><?php echo xlt('Federal Tax ID'); ?>: </span></TD><TD><input type=text name=taxid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaltaxid"]); ?>"></td>
+<TD><span class=text><?php echo xlt('Professional identification type'); ?>: </span></TD><TD><input type=text name=taxid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaltaxid"]); ?>"></td>
 <TD><span class=text><?php echo xlt('DEA Number'); ?>: </span></TD><TD><input type=text name=drugid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaldrugid"]); ?>"></td>
 </TR>
 
