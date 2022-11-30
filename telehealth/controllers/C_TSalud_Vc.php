@@ -84,11 +84,11 @@ Autoloader::register();
 function dbConn()
 {
     // localserver
-    $servername = "ops-openemr-mysql";
-    // $servername = 'localhost';
-    $username = "openemr";
-    $password = "openemr";
-    $database = "openemr";
+    // $servername = "ops-openemr-mysql";
+    // // $servername = 'localhost';
+    // $username = "openemr";
+    // $password = "openemr";
+    // $database = "openemr";
     // dev server
     $servername = "localhost";
     $username = "admin_devopenemr";
@@ -842,7 +842,7 @@ function saveNotify()
         $data = json_decode(file_get_contents('php://input'), true);
         print_r($data);
         if (isset($data['topic'])) {
-            echo  "getting status from stautus table...";
+            echo  "<br>getting status from stautus table...";
             $topic = $data['topic'];
             $data_id = $data['vc']['secret'];
             $appstatus = getappStatus($topic);
