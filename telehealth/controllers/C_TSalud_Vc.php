@@ -86,14 +86,14 @@ function dbConn()
     // localserver
     $servername = "ops-openemr-mysql";
     // $servername = 'localhost';
-    // $username = "openemr";
-    // $password = "openemr";
-    // $database = "openemr";
+    $username = "openemr";
+    $password = "openemr";
+    $database = "openemr";
     // dev server
-    $servername = "localhost";
-    $username = "admin_devopenemr";
-    $password = "BxX7vZb27z";
-    $database = "admin_devopenemr";
+    // $servername = "localhost";
+    // $username = "admin_devopenemr";
+    // $password = "BxX7vZb27z";
+    // $database = "admin_devopenemr";
     //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -990,8 +990,8 @@ $pid = 8;
 $encounter = 1;
 $formid = 25;
 //
-$data_id = '553515e0e1760840501a30b851120776a1804717';
-$medic_secret = '1s5XKwLSSJ';
+$data_id = '6ebdf2bbee988517419b0fbb4682dd81fd0b0f92';
+$medic_secret = 'DZw1PN6ZBs';
 /**
  * 
  */
