@@ -283,7 +283,7 @@ function toggle_password() {
     <TD style="width:180px;"><span class=text><?php echo xlt('Username'); ?>: </span></TD>
     <TD style="width:270px;"><input type="text" name=username style="width:150px;" class="form-control" value="<?php echo attr($iter["username"]); ?>" disabled></td>
 <?php if (empty($GLOBALS['gbl_ldap_enabled']) || empty($GLOBALS['gbl_ldap_exclusions'])) { ?>
-        <TD style="width:200px;"><span class=text>*<?php echo xlt('Your Password'); ?>*: </span></TD>
+        <TD style="width:200px;"><span class=text>*<?php echo xlt('Your user’s administration profile password'); ?>*: </span></TD>
         <TD class='text' style="width:280px;"><input type='password' name=adminPass style="width:150px;"  class="form-control" value="" autocomplete='off'><font class="mandatory"></font></TD>
 <?php } ?>
 </TR>
@@ -388,7 +388,7 @@ if ($fres) {
 <?php } ?>
 
 <TR>
-<TD><span class=text><?php echo xlt('Federal Tax ID'); ?>: </span></TD><TD><input type=text name=taxid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaltaxid"]); ?>"></td>
+<TD><span class=text><?php echo xlt('Professional identification type'); ?>: </span></TD><TD><input type=text name=taxid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaltaxid"]); ?>"></td>
 <TD><span class=text><?php echo xlt('DEA Number'); ?>: </span></TD><TD><input type=text name=drugid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaldrugid"]); ?>"></td>
 </TR>
 
@@ -442,7 +442,7 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
 </tr>
 
 <tr>
-<td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
+<td><span class="text"><?php echo xlt('Professional identification number'); ?>: </span></td>
 <td><input type="text" name="state_license_number" style="width:150px;" class="form-control" value="<?php echo attr($iter["state_license_number"]); ?>"></td>
 <td class='text'><?php echo xlt('NewCrop eRX Role'); ?>:</td>
 <td>

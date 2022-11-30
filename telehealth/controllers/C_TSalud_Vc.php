@@ -837,23 +837,23 @@ function saveNotify()
         $r = array(
             'success' => 'nada'
         );
-        // echo  "start saving notification...";
+        echo  "start saving notification...";
         //getting POS from API
         $data = json_decode(file_get_contents('php://input'), true);
-        // print_r($data);
+        print_r($data);
         if (isset($data['topic'])) {
-            // echo  "getting status from stautus table...";
+            echo  "getting status from stautus table...";
             $topic = $data['topic'];
             $data_id = $data['vc']['secret'];
             $appstatus = getappStatus($topic);
-            // echo  "satus ok and is $appstatus ";
+            echo  "satus ok and is $appstatus ";
             //
             $sql = "SELECT * FROM telehealth_vc where data_id='$data_id';";
             // echo $sql;
             $records = sqlS($sql);
             // print_r($records);
             if ($records) {
-                // echo  "updating appointment status...";
+                echo  "updating appointment status...";
                 $pc_eid = $records['pc_eid'];
                 $medic_secret = $records['medic_secret'];
                 updateScheduleStatus($pc_eid, $appstatus, $data_id, $medic_secret);

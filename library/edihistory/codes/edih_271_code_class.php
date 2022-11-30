@@ -216,7 +216,7 @@ class edih_271_codes
         "NF" => "Natl Assn of Ins Commissn (NAIC) Code",
         "NQ" => "Medicaid Recipient ID Number",
         "NT" => "Administrator's Reference Number",
-        "0B" => "State License Number",
+        "0B" => "Professional identification number",
         "Q4" => "Prior Identifier Number",
         "RB" => "Rate Code Number",
         "SY" => "Social Security Number",
