@@ -283,7 +283,7 @@ function toggle_password() {
     <TD style="width:180px;"><span class=text><?php echo xlt('Username'); ?>: </span></TD>
     <TD style="width:270px;"><input type="text" name=username style="width:150px;" class="form-control" value="<?php echo attr($iter["username"]); ?>" disabled></td>
 <?php if (empty($GLOBALS['gbl_ldap_enabled']) || empty($GLOBALS['gbl_ldap_exclusions'])) { ?>
-        <TD style="width:200px;"><span class=text>*<?php echo xlt('Your Password'); ?>*: </span></TD>
+        <TD style="width:200px;"><span class=text>*<?php echo xlt('Your user’s administration profile password'); ?>*: </span></TD>
         <TD class='text' style="width:280px;"><input type='password' name=adminPass style="width:150px;"  class="form-control" value="" autocomplete='off'><font class="mandatory"></font></TD>
 <?php } ?>
 </TR>

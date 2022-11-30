@@ -233,7 +233,7 @@ function authorized_clicked() {
 </tr>
 <tr>
     <td style="width:150px;"></td><td style="width:220px;"></td>
-    <td style="width:200px;"><span class='text'><?php echo xlt('Your Password'); ?>: </span></td>
+    <td style="width:200px;"><span class='text'><?php echo xlt('Your user’s administration profile password'); ?>: </span></td>
     <td class='text' style="width:280px;"><input type='password' name=adminPass style="width:120px;"  value="" autocomplete='off' class="form-control"><font class="mandatory"></font></td>
 
 </tr>

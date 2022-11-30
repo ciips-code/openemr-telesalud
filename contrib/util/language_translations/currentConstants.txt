@@ -12985,11 +12985,11 @@ Your new credentials have been sent. Check your email inbox and also possibly yo
 your next appointment at
 Your on file email address
 Your one time credential reset link has expired. Reset and try again.
-Your Password
-Your Password Expired. Please change your password.
-Your Password Expires on
+Your user’s administration profile password
+Your user’s administration profile password Expired. Please change your password.
+Your user’s administration profile password Expires on
 Your password expires today. Please change your password now.
-Your Password Expires today. Please change your password.
+Your user’s administration profile password Expires today. Please change your password.
 Your password is your signature
 Your Portal Login Web Address. Bookmark for future logins.
 Your PostCalendar configuration has been reset to use defaults.
