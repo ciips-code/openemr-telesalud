@@ -2,7 +2,7 @@
 function showVCButton(authUserID, pid) {
     $.ajax({
         type: 'GET',
-        url: '/telesalud/controllers/C_TSalud_Vc.php',
+        url: '/telehealth/controllers/C_TSalud_vc.php',
         data: {
             action: 'vcButton',
             pc_aid: authUserID,

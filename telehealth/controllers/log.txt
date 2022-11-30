@@ -1,0 +1,6 @@
+Array
+(
+    [to] => sioy23@gmail.com
+    [subject] => [All in One OPS ] - Nueva video consulta para el 2022-11-24 a las 10:50:00
+    [body] => Hola, XxxXxxXx usted tiene una video consulta médica con el médico Izquierdo Souchay para el día 2022-11-24 a las 10:50:00. <br> <br> Para acceder a la video consulta médica ingrese al siguiente enlace: <br> <a href='https://meet.telesalud.iecs.org.ar:32443/videoconsultation?vc=da99dc46186ed1ae35f93b0d3a8e7afe3c192998' target='_blank'>https://meet.telesalud.iecs.org.ar:32443/videoconsultation?vc=da99dc46186ed1ae35f93b0d3a8e7afe3c192998</a>
+)

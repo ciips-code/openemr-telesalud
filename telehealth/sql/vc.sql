@@ -12,7 +12,7 @@ openemr_postcalendar_events AS c
 INNER JOIN patient_data AS p ON
 c.pc_pid = p.id 
 INNER JOIN users AS m ON c.pc_aid = m.id 
-LEFT join tsalud_vc as vc on c.pc_eid =vc.pc_eid
+LEFT join telehealth_vc as vc on c.pc_eid =vc.pc_eid
 
 WHERE
 c.pc_catid IN (16) and c.pc_eid=1;

@@ -5,8 +5,8 @@
 global $disable_utf8_flag;
 $disable_utf8_flag = false;
 
-//$host: Servicio de MySQL configurado en el arhcivo docker-compose.yml (telesalud-openemr-mysql) 
-$host	= 'telesalud-openemr-mysql';
+//$host: Servicio de MySQL configurado en el arhcivo docker-compose.yml (ops-openemr-mysql) 
+$host	= 'ops-openemr-mysql';
 $port	= '3306';
 $login	= 'openemr';
 $pass	= 'openemr';
