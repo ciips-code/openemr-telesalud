@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Telehealth Video Consultations Module for OpenEMR.
  *
@@ -10,5 +11,31 @@
  * @copyright Copyright (c) 2022 - 2023 YOIS<sioy23@gmail.com>
  * @license   https://github.com/ciips-code/openemr-telesalud/LICENCE
  */
-echo "Nuevo / Edicion ";
-// /**
+class VideoConsultation extends Controller
+{
+    private $dbConn = null;
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function create()
+    {
+        //
+    }
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getLinksButtons()
+    {
+        //
+    }
+    /**
+     * 
+     */
+    public function saveNotification()
+    {
+    }
+}

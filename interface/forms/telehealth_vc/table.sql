@@ -23,15 +23,15 @@ ADD PRIMARY KEY (`pc_eid`);
 -- Table structure for table `telehealth_vc_files`
 --
 DROP table if exists `telehealth_vc_files`;
-CREATE TABLE `telehealth_vc_files` (
-    `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `pc_eid` INT(11) UNSIGNED NOT NULL,
-    `type` VARCHAR(1024),
-    `description` VARCHAR(1024),
-    `file` VARCHAR(1024),
-    `updated` TIMESTAMP NOT NULL,
-    PRIMARY KEY (`id`) USING BTREE
-);
+-- CREATE TABLE `telehealth_vc_files` (
+--     `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+--     `pc_eid` INT(11) UNSIGNED NOT NULL,
+--     `type` VARCHAR(1024),
+--     `description` VARCHAR(1024),
+--     `file` VARCHAR(1024),
+--     `updated` TIMESTAMP NOT NULL,
+--     PRIMARY KEY (`id`) USING BTREE
+-- );
 
 -- -
 -- Telesalud Video Consultations Settins Table 
@@ -102,3 +102,9 @@ VALUES (
     'El paciente anuncia su presencia',
     '@'
   );
+  
+  -- Documents categories
+  delete from categories where name = 'Teleconsultas';
+  delete from categories where name = 'Video Consultation';
+  insert into categories (id,value,name,parent, aco_spec,lft,rght) 
+  VALUES (31,'','Teleconsultas',1,'patients|docs',52,56);
