@@ -5,11 +5,11 @@ CREATE TABLE `tsalud_vc` (
     `success` BOOL,
     `message` VARCHAR (1024),
     `data_id` VARCHAR (1024),
-    `data_valid_from` VARCHAR (1024),
-    `data_valid_to` VARCHAR (1024),
-    `data_patient_url` VARCHAR (1024),
-    `data_medic_url` VARCHAR (1024),
-    `data_data_url` VARCHAR (1024),
+    `valid_from` VARCHAR (1024),
+    `valid_to` VARCHAR (1024),
+    `patient_url` VARCHAR (1024),
+    `medic_url` VARCHAR (1024),
+    `url` VARCHAR (1024),
     `medic_secret` VARCHAR (1024)
 );
 DROP TABLE IF EXISTS tsalud_vc_notify;
