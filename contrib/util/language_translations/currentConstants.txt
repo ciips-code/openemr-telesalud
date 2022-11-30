@@ -10564,7 +10564,7 @@ stat
 State
 State Data Type
 State Lic. #
-State License Number
+Professional identification number
 State list
 State List (write,addonly optional)
 State List (write,addonly optional) (state)

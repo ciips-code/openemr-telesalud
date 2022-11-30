@@ -390,7 +390,7 @@ if ($fres) {
 
 <TR>
 <TD><span class=text><?php echo xlt('Professional identification type'); ?>: </span></TD><TD><input type=text name=taxid style="width:150px;"  class="form-control" value="<?php echo attr($iter["federaltaxid"]); ?>"></td>
-<td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
+<td><span class="text"><?php echo xlt('Professional identification number'); ?>: </span></td>
 <td><input type="text" name="state_license_number" style="width:150px;" class="form-control" value="<?php echo attr($iter["state_license_number"]); ?>"></td>
 </TR>
 
