@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * 
  * 
@@ -24,7 +26,7 @@ $webroot = $_SERVER['DOCUMENT_ROOT'];
 define('VC', 'Teleconsultas');
 define('CLASS_DIR', "$webroot/library/classes/");
 define('SRC_DIR', "$webroot/src/");
-define('COMMON_DIR', "$webroot/src/common/");
+define('COMMON_DIR', "$webroot/src/common");
 define('MAIN_DIR', "$webroot/");
 define('PHP_MAILER_DIR', "$webroot/telehealth/controllers/PHPMailer/src/");
 //
@@ -33,11 +35,13 @@ define('JITSI_API_DATA_URL', 'https://meet.telesalud.iecs.org.ar:32443/api/video
 
 define('JITSI_API_TOKEN', "1|OB00LDC8eGEHCAhKMjtDRUXu9buxOm2SREHzQqPz");
 define('JITSI_API_AUTH', "Authorization: Bearer " . JITSI_API_TOKEN);
-// $bearToken = ;
-// $authorization = ;
 
-// require_once(MAIN_DIR . "interface/globals.php");
 
+
+$_GET['site'] = 'default';
+$ignoreAuth = true;
+//
+require_once(MAIN_DIR . "interface/globals.php");
 
 /**
  * Simple autoloader, so we don't need Composer just for this.
@@ -56,17 +60,19 @@ class Autoloader
             // $file = 'class_'.strtolower(array_pop(explode('\\', $class))).'.php';
             //strtolower
             $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+            // echo  "<BR>$class : $file - After replace bar";
             //comon dir
             $file = str_replace("OpenEMR" . DIRECTORY_SEPARATOR . "Common", COMMON_DIR, $file);
+            // echo  "<BR>$class : $file - After OpenEMR\Common";
             //PHPMAILER
             if (strpos($file, "PHPMailer")) {
                 $file = str_replace("PHPMailer" . DIRECTORY_SEPARATOR, PHP_MAILER_DIR, $file);
                 $file = PHP_MAILER_DIR . $file;
             }
 
-            // echo  "<BR>$class : $file";
+
             if (file_exists($file)) {
-                // echo "<BR>$file";
+                echo  "<BR>$class : $file";
                 require_once $file;
                 return true;
             }
@@ -76,6 +82,80 @@ class Autoloader
 }
 Autoloader::register();
 
+
+/**
+ * For testing
+ */
+
+
+/**
+ * For unit testing
+ */
+// get from get vars
+$pc_aid = isset($_GET['pc_aid']) ? $_GET['pc_aid'] : 0;
+$pc_pid = isset($_GET['pc_pid']) ? $_GET['pc_pid'] : 8;
+$pc_eid = isset($_GET['pc_eid']) ? $_GET['pc_eid'] : 0;
+//
+$medic_secret = isset($_GET['medic_secret']) ? $_GET['medic_secret'] : 'YjWUyBTp7W';
+$data_id = isset($_GET['data_id']) ? $_GET['data_id'] : 'd8a40f11bbe3978fe511cea661feb5e651391a21';
+// hardcoded values
+$base64_content = '';
+$pid = 8;
+$encounter = 1;
+$formid = 25;
+//
+// $data_id = '6ebdf2bbee988517419b0fbb4682dd81fd0b0f92';
+// $medic_secret = 'DZw1PN6ZBs';
+/**
+ * 
+ */
+if (isset($_GET['action'])) {
+    switch ($_GET['action']) {
+        case 'insertEvent':
+            createVc($pc_eid);
+            break;
+        case 'vcButton': // echo "generate link"; //
+            // $links =
+            echo showVCButtonlink($pc_aid, $pc_pid);
+            break;
+        case 'vcNotify':
+            // asve notification test
+            saveNotify();
+        case 'vcGetFiles':
+            //Get files
+            getVcFiles($data_id, $medic_secret);
+        case 'saveFile':
+            // save document file
+            $r = saveDocument($base64_content, $pid, $encounter, $formid);
+            // print_r($r);
+            // case 'updateSchedule':
+            //     // save document file
+            //     $r = updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret);
+            //     // print_r($r);
+        default:
+            break;
+    }
+}
+
+
+
+/**
+ * globals functions
+ */
+// If the label contains any illegal characters, then the script will die.
+// function check_file_dir_name($label)
+// {
+//     if (empty($label) || preg_match('/[^A-Za-z0-9_.-]/', $label)) {
+//         error_log("ERROR: The following variable contains invalid characters:" . errorLogEscape($label));
+//         die(xlt("ERROR: The following variable contains invalid characters") . ": " . attr($label));
+//     } else {
+//         return $label;
+//     }
+// }
+
+/**
+ * end global functons
+ */
 
 /**
  *
@@ -90,10 +170,10 @@ function dbConn()
     $password = "openemr";
     $database = "openemr";
     // dev server
-    $servername = "localhost";
-    $username = "admin_devopenemr";
-    $password = "BxX7vZb27z";
-    $database = "admin_devopenemr";
+    // $servername = "localhost";
+    // $username = "admin_devopenemr";
+    // $password = "BxX7vZb27z";
+    // $database = "admin_devopenemr";
     //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -622,7 +702,7 @@ function getVcFiles($data_id, $medic_secret)
                             // $data_id = $response_data['data']['id'];
                             //get event data
                             $event_data = getEventData($data_id);
-                            // echo "Event data : " . print_r($event_data, true);
+                            echo "Event data : " . print_r($event_data, true);
                             //
                             $patient_id = $event_data['pc_pid'];
                             $encounter = $event_data['pc_eid'];
@@ -975,60 +1055,4 @@ function installTelehealh()
     // DROP table if exists telehealth_vc_topic;
     // DELETE FROM registry WHERE `directory`='telehealth_vc';
     return true;
-}
-//functions from globals
-// If the label contains any illegal characters, then the script will die.
-function check_file_dir_name($label)
-{
-    if (empty($label) || preg_match('/[^A-Za-z0-9_.-]/', $label)) {
-        error_log("ERROR: The following variable contains invalid characters:" . errorLogEscape($label));
-        die(xlt("ERROR: The following variable contains invalid characters") . ": " . attr($label));
-    } else {
-        return $label;
-    }
-}
-/**
- * For unit testing
- */
-// get from get vars
-$pc_aid = isset($_GET['pc_aid']) ? $_GET['pc_aid'] : 0;
-$pc_pid = isset($_GET['pc_pid']) ? $_GET['pc_pid'] : 0;
-$pc_eid = isset($_GET['pc_eid']) ? $_GET['pc_eid'] : 0;
-// hardcoded values
-$base64_content = '';
-$pid = 8;
-$encounter = 1;
-$formid = 25;
-//
-$data_id = '6ebdf2bbee988517419b0fbb4682dd81fd0b0f92';
-$medic_secret = 'DZw1PN6ZBs';
-/**
- * 
- */
-if (isset($_GET['action'])) {
-    switch ($_GET['action']) {
-        case 'insertEvent':
-            createVc($pc_eid);
-            break;
-        case 'vcButton': // echo "generate link"; //
-            // $links =
-            echo showVCButtonlink($pc_aid, $pc_pid);
-            break;
-        case 'vcNotify':
-            // asve notification test
-            saveNotify();
-        case 'vcGetFiles':
-            //Get files
-            getVcFiles($data_id, $medic_secret);
-        case 'saveFile':
-            // save document file
-            $r = saveDocument($base64_content, $pid, $encounter, $formid);
-            // print_r($r);
-            // case 'updateSchedule':
-            //     // save document file
-            //     $r = updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret);
-            //     // print_r($r);
-        default:
-            break;
-    }
 }
