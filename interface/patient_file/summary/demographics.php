@@ -58,7 +58,8 @@ if (isset($_GET['set_pid'])) {
         SessionUtil::setSession('encounter', $encounter);
     }
 }
-//}
+
+
 
 // Note: it would eventually be a good idea to move this into
 // it's own module that people can remove / add if they don't
@@ -964,7 +965,6 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     $sectionCards = $sectionRenderEvents->getCards();
 
                     $t = $twig->getTwig();
-
                     foreach ($sectionCards as $card) {
                         $_auth = $card->getAcl();
                         if (!AclMain::aclCheckCore($_auth[0], $_auth[1])) {
@@ -1174,6 +1174,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         echo $twig->getTwig()->render('patient/card/loader.html.twig', $viewArgs);
                     endif; //end if prw is activated
 
+                    // TELESALUD
+                    /*
                     if (AclMain::aclCheckCore('patients', 'disclosure')) :
                         $authWriteDisclosure = AclMain::aclCheckCore('patients', 'disclosure', '', 'write');
                         $authAddonlyDisclosure = AclMain::aclCheckCore('patients', 'disclosure', '', 'addonly');
@@ -1194,6 +1196,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         ];
                         echo $twig->getTwig()->render('patient/card/loader.html.twig', $viewArgs);
                     endif; // end if disclosures authorized
+                    */
+                    // ./TELESALUD
 
                     if ($GLOBALS['amendments'] && AclMain::aclCheckCore('patients', 'amendment')) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('amendment'));
@@ -1223,6 +1227,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         echo $twig->getTwig()->render('patient/card/amendments.html.twig', $viewArgs);
                     endif; // end amendments authorized
 
+                    // TELESALUD
+                    /*
                     if (AclMain::aclCheckCore('patients', 'lab')) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('lab'));
                         // labdata expand collapse widget
@@ -1250,6 +1256,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         ];
                         echo $twig->getTwig()->render('patient/card/loader.html.twig', $viewArgs);
                     endif; // end labs authorized
+                    */
+                    // ./TELESALUD
 
                     if ($vitals_is_registered && AclMain::aclCheckCore('patients', 'med')) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('vital_sign'));
@@ -1330,7 +1338,6 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     $sectionCards = $sectionRenderEvents->getCards();
 
                     $t = $twig->getTwig();
-
                     foreach ($sectionCards as $card) {
                         $_auth = $card->getAcl();
                         $auth = AclMain::aclCheckCore($_auth[0], $_auth[1]);
@@ -1361,6 +1368,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
 
                         echo $t->render($card->getTemplateFile(), array_merge($card->getTemplateVariables(), $viewArgs));
                     }
+
 
                     if ($GLOBALS['erx_enable']) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('demographics'));
@@ -1393,7 +1401,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         echo $twig->getTwig()->render('patient/card/photo.html.twig', $viewArgs);
                     }
 
+                    // TELESALUD
                     // Advance Directives
+                    /*
                     if ($GLOBALS['advance_directives_warning']) {
                         // advance directives expand collapse widget
 
@@ -1455,6 +1465,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                             echo $twig->getTwig()->render('patient/card/adv_dir.html.twig', $viewArgs);
                         }
                     }  // close advanced dir block
+                    */
+                    // ./TELESALUD
+
 
                     // Show Clinical Reminders for any user that has rules that are permitted.
                     $clin_rem_check = resolve_rules_sql('', '0', true, '', $_SESSION['authUser']);

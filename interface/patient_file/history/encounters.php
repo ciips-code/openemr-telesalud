@@ -280,11 +280,13 @@ function efmouseover(elem, ptid, encid, formname, formid) {
 
     ?>
 
-    <?php if ($billing_view) { ?>
-        <a href='encounters.php?billing=0&issue=<?php echo $issue . $getStringForPage; ?>' class="btn btn-small btn-info" onclick='top.restoreSession()' style='font-size: 11px'><?php echo xlt('To Clinical View'); ?></a>
-    <?php } else { ?>
-        <a href='encounters.php?billing=1&issue=<?php echo $issue . $getStringForPage; ?>' class="btn btn-small btn-info" onclick='top.restoreSession()' style='font-size: 11px'><?php echo xlt('To Billing View'); ?></a>
-    <?php } ?>
+    <!-- TELESALUD -->
+    <?php /* if ($billing_view) {
+        echo "<a href='encounters.php?billing=0&issue=<?php echo $issue . $getStringForPage; ?>' class='btn btn-small btn-info' onclick='top.restoreSession()' style='font-size: 11px'>" . xlt('To Clinical View') . "</a>";
+    } else {
+        echo "<a href='encounters.php?billing=1&issue=<?php echo $issue . $getStringForPage; ?>' class='btn btn-small btn-info' onclick='top.restoreSession()' style='font-size: 11px'>" . xlt('To Billing View') . "</a>";
+    }*/ ?>
+    <!-- ./TELESALUD -->
 
     <span class="float-right">
         <?php echo xlt('Results per page'); ?>:

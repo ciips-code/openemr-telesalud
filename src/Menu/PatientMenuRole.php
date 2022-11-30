@@ -199,6 +199,13 @@ class PatientMenuRole extends MenuRole
         EOT;
         echo $str_top . "\r\n";
         foreach ($menu_restrictions as $key => $value) {
+
+            // TELESALUD
+            if (in_array($value->menu_id, ['report', 'documents', 'transactions', 'ledger', 'external_data'])) {
+                continue;
+            }
+            // ./TELESALUD
+
             if (!empty($value->children)) {
                 // create dropdown if there are children (bootstrap3 horizontal nav bar with dropdown)
                 $class = isset($value->class) ? $value->class : '';
