@@ -32,7 +32,6 @@ DROP table if exists `telehealth_vc_files`;
 --     `updated` TIMESTAMP NOT NULL,
 --     PRIMARY KEY (`id`) USING BTREE
 -- );
-
 -- -
 -- Telesalud Video Consultations Settins Table 
 -- -
@@ -70,41 +69,47 @@ CREATE TABLE `telehealth_vc_topic` (
     PRIMARY KEY (`id`) USING BTREE
 );
 -- -   
-INSERT INTO `telehealth_vc_topic`
-(`topic`,`description`,`value`) 
+INSERT INTO `telehealth_vc_topic` (`topic`, `description`, `value`)
 VALUES (
     'medic-set-attendance',
     'El médico ingresa a la videoconsulta',
     '-'
   ),
- (
+  (
     'medic-unset-attendance',
     'El médico cierra la pantalla de videoconsulta',
     '>'
   ),
-
- (
+  (
     'videoconsultation-started',
     'Se da por iniciada la videoconsulta, esto se da cuando tanto el médico como el paciente están presentes
 ',
     '-'
   ),
-
- (
+  (
     'videoconsultation-finished',
     'El médico presiona el botón Finalizar consulta
 ',
     '-'
   ),
-
- (
+  (
     'patient-set-attendance',
     'El paciente anuncia su presencia',
     '@'
   );
-  
-  -- Documents categories
-  delete from categories where name = 'Teleconsultas';
-  delete from categories where name = 'Video Consultation';
-  insert into categories (id,value,name,parent, aco_spec,lft,rght) 
-  VALUES (31,'','Teleconsultas',1,'patients|docs',52,56);
+-- Documents categories
+delete from categories
+where name = 'Teleconsultas';
+delete from categories
+where name = 'Video Consultation';
+insert into categories (id, value, name, parent, aco_spec, lft, rght)
+VALUES (31, '', 'Teleconsultas', 1, 'patients|docs', 52, 56);
+-- tabla de logs
+drop table if exists telehealth_vc_log;
+CREATE TABLE telehealth_vc_log (
+   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `timestamp` TIMESTAMP  NOT NULL,
+  `data_id` VARCHAR(255) NOT NULL,
+  `status` VARCHAR(30) NOT NULL,
+    PRIMARY KEY (`id`) USING BTREE
+);

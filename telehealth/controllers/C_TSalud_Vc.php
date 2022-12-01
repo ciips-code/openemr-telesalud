@@ -626,15 +626,15 @@ pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
 /**
  * Undocumented function
  *
- * @param [type] $content
+ * @param [type] $data_id
+ * @param [type] $status
  * @return void
  */
-function logFile($content)
+function logVc($data_id, $status)
 {
-    //Something to write to txt log
-    $log  = "User: " . $_SERVER['REMOTE_ADDR'] . ' - ' . date("F j, Y, g:i a") . ": $content " . PHP_EOL;
-    //Save string to log, use FILE_APPEND to append.
-    file_put_contents('./log_' . date("j.n.Y") . '.log', $log, FILE_APPEND);
+    $query = "insert into telehealth_vc_log (data_id,status) VALUES('$data_id','$status')";
+    $conn = dbConn();
+    return $conn->query($query) or trigger_error($conn->error . " " . $query);
 }
 /**
  * Undocumented function
@@ -650,7 +650,7 @@ function updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret)
     if ($conn) {
         $query = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
         $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
-        logFile($status);
+        logVc($data_id,$status);
         //si el medico cierran la videoconsulta
         if ($status == 'videoconsultation-finished') {
             // echo "Status ok getting files..";
