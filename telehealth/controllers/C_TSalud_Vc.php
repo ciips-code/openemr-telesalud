@@ -104,8 +104,6 @@ $pid = 8;
 $encounter = 1;
 $formid = 25;
 //
-// $data_id = '6ebdf2bbee988517419b0fbb4682dd81fd0b0f92';
-// $medic_secret = 'DZw1PN6ZBs';
 /**
  * 
  */
@@ -165,7 +163,6 @@ function dbConn()
 {
     // localserver
     // $servername = "ops-openemr-mysql";
-    // // $servername = 'localhost';
     // $username = "openemr";
     // $password = "openemr";
     // $database = "openemr";
@@ -640,14 +637,15 @@ function updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret)
     $result = false;
     if ($conn) {
         $query = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
+        $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
         //teleconsulta cerrada por el medico
+        //solo cuando cierra la consulta
         if ($status == 'videoconsultation-finished') {
             //get files
+            // echo "Status ok getting files..";
             getVcFiles($data_id, $medic_secret);
-        } else {
-            $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
-            $conn->close();
         }
+        $conn->close();
     }
     return $result;
 }
@@ -702,13 +700,15 @@ function getVcFiles($data_id, $medic_secret)
                             // $data_id = $response_data['data']['id'];
                             //get event data
                             $event_data = getEventData($data_id);
-                            // echo "Event data : " . print_r($event_data, true);
-                            //
-                            $patient_id = $event_data['pc_pid'];
-                            $encounter = $event_data['pc_eid'];
-                            $formid = 25; //$event_data['formID'];
-                            //Save file
-                            saveDocument($filetext, $patient_id, $encounter, $formid);
+                            if (isset($event_data['pc_pid'])) {
+                                // echo "Event data : " . print_r($event_data, true);
+                                //
+                                $patient_id = $event_data['pc_pid'];
+                                $encounter = $event_data['pc_eid'];
+                                $formid = 25; //$event_data['formID'];
+                                //Save file
+                                saveDocument($filetext, $patient_id, $encounter, $formid);
+                            }
                         } else {
                             // echo "<br>$type have not file";
                         }
@@ -920,7 +920,7 @@ function saveNotify()
         // echo  "start saving notification...";
         //getting POS from API
         $data = json_decode(file_get_contents('php://input'), true);
-        // echo  "<br>POST Data: ".print_r($data,true);
+        // echo  "<br>POST Data: " . print_r($data, true);
         if (isset($data['topic'])) {
             // echo  "<br>getting status from stautus table...";
             $topic = $data['topic'];
