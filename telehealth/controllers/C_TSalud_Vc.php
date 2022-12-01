@@ -702,7 +702,7 @@ function getVcFiles($data_id, $medic_secret)
                             // $data_id = $response_data['data']['id'];
                             //get event data
                             $event_data = getEventData($data_id);
-                            echo "Event data : " . print_r($event_data, true);
+                            // echo "Event data : " . print_r($event_data, true);
                             //
                             $patient_id = $event_data['pc_pid'];
                             $encounter = $event_data['pc_eid'];
