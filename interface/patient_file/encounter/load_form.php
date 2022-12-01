@@ -44,3 +44,4 @@ if (substr($_GET["formname"], 0, 3) === 'LBF') {
 if (!empty($GLOBALS['text_templates_enabled'])) { ?>
     <script src="<?php echo $GLOBALS['web_root'] ?>/library/js/CustomTemplateLoader.js"></script>
 <?php } ?>
+
