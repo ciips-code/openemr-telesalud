@@ -887,12 +887,12 @@ function getCodeText($code)
                         </div>
 
                         <div class="form-group col-12">
-                            <label class="col-form-label" for="form_begin"><?php echo ('Fecha de inicio') /*echo xlt('Begin Date and Time');*/ ?>:</label>
+                            <label class="col-form-label" for="form_begin"><?php echo ('Date of onset') ?>:</label>
                             <input type='text' class='datepicker form-control' name='form_begin' id='form_begin' value='<?php echo attr(trim(oeFormatDateTime($irow['begdate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd date of onset, surgery or start of medication'); ?>' autocomplete="off" />
                         </div>
 
                         <div class="form-group col-12" id='row_enddate'>
-                            <label class="col-form-label" for="form_begin"><?php echo ('Fecha de resolución') /*xlt('End Date and Time');*/ ?>:</label>
+                            <label class="col-form-label" for="form_begin"><?php echo ('Resolution date') ?>:</label>
                             <input type='text' class='datepicker form-control' name='form_end' id='form_end' value='<?php echo attr(trim(oeFormatDateTime($irow['enddate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd HH:MM date of recovery or end of medication'); ?>' autocomplete="off" />
                             &nbsp;(<?php echo xlt('leave blank if still active'); ?>)
                         </div>
@@ -962,7 +962,7 @@ function getCodeText($code)
                         <!-- Verification Status for Medication Allergy -->
 
                         <div class="form-group col-12" id='row_verification'>
-                            <label class="col-form-label" for="form_verification"><?php /*echo xlt('Verification Status'); */ echo ('Estado de confirmación')?>:</label>
+                            <label class="col-form-label" for="form_verification"><?php echo xlt('Confirmation status'); ?>:</label>
                             <?php
                             $codeListName = ($thistype == 'medical_problem') ? 'condition-verification' : 'allergyintolerance-verification';
                             echo generate_select_list('form_verification', $codeListName, ($irow['verification'] ?? null), '', '', '', '');
@@ -986,7 +986,7 @@ function getCodeText($code)
                         if ($GLOBALS['ippf_specific']) {
                             echo " style='display:none;'";
                         } ?>>
-                            <label class="col-form-label" for="form_outcome"><?php echo('Estado del problema') /*echo xlt('Outcome'); */?>:</label>
+                            <label class="col-form-label" for="form_outcome"><?php echo xlt('Diagnosis Condition'); ?>:</label>
                             <?php
                             echo generate_select_list('form_outcome', 'outcome', ($irow['outcome'] ?? null), '', '', '', 'outcomeClicked(this);');
                             ?>
