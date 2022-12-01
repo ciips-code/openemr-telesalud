@@ -640,11 +640,11 @@ function updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret)
         $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
         //teleconsulta cerrada por el medico
         //solo cuando cierra la consulta
-        if ($status == 'videoconsultation-finished') {
-            //get files
-            // echo "Status ok getting files..";
-            getVcFiles($data_id, $medic_secret);
-        }
+        // if ($status == 'videoconsultation-finished') {
+        //get files
+        // echo "Status ok getting files..";
+        getVcFiles($data_id, $medic_secret);
+        // }
         $conn->close();
     }
     return $result;
