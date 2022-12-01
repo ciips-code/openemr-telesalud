@@ -641,21 +641,20 @@ function updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret)
         //teleconsulta cerrada por el medico
         //solo cuando cierra la consulta
         // if ($status == 'videoconsultation-finished') {
-        $fileName = './vc-status.log';
+        // saveFile($content);
+        $fileName = 'vc-status.log';
         $content = " - $status  ==  ";
-
         if (file_exists($fileName)) {
             // $content1 = file_get_contents($fileName, true);
             file_put_contents(
                 $fileName,
-                $content,FILE_APPEND
-            );
-        } else {
-            file_put_contents(
-                $fileName,
-                $content
+                $content,
+                FILE_APPEND
             );
         }
+        $fullPath = getcwd();
+        // $file = 'log.txt';
+        file_force_contents("$fullPath/$fileName", $content);
         //get files
         // echo "Status ok getting files..";
         getVcFiles($data_id, $medic_secret);
