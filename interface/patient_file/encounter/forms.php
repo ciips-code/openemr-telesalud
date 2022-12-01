@@ -615,6 +615,7 @@ $menu = $eventDispatcher->dispatch($encounterMenuEvent, EncounterMenuEvent::MENU
 
 $twig = new TwigContainer(null, $GLOBALS['kernel']);
 $t = $twig->getTwig();
+
 echo $t->render('encounter/forms/navbar.html.twig', [
     'encounterDate' => oeFormatShortDate($encounter_date),
     'patientName' => $patientName,
@@ -622,6 +623,12 @@ echo $t->render('encounter/forms/navbar.html.twig', [
     'enableFollowUpEncounters' => $GLOBALS['enable_follow_up_encounters'],
     'menuArray' => $menu->getMenuData(),
 ]);
+/*
+echo "<pre>";
+print_r($menu->getMenuData());
+echo "</pre>";
+die();
+*/
 ?>
 
 <div id="encounter_forms" class="mx-1">
@@ -1004,5 +1011,15 @@ if (!$pass_sens_squad) {
 ?>
 
 </div> <!-- end large encounter_forms DIV -->
+    <script>
+        // TELESALUD
+        if(typeof load_location === 'undefined') {
+            function load_location(location) {
+                top.restoreSession();
+                document.location = location;
+            }
+        }
+        // ./TELESALUD
+    </script>
 </body>
 </html>
