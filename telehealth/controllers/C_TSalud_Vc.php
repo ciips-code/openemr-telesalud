@@ -623,7 +623,19 @@ pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
     $conn = dbConn();
     return $conn->query($query) or trigger_error($conn->error . " " . $query);
 }
-
+/**
+ * Undocumented function
+ *
+ * @param [type] $content
+ * @return void
+ */
+function logFile($content)
+{
+    //Something to write to txt log
+    $log  = "User: " . $_SERVER['REMOTE_ADDR'] . ' - ' . date("F j, Y, g:i a") . ": $content " . PHP_EOL;
+    //Save string to log, use FILE_APPEND to append.
+    file_put_contents('./log_' . date("j.n.Y") . '.log', $log, FILE_APPEND);
+}
 /**
  * Undocumented function
  *
@@ -638,27 +650,13 @@ function updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret)
     if ($conn) {
         $query = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
         $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
-        //teleconsulta cerrada por el medico
-        //solo cuando cierra la consulta
-        // if ($status == 'videoconsultation-finished') {
-        // saveFile($content);
-        $fileName = 'vc-status.log';
-        $content = " - $status  ==  ";
-        if (file_exists($fileName)) {
-            // $content1 = file_get_contents($fileName, true);
-            file_put_contents(
-                $fileName,
-                $content,
-                FILE_APPEND
-            );
+        logFile($status);
+        //si el medico cierran la videoconsulta
+        if ($status == 'videoconsultation-finished') {
+            // echo "Status ok getting files..";
+            //Obtener y guardar adjuntos
+            getVcFiles($data_id, $medic_secret);
         }
-        $fullPath = getcwd();
-        // $file = 'log.txt';
-        file_force_contents("$fullPath/$fileName", $content);
-        //get files
-        // echo "Status ok getting files..";
-        getVcFiles($data_id, $medic_secret);
-        // }
         $conn->close();
     }
     return $result;
@@ -673,7 +671,6 @@ function updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret)
 function getVcFiles($data_id, $medic_secret)
 {
     $result = false;
-
     try {
         $data = array(
             "vc" => $data_id,
@@ -737,7 +734,6 @@ function getVcFiles($data_id, $medic_secret)
         //
         echo $e;
         // Error: Duplicate entry '1' for key 'PRIMARY' //
-
     }
     return $result;
     // print_r();
