@@ -643,16 +643,16 @@ function logVc($data_id, $status)
  * @param [type] $status
  * @return void
  */
-function updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret)
+function updateScheduleStatus($pc_eid, $topic, $status, $data_id, $medic_secret)
 {
     $conn = dbConn();
     $result = false;
     if ($conn) {
         $query = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
         $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
-        logVc($data_id,$status);
+        logVc($data_id, $topic);
         //si el medico cierran la videoconsulta
-        if ($status == 'videoconsultation-finished') {
+        if ($topic == 'videoconsultation-finished') {
             // echo "Status ok getting files..";
             //Obtener y guardar adjuntos
             getVcFiles($data_id, $medic_secret);
@@ -946,7 +946,7 @@ function saveNotify()
                 // echo  "updating appointment status...";
                 $pc_eid = $records['pc_eid'];
                 $medic_secret = $records['medic_secret'];
-                updateScheduleStatus($pc_eid, $appstatus, $data_id, $medic_secret);
+                updateScheduleStatus($pc_eid, $topic, $appstatus, $data_id, $medic_secret);
             }
             $r = array(
                 'success' => 'ok'
