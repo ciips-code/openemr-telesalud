@@ -641,7 +641,7 @@ function updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret)
         //teleconsulta cerrada por el medico
         //solo cuando cierra la consulta
         // if ($status == 'videoconsultation-finished') {
-        $fileName = 'vc-status.log';
+        $fileName = './vc-status.log';
         $content = " - $status  ==  ";
 
         if (file_exists($fileName)) {
