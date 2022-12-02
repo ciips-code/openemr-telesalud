@@ -14,6 +14,8 @@ CREATE TABLE `telehealth_vc` (
     `medic_url` VARCHAR(1024),
     `url` VARCHAR(1024),
     `medic_secret` VARCHAR(1024),
+     `evolution` longtext  NULL,
+     `encounter` BIGINT(20)  NULL DEFAULT 0,
     `created` DATETIME NOT NULL,
     `updated` TIMESTAMP NOT NULL
 );
