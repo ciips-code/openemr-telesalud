@@ -114,14 +114,14 @@ Autoloader::register();
 $pc_aid = isset($_GET['pc_aid']) ? $_GET['pc_aid'] : 0;
 $pc_pid = isset($_GET['pc_pid']) ? $_GET['pc_pid'] : 8;
 $pc_eid = isset($_GET['pc_eid']) ? $_GET['pc_eid'] : 0;
-
+$encounter = isset($_GET['encounter']) ? $_GET['encounter'] : 0;
 //
 $medic_secret = isset($_GET['medic_secret']) ? $_GET['medic_secret'] : 'YjWUyBTp7W';
 $data_id = isset($_GET['data_id']) ? $_GET['data_id'] : 'd8a40f11bbe3978fe511cea661feb5e651391a21';
 // hardcoded values
 $base64_content = '';
-$pid = 8;
-$encounter = 1;
+// $pid = 8;
+// $encounter = 1;
 $formid = 25;
 //
 /**
@@ -139,25 +139,31 @@ if (isset($_GET['action'])) {
         case 'vcNotify':
             // asve notification test
             saveNotify();
+            break;
         case 'vcGetFiles':
             //Get files
             getVcFiles($data_id, $medic_secret);
+            break;
         case 'saveFile':
             // save document file
             $r = saveDocument($base64_content, $pid, $encounter, $formid);
+            break;
         case 'saveEncounter':
             // save document file
             // $r = saveEncounter($pid);
+            break;
         case 'getEvolution':
             // save document file
-            echo getEvolution($data_id);
+            echo getEvolution($encounter);
+            break;
         case 'createEcounter':
             // save document file
             //function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
             $provider_id = "8";
             $userauthorized = "8";
             $facility_id = "3";
-            $r = createEcounter("$pid", $provider_id, $userauthorized, $facility_id);
+            $r = createEcounter($data_id, "$pid", $provider_id, $userauthorized, $facility_id);
+            break;
         default:
             break;
     }
@@ -174,7 +180,7 @@ if (isset($_GET['action'])) {
  * @param integer $pc_catid
  * @return void
  */
-function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
+function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
 {
     $facilityService = new FacilityService();
     $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d H:i:s'));
@@ -253,31 +259,35 @@ function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reas
     $mode = 'new';
     // ) {
     $encounter = generate_id();
-    return addForm(
+    // print_r($result);
+    $query = "update telehealth_vc set encounter=$encounter where data_id='$data_id'";
+    $conn = dbConn();
+    $return = $conn->query($query) or trigger_error($conn->error . " " . $query);
+    $result = addForm(
         $encounter,
         xlt('Telehealth Encounter'),
         sqlInsert(
             "INSERT INTO form_encounter SET
-                    date = ?,
-                    onset_date = ?,
-                    reason = ?,
-                    facility = ?,
-                    pc_catid = ?,
-                    facility_id = ?,
-                    billing_facility = ?,
-                    sensitivity = ?,
-                    referral_source = ?,
-                    pid = ?,
-                    encounter = ?,
-                    pos_code = ?,
-                    class_code = ?,
-                    external_id = ?,
-                    parent_encounter_id = ?,
-                    provider_id = ?,
-                    discharge_disposition = ?,
-                    referring_provider_id = ?,
-                    encounter_type_code = ?,
-                    encounter_type_description = ?",
+                date = ?,
+                onset_date = ?,
+                reason = ?,
+                facility = ?,
+                pc_catid = ?,
+                facility_id = ?,
+                billing_facility = ?,
+                sensitivity = ?,
+                referral_source = ?,
+                pid = ?,
+                encounter = ?,
+                pos_code = ?,
+                class_code = ?,
+                external_id = ?,
+                parent_encounter_id = ?,
+                provider_id = ?,
+                discharge_disposition = ?,
+                referring_provider_id = ?,
+                encounter_type_code = ?,
+                encounter_type_description = ?",
             [
                 $date,
                 $onset_date,
@@ -306,6 +316,8 @@ function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reas
         $userauthorized,
         $date
     );
+
+    return $return;
 }
 function saveEncounter($pid, $encounter)
 {
@@ -319,7 +331,7 @@ function saveEncounter($pid, $encounter)
 
             $sql = "SELECT form_id, encounter FROM `forms` WHERE formdir = 'clinical_notes' AND pid = %s AND encounter = %s AND deleted = 0 LIMIT 1";
             $query = sprintf($sql, array($_SESSION["pid"], $_SESSION["encounter"]));
-            print_r($query);
+            // print_r($query);
             // $formid = sqlSuery($query)['form_id'] ?? 0;
             // if (!empty($formid)) {
             //     echo "<script>var message=" .
@@ -453,11 +465,12 @@ where pc_eventDate = current_date()
 /**
  * 
  */
-function getEvolution($data_id){
-    $sql = "SELECT evolution from telehealth_vc where data_id = '$data_id'";
-    $query = sprintf($sql, array($_SESSION["pid"], $_SESSION["encounter"]));
-    $r=sqlS($sql);
-    return $r['evolution'];
+function getEvolution($encounter)
+{
+    $sql = "SELECT * FROM `telehealth_vc` where encounter=$encounter";
+    $r = sqlS($sql);
+    // echo $sql;
+    return isset($r['evolution']) ? $r['evolution'] : '';
 }
 /**
  *
@@ -550,6 +563,7 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
          *      patient_name:paciente-yois
          *      extra[]:hola
          */
+
         $data = array(
             "medic_name" => $calendar_data['medicFullName'],
             "patient_name" => $calendar_data['patientFullName'],
@@ -584,7 +598,8 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
             $userauthorized = $calendar_data['pc_aid'];
             $facility_id = $calendar_data['pc_facility'];
             // $provider_id=, $userauthorized, $facility_id;
-            createEcounter($pid, $provider_id, $userauthorized, $facility_id);
+            $data_id = $vc_data['data']['id'];
+            createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility_id);
             // enviar email de la video consulta al medico
             // sendEmail($calendar_data);
         } else {
@@ -1199,6 +1214,7 @@ function getEventData($data_id)
     vc.data_id,
     e.pc_eid,
     e.pc_pid,
+    vc.encounter,
     IFNULL((SELECT 
                     f.id
                 FROM
