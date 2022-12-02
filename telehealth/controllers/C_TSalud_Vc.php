@@ -27,6 +27,10 @@ define('VC', 'Teleconsultas');
 define('CLASS_DIR', "$webroot/library/classes/");
 define('SRC_DIR', "$webroot/src/");
 define('COMMON_DIR', "$webroot/src/common");
+define('Csrf_DIR', "$webroot/src/common/Csrf");
+define('Uuid_DIR', "$webroot/src/common/Uuid");
+define('Core_DIR', "$webroot/src/Core");
+define('Services_DIR', "$webroot/Services");
 define('MAIN_DIR', "$webroot/");
 define('PHP_MAILER_DIR', "$webroot/telehealth/controllers/PHPMailer/src/");
 //
@@ -36,12 +40,23 @@ define('JITSI_API_DATA_URL', 'https://meet.telesalud.iecs.org.ar:32443/api/video
 define('JITSI_API_TOKEN', "1|OB00LDC8eGEHCAhKMjtDRUXu9buxOm2SREHzQqPz");
 define('JITSI_API_AUTH', "Authorization: Bearer " . JITSI_API_TOKEN);
 
+use OpenEMR\Common\Csrf\CsrfUtils;
+use OpenEMR\Common\Uuid\UuidRegistry;
+use OpenEMR\Core\Header;
+use OpenEMR\Services\ClinicalNotesService;
+use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Services\CodeTypesService;
+use OpenEMR\Services\EncounterService;
+use OpenEMR\Services\FacilityService;
+use OpenEMR\Services\ListService;
 
 
 $_GET['site'] = 'default';
 $ignoreAuth = true;
 //
 require_once(MAIN_DIR . "interface/globals.php");
+require_once("$srcdir/api.inc");
+require_once("$srcdir/forms.inc");
 
 /**
  * Simple autoloader, so we don't need Composer just for this.
@@ -57,22 +72,26 @@ class Autoloader
         // Use default autoload implementation
         spl_autoload_register();
         spl_autoload_register(function ($class) {
-            // $file = 'class_'.strtolower(array_pop(explode('\\', $class))).'.php';
-            //strtolower
+            //
             $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-            // echo  "<BR>$class : $file - After replace bar";
+            echo  "- After replace bar : Clase: $class : Archivo: $file  \n";
             //comon dir
             $file = str_replace("OpenEMR" . DIRECTORY_SEPARATOR . "Common", COMMON_DIR, $file);
-            // echo  "<BR>$class : $file - After OpenEMR\Common";
+            echo  "$class : $file - After OpenEMR\Common \n";
+            //
+            $file = str_replace("OpenEMR" . DIRECTORY_SEPARATOR . "Common" . DIRECTORY_SEPARATOR . "Csrf", Csrf_DIR, $file);
+            echo  "$class : $file - OpenEMR\Common\Csrf\n";
+            $file = str_replace("OpenEMR" . DIRECTORY_SEPARATOR . "Common" . DIRECTORY_SEPARATOR . "Uuid", Uuid_DIR, $file);
+            echo  "$class : $file - OpenEMR\Common\Uuid\n";
+            $file = str_replace("OpenEMR" . DIRECTORY_SEPARATOR . "Services", Services_DIR, $file);
+            echo  "$class : $file - After OpenEMR\Services\n";
             //PHPMAILER
             if (strpos($file, "PHPMailer")) {
                 $file = str_replace("PHPMailer" . DIRECTORY_SEPARATOR, PHP_MAILER_DIR, $file);
                 $file = PHP_MAILER_DIR . $file;
             }
-
-
             if (file_exists($file)) {
-                echo  "<BR>$class : $file";
+                echo  "$class : $file";
                 require_once $file;
                 return true;
             }
@@ -95,6 +114,7 @@ Autoloader::register();
 $pc_aid = isset($_GET['pc_aid']) ? $_GET['pc_aid'] : 0;
 $pc_pid = isset($_GET['pc_pid']) ? $_GET['pc_pid'] : 8;
 $pc_eid = isset($_GET['pc_eid']) ? $_GET['pc_eid'] : 0;
+
 //
 $medic_secret = isset($_GET['medic_secret']) ? $_GET['medic_secret'] : 'YjWUyBTp7W';
 $data_id = isset($_GET['data_id']) ? $_GET['data_id'] : 'd8a40f11bbe3978fe511cea661feb5e651391a21';
@@ -125,35 +145,209 @@ if (isset($_GET['action'])) {
         case 'saveFile':
             // save document file
             $r = saveDocument($base64_content, $pid, $encounter, $formid);
-            // print_r($r);
-            // case 'updateSchedule':
-            //     // save document file
-            //     $r = updateAppStatus($pc_eid, $status, $data_id, $medic_secret);
-            //     // print_r($r);
+        case 'saveEncounter':
+            // save document file
+            // $r = saveEncounter($pid);
+        case 'createEcounter':
+            // save document file
+            //function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
+            $provider_id = "8";
+            $userauthorized = "8";
+            $facility_id = "3";
+            $r = createEcounter("$pid", $provider_id, $userauthorized, $facility_id);
         default:
             break;
     }
 }
 
-
-
 /**
- * globals functions
+ * Undocumented function
+ *
+ * @param [type] $pid
+ * @param [type] $provider_id
+ * @param [type] $userauthorized
+ * @param [type] $facility_id
+ * @param string $reason
+ * @param integer $pc_catid
+ * @return void
  */
-// If the label contains any illegal characters, then the script will die.
-// function check_file_dir_name($label)
-// {
-//     if (empty($label) || preg_match('/[^A-Za-z0-9_.-]/', $label)) {
-//         error_log("ERROR: The following variable contains invalid characters:" . errorLogEscape($label));
-//         die(xlt("ERROR: The following variable contains invalid characters") . ": " . attr($label));
-//     } else {
-//         return $label;
-//     }
-// }
+function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
+{
+    $facilityService = new FacilityService();
+    $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d H:i:s'));
+    $onset_date = null;
+    // $onset_date = isset($_POST['form_onset_date']) ? DateTimeToYYYYMMDDHHMMSS($_POST['form_onset_date']) : null;
+    $sensitivity = null;
+    // $pc_catid = $_POST['pc_catid'] ?? null;
+    // $facility_id = $_POST['facility_id'] ?? null;
+    $billing_facility = '';
+    // $reason = $_POST['reason'] ?? null;
+    $mode = null;
+    $referral_source =  '';
+    $class_code =  '';
+    $pos_code =  null;
+    $parent_enc_id =  null;
+    $encounter_provider =  null;
+    $referring_provider_id =  null;
+    //save therapy group if exist in external_id column
+    $external_id = isset($_POST['form_gid']) ? $_POST['form_gid'] : '';
 
-/**
- * end global functons
- */
+    $discharge_disposition = null;
+    $discharge_disposition = null;
+
+    $facilityresult = $facilityService->getById($facility_id);
+    $facility = $facilityresult['name'];
+
+    // $normalurl = "patient_file/encounter/encounter_top.php";
+
+    // $nexturl = $normalurl;
+
+    // $provider_id = $_SESSION['authUserID'] ? $_SESSION['authUserID'] : 0;
+    // $provider_id = $encounter_provider ? $encounter_provider : $provider_id;
+
+    // $encounter_type = $_POST['encounter_type'] ?? '';
+    $encounter_type_code = null;
+    $encounter_type_description = null;
+    // // we need to lookup the codetype and the description from this if we have one
+    if (!empty($encounter_type)) {
+        $listService = new ListService();
+        $option = $listService->getListOption('encounter-types', $encounter_type);
+        $encounter_type_code = $option['codes'] ?? null;
+        if (!empty($encounter_type_code)) {
+            $codeService = new CodeTypesService();
+            $encounter_type_description = $codeService->lookup_code_description($encounter_type_code) ?? null;
+        } else {
+            // we don't have any codes installed here so we will just use the encounter_type
+            $encounter_type_code = $encounter_type;
+            $encounter_type_description = $option['title'];
+        }
+    }
+    // // TSALUD- ISSUE-#16: Campos obligatorios nueva visita
+    // // Desde globales se ocultan todos los campos del formulario nueva visita. 
+    // // A continuación se asignan los valores obligatorios para que se pueda generar una nueva visita. 
+
+    // // facility_id=3
+    // // pc_catid=5
+    // // class_code='AMB'
+    // // date=fecha actual
+
+    // if ($pc_catid==null) {
+    //     $pc_catid=5;
+    // }
+    // if ($facility_id==null) {
+    //     $facility_id=3;
+    // }
+    // if ($class_code==null) {
+    //     $class_code='ABM';
+    // }
+    // if ($date==null) {
+    $date =date('Y-m-d h:i:s', time());// DateTimeToYYYYMMDDHHMMSS());
+    // }
+
+    echo $date;
+
+    // if (
+    $mode = 'new';
+    // ) {
+    $encounter = generate_id();
+    return addForm(
+        $encounter,
+        xlt('Telehealth Encounter'),
+        sqlInsert(
+            "INSERT INTO form_encounter SET
+                    date = ?,
+                    onset_date = ?,
+                    reason = ?,
+                    facility = ?,
+                    pc_catid = ?,
+                    facility_id = ?,
+                    billing_facility = ?,
+                    sensitivity = ?,
+                    referral_source = ?,
+                    pid = ?,
+                    encounter = ?,
+                    pos_code = ?,
+                    class_code = ?,
+                    external_id = ?,
+                    parent_encounter_id = ?,
+                    provider_id = ?,
+                    discharge_disposition = ?,
+                    referring_provider_id = ?,
+                    encounter_type_code = ?,
+                    encounter_type_description = ?",
+            [
+                $date,
+                $onset_date,
+                $reason,
+                $facility,
+                $pc_catid,
+                "$facility_id",
+                $billing_facility,
+                $sensitivity,
+                $referral_source,
+                $pid,
+                $encounter,
+                $pos_code,
+                $class_code,
+                $external_id,
+                $parent_enc_id,
+                $provider_id,
+                $discharge_disposition,
+                $referring_provider_id,
+                $encounter_type_code,
+                $encounter_type_description
+            ]
+        ),
+        "newpatient",
+        $pid,
+        $userauthorized,
+        $date
+    );
+}
+function saveEncounter($pid, $encounter)
+{
+    $formid = (int) ($_GET['id'] ?? 0);
+
+    $clinicalNotesService = new ClinicalNotesService();
+    $conn = dbConn();
+    if ($conn) {
+
+        if (empty($formid)) {
+
+            $sql = "SELECT form_id, encounter FROM `forms` WHERE formdir = 'clinical_notes' AND pid = %s AND encounter = %s AND deleted = 0 LIMIT 1";
+            $query = sprintf($sql, array($_SESSION["pid"], $_SESSION["encounter"]));
+            print_r($query);
+            // $formid = sqlSuery($query)['form_id'] ?? 0;
+            // if (!empty($formid)) {
+            //     echo "<script>var message=" .
+            //         js_escape(xl("Already a Clinical Notes form for this encounter. Using existing Clinical Notes form.")) .
+            //         "</script>";
+            // }
+        }
+        // if ($formid) {
+        //     $records = $clinicalNotesService->getClinicalNotesForPatientForm($formid, $_SESSION['pid'], $_SESSION['encounter']) ?? [];
+        //     $check_res = [];
+        //     foreach ($records as $record) {
+        //         // we are only going to include active clinical notes, but we leave them as historical records in the system
+        //         // FHIR and other resources still refer to them, they will just be marked as inactive...
+        //         if ($record['activity'] == ClinicalNotesService::ACTIVITY_ACTIVE) {
+        //             $record['uuid'] = UuidRegistry::uuidToString($record['uuid']);
+        //             $check_res[] = $record;
+        //         }
+        //     }
+        // } else {
+        //     $check_res = [
+        //         [
+        //             'id' => 0, 'code' => '', 'codetext' => '', 'clinical_notes_type' => '', 'description' => ''
+        //         ]
+        //     ];
+        // }
+
+        // $clinical_notes_type = $clinicalNotesService->getClinicalNoteTypes();
+        // $clinical_notes_category = $clinicalNotesService->getClinicalNoteCategories();
+    }
+    return true;
+}
 
 /**
  *
@@ -167,10 +361,10 @@ function dbConn()
     $password = "openemr";
     $database = "openemr";
     // dev server
-    $servername = "localhost";
-    $username = "admin_devopenemr";
-    $password = "BxX7vZb27z";
-    $database = "admin_devopenemr";
+    // $servername = "localhost";
+    // $username = "admin_devopenemr";
+    // $password = "BxX7vZb27z";
+    // $database = "admin_devopenemr";
     //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -310,7 +504,8 @@ CONCAT_WS( m.fname, m.mname, m.lname ) AS medicFullName
 , p.email as patientEmail
 ,  vc.patient_url as patientEncounterUrl
 ,  vc.medic_url as medicEncounterUrl
-, m.email as medicEmail
+, m.email as medicEmail,
+c.pc_facility
 
 FROM
 openemr_postcalendar_events AS c 
@@ -372,7 +567,13 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
             // actualizar links de acceso a video consulta en evento
             updateLinksToAgenda($pc_eid, $vc_data);
             //agregar encuentro
-            // addEcounter();
+            //function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
+            $pid = $calendar_data['pc_pid'];
+            $provider_id = $calendar_data['pc_aid'];
+            $userauthorized = $calendar_data['pc_aid'];
+            $facility_id = $calendar_data['pc_facility'];
+            // $provider_id=, $userauthorized, $facility_id;
+            createEcounter($pid, $provider_id, $userauthorized, $facility_id);
             // enviar email de la video consulta al medico
             // sendEmail($calendar_data);
         } else {
@@ -1042,7 +1243,7 @@ function getappStatus($topic)
 function registerTelehealth($directory, $sql_run = 0, $unpackaged = 1, $state = 0)
 {
     // $directory = 'telehealth_vc';
-    // $check = sqlQuery("select state from registry where directory=?", array($directory));
+    // $check = sqlS("select state from registry where directory=?", array($directory));
     // if ($check == false) {
     //     $lines = @file($GLOBALS['srcdir'] . "/../interface/forms/$directory/info.txt");
     //     if ($lines) {
