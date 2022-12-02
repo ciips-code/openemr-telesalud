@@ -128,7 +128,7 @@ if (isset($_GET['action'])) {
             // print_r($r);
             // case 'updateSchedule':
             //     // save document file
-            //     $r = updateScheduleStatus($pc_eid, $status, $data_id, $medic_secret);
+            //     $r = updateAppStatus($pc_eid, $status, $data_id, $medic_secret);
             //     // print_r($r);
         default:
             break;
@@ -162,15 +162,15 @@ if (isset($_GET['action'])) {
 function dbConn()
 {
     // localserver
-    // $servername = "ops-openemr-mysql";
-    // $username = "openemr";
-    // $password = "openemr";
-    // $database = "openemr";
+    $servername = "ops-openemr-mysql";
+    $username = "openemr";
+    $password = "openemr";
+    $database = "openemr";
     // dev server
-    $servername = "localhost";
-    $username = "admin_devopenemr";
-    $password = "BxX7vZb27z";
-    $database = "admin_devopenemr";
+    // $servername = "localhost";
+    // $username = "admin_devopenemr";
+    // $password = "BxX7vZb27z";
+    // $database = "admin_devopenemr";
     //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -367,6 +367,8 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
         if ($vc_data['success']) {
             // agregar video consulta a la bd
             insertVc($pc_eid, $vc_data);
+            //save log
+            logVc($vc_data['data']['id'], 'SCHEDULED', $svc_response);
             // actualizar links de acceso a video consulta en evento
             updateLinksToAgenda($pc_eid, $vc_data);
             //agregar encuentro
@@ -628,11 +630,12 @@ pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
  *
  * @param [type] $data_id
  * @param [type] $status
+ * @param [type] $json_response
  * @return void
  */
-function logVc($data_id, $status)
+function logVc($data_id, $status, $json_response)
 {
-    $query = "insert into telehealth_vc_log (data_id,status) VALUES('$data_id','$status')";
+    $query = "insert into telehealth_vc_log (data_id,status,response) VALUES('$data_id','$status','$json_response')";
     $conn = dbConn();
     return $conn->query($query) or trigger_error($conn->error . " " . $query);
 }
@@ -640,17 +643,17 @@ function logVc($data_id, $status)
  * Undocumented function
  *
  * @param [type] $pc_eid
- * @param [type] $status
+ * @param [type] $appstatus
+ * @param [type] $json_response
  * @return void
  */
-function updateScheduleStatus($pc_eid, $topic, $status, $data_id, $medic_secret)
+function updateAppStatus($pc_eid, $data_id, $topic, $medic_secret, $appstatus)
 {
     $conn = dbConn();
     $result = false;
     if ($conn) {
-        $query = "update openemr_postcalendar_events set pc_apptstatus='$status' where pc_eid=$pc_eid;";
+        $query = "update openemr_postcalendar_events set pc_apptstatus='$appstatus' where pc_eid=$pc_eid;";
         $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
-        logVc($data_id, $topic);
         //si el medico cierran la videoconsulta
         if ($topic == 'videoconsultation-finished') {
             // echo "Status ok getting files..";
@@ -683,6 +686,8 @@ function getVcFiles($data_id, $medic_secret)
         // print_r($api_response);
         //get api response
         $response_data = json_decode($api_response, true);
+        //save log
+        logVc($data_id, 'FILES GET', $api_response);
         // print_r($response_data);
         //db conn
         $conn = dbConn();
@@ -929,24 +934,30 @@ function saveNotify()
         );
         // echo  "start saving notification...";
         //getting POS from API
-        $data = json_decode(file_get_contents('php://input'), true);
+        $json_response = file_get_contents('php://input');
+        $data = json_decode($json_response, true);
         // echo  "<br>POST Data: " . print_r($data, true);
+        //if have topic is a notification
         if (isset($data['topic'])) {
             // echo  "<br>getting status from stautus table...";
             $topic = $data['topic'];
-            $data_id = $data['vc']['secret'];
             $appstatus = getappStatus($topic);
             // echo  "satus ok and is $appstatus ";
             //
+            $data_id = $data['vc']['secret'];
             $sql = "SELECT * FROM telehealth_vc where data_id='$data_id';";
             // echo $sql;
             $records = sqlS($sql);
             // print_r($records);
+            // if exists
             if ($records) {
                 // echo  "updating appointment status...";
                 $pc_eid = $records['pc_eid'];
                 $medic_secret = $records['medic_secret'];
-                updateScheduleStatus($pc_eid, $topic, $appstatus, $data_id, $medic_secret);
+                //save appointment state
+                updateAppStatus($pc_eid, $data_id, $topic, $medic_secret, $appstatus);
+                //save log
+                logVc($data_id, $topic, $json_response);
             }
             $r = array(
                 'success' => 'ok'
