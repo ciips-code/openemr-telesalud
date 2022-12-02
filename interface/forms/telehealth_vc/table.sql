@@ -111,5 +111,6 @@ CREATE TABLE telehealth_vc_log (
   `timestamp` TIMESTAMP  NOT NULL,
   `data_id` VARCHAR(255) NOT NULL,
   `status` VARCHAR(30) NOT NULL,
+  `response` longtext  NULL,
     PRIMARY KEY (`id`) USING BTREE
 );

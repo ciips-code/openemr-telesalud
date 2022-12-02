@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Telehealth Video Consultations Module for OpenEMR.
+ * Telehealth Video Consultations Class.
  *
  * @package   TelesaludVideoConsultationModule
  * @link      https://github.com/ciips-code/openemr-telesalud/
@@ -10,5 +11,14 @@
  * @copyright Copyright (c) 2022 - 2023 YOIS<sioy23@gmail.com>
  * @license   https://github.com/ciips-code/openemr-telesalud/LICENCE
  */
-// echo "Nuevo / Edicion ";
-echo "Nuevo";
+
+use OpenEMR\Common\ORDataObject\ORDataObject;
+
+/**
+ * Undocumented class
+ */
+class FormTelehealthVc extends ORDataObject
+
+{
+    
+}

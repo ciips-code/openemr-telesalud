@@ -13,4 +13,4 @@
  * @license   https://github.com/ciips-code/openemr-telesalud/LICENCE
  */
 
-require("new.php");
+echo "Vista";
