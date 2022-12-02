@@ -148,6 +148,9 @@ if (isset($_GET['action'])) {
         case 'saveEncounter':
             // save document file
             // $r = saveEncounter($pid);
+        case 'getEvolution':
+            // save document file
+            echo getEvolution($data_id);
         case 'createEcounter':
             // save document file
             //function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
@@ -447,7 +450,15 @@ where pc_eventDate = current_date()
     }
     return $r;
 }
-
+/**
+ * 
+ */
+function getEvolution($data_id){
+    $sql = "SELECT evolution from telehealth_vc where data_id = '$data_id'";
+    $query = sprintf($sql, array($_SESSION["pid"], $_SESSION["encounter"]));
+    $r=sqlS($sql);
+    return $r['evolution'];
+}
 /**
  *
  * @param unknown $url            
