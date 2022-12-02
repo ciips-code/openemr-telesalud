@@ -241,7 +241,7 @@ function createEcounter($pid, $provider_id, $userauthorized, $facility_id, $reas
     //     $class_code='ABM';
     // }
     // if ($date==null) {
-    $date =date('Y-m-d h:i:s', time());// DateTimeToYYYYMMDDHHMMSS());
+    $date = date('Y-m-d h:i:s', time()); // DateTimeToYYYYMMDDHHMMSS());
     // }
 
     echo $date;
@@ -936,6 +936,10 @@ function getVcFiles($data_id, $medic_secret)
                     //end loop type files
                 }
             }
+            //Guardar Evolucion
+            $evolution = isset($response_data['data']['evolution']) ? $response_data['data']['evolution'] : '';
+            $query = "UPDATE telehealth_vc set evolution='$evolution' where data_id='$data_id'";
+            $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
             //  end loop types
             //save log
             logVc($data_id, 'Download attached files', $api_response);
