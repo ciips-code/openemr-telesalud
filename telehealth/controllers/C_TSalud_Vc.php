@@ -368,7 +368,7 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
             // agregar video consulta a la bd
             insertVc($pc_eid, $vc_data);
             //save log
-            logVc($vc_data['data']['id'], 'SCHEDULED', $svc_response);
+            logVc($vc_data['data']['id'], 'Scheduled', $svc_response);
             // actualizar links de acceso a video consulta en evento
             updateLinksToAgenda($pc_eid, $vc_data);
             //agregar encuentro
@@ -643,17 +643,22 @@ function logVc($data_id, $status, $json_response)
  * Undocumented function
  *
  * @param [type] $pc_eid
+ * @param [type] $data_id
+ * @param [type] $topic
+ * @param [type] $medic_secret
  * @param [type] $appstatus
  * @param [type] $json_response
  * @return void
  */
-function updateAppStatus($pc_eid, $data_id, $topic, $medic_secret, $appstatus)
+function updateAppStatus($pc_eid, $data_id, $topic, $medic_secret, $appstatus, $json_response)
 {
     $conn = dbConn();
     $result = false;
     if ($conn) {
         $query = "update openemr_postcalendar_events set pc_apptstatus='$appstatus' where pc_eid=$pc_eid;";
         $result = $conn->query($query) or trigger_error($conn->error . " " . $query);
+        //save log
+        logVc($data_id, $topic, $json_response);
         //si el medico cierran la videoconsulta
         if ($topic == 'videoconsultation-finished') {
             // echo "Status ok getting files..";
@@ -686,13 +691,11 @@ function getVcFiles($data_id, $medic_secret)
         // print_r($api_response);
         //get api response
         $response_data = json_decode($api_response, true);
-        //save log
-        logVc($data_id, 'FILES GET', $api_response);
-        // print_r($response_data);
         //db conn
         $conn = dbConn();
         //if connected and files inside answer
         if ($conn && isset($response_data['data']['files'])) {
+            // print_r($response_data);            
             // echo "Getting Files...";
             //get files
             $files = $response_data['data']['files'];
@@ -733,6 +736,8 @@ function getVcFiles($data_id, $medic_secret)
                 }
             }
             //  end loop types
+            //save log
+            logVc($data_id, 'Download attached files', $api_response);
         }
         $result = true;
     } catch (Exception $e) {
@@ -955,9 +960,7 @@ function saveNotify()
                 $pc_eid = $records['pc_eid'];
                 $medic_secret = $records['medic_secret'];
                 //save appointment state
-                updateAppStatus($pc_eid, $data_id, $topic, $medic_secret, $appstatus);
-                //save log
-                logVc($data_id, $topic, $json_response);
+                updateAppStatus($pc_eid, $data_id, $topic, $medic_secret, $appstatus, $json_response);
             }
             $r = array(
                 'success' => 'ok'
