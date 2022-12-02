@@ -462,6 +462,13 @@ $constraints = LBF_Validation::generate_validate_constraints("DEM");
                         $datacols   = $frow['datacols'];
                         $data_type  = $frow['data_type'];
                         $field_id   = $frow['field_id'];
+
+                        // TELESALUD
+                        if (in_array($field_id, ['provider_since_date', 'hipaa_notice']) ) {
+                            continue;
+                        }
+                        // ./TELESALUD
+
                         $list_id    = $frow['list_id'];
                         $currvalue  = '';
 

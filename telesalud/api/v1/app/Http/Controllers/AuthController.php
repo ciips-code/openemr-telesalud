@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 class AuthController extends Controller
 {
     public function register(Request $request) 
@@ -14,7 +15,7 @@ class AuthController extends Controller
 
         $validate = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:telesa_users',
+            'email' => 'required|string|email|max:255|unique:tsalud_users',
             'password' => 'required|string|min:8'
         ]);
 

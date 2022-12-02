@@ -64,7 +64,7 @@ class PatientController extends Controller
      * Devolvemos el registro del paciente
      * que se encuentre por su id
      */
-    public function showOnePatientById($id): array
+    public function showOnePatientById($id)
     {
         return response()->json(Patient::find($id));
     }
@@ -74,7 +74,7 @@ class PatientController extends Controller
      * que se encuentre por su número de 
      * identificación
      */
-    public function showOnePatientByIdentification($identification): array
+    public function showOnePatientByIdentification($identification)
     {
 
     }

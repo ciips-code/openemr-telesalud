@@ -387,7 +387,7 @@ class X12Partner extends ORDataObject
         '27' => 'Carrier ID from HCFA',
         '28' => 'Fiscal Intermediary ID from HCFA',
         '29' => 'Medicare ID from HCFA',
-        '30' => 'U.S. Federal Tax ID Number',
+        '30' => 'U.S. Professional identification type Number',
         '33' => 'NAIC Company Code',
         'ZZ' => 'Mutually Defined',
         );

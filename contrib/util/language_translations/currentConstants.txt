@@ -4101,7 +4101,7 @@ External Database Import Utility
 External Draw Panel
 External Exam
 External Exam Default Values
-External ID
+Identification document type
 External Id
 External identifier
 External Lab
@@ -4229,7 +4229,7 @@ February
 FECA
 Federal Drug ID
 Federal EIN
-Federal Tax ID
+Professional identification type
 Federally Qualified Health Center
 Fee
 fee
@@ -6029,7 +6029,7 @@ LH{{left hertel measurement}}
 Liability
 Liability Medical
 Library
-License/ID
+Identification document number
 Licensed Prescriber
 Licensed Prescriber First Name
 Licensed Prescriber Last Name
@@ -10564,7 +10564,7 @@ stat
 State
 State Data Type
 State Lic. #
-State License Number
+Professional identification number
 State list
 State List (write,addonly optional)
 State List (write,addonly optional) (state)
@@ -12985,11 +12985,11 @@ Your new credentials have been sent. Check your email inbox and also possibly yo
 your next appointment at
 Your on file email address
 Your one time credential reset link has expired. Reset and try again.
-Your Password
-Your Password Expired. Please change your password.
-Your Password Expires on
+Your user’s administration profile password
+Your user’s administration profile password Expired. Please change your password.
+Your user’s administration profile password Expires on
 Your password expires today. Please change your password now.
-Your Password Expires today. Please change your password.
+Your user’s administration profile password Expires today. Please change your password.
 Your password is your signature
 Your Portal Login Web Address. Bookmark for future logins.
 Your PostCalendar configuration has been reset to use defaults.

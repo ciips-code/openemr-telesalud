@@ -72,7 +72,7 @@ class ListService
         $sql .= " ORDER BY `seq` ";
 
         $statementResults = sqlStatementThrowException($sql, $binding);
-
+        
         $results = array();
         while ($row = sqlFetchArray($statementResults)) {
             array_push($results, $row);

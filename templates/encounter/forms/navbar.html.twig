@@ -8,22 +8,28 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <div class="navbar-nav">
       {% for category, details in menuArray %}
-      {% if details.children is iterable %}      
-      {% for item in details.children %}
-      {% set display = (item.menu_name is defined) ? item.menu_name : item.displayText %}
-      {% if item.onclick is defined %}
-      {% set onclick = item.onclick %}
-      {% else %}
-      {% set formURL = (item.href is defined) ? item.href : rootdir ~
-      "/patient_file/encounter/load_form.php?formname=" ~ item.directory|url_encode %}
-      {% set onclick = "openNewForm(" ~ formURL|attr_js ~ "," ~ display|xlFormTitle|attr_js ~ ")" %}
-      {% endif %}
-      <a href="#" class="nav-item nav-link" onclick="{{ onclick }}">{{ display|xlFormTitle|text }}</a> {% endfor %}      
-      {% else %}      
-      <a class="nav-item nav-link" href="#"
-        onclick="openNewForm({{ details.formURL|attr_js }}, {{ details.displayText|xlFormTitle|attr_js }})">{{details.displayText|text
-        }}</a>      
-      {% endif %}
+          {% if details.children is iterable %}
+            {% for item in details.children %}
+                {% set display = (item.menu_name is defined) ? item.menu_name : item.displayText %}
+                {% if item.onclick is defined %}
+                    {% set onclick = item.onclick %}
+                {% else %}
+                    {% set formURL = (item.href is defined) ? item.href : rootdir ~ "/patient_file/encounter/load_form.php?formname=" ~ item.directory|url_encode %}
+                    {% set onclick = "openNewForm(" ~ formURL|attr_js ~ "," ~ display|xlFormTitle|attr_js ~ ")" %}
+                {% endif %}
+                {% if item.directory != 'medical_problem' %}
+                    <a href="#" class="nav-item nav-link" onclick="{{ onclick }}">{{ display|xlFormTitle|text }}</a>
+                {% else %}
+                    <a href="#" class="nav-item nav-link" onclick="return load_location('/interface/patient_file/summary/stats_full.php?active=all&category=medical_problem')">{{ display|xlFormTitle|text }}</a>
+                {% endif %}
+            {% endfor %}
+          {% else %}
+            {% if item.directory == 'medical_problem' %}
+                <a class="nav-item nav-link" href="#" onclick="return load_location('/interface/patient_file/summary/stats_full.php?active=all&category=medical_problem')">{{details.displayText|text}}</a>
+            {% else %}
+                <a class="nav-item nav-link" href="#" onclick="openNewForm({{ details.formURL|attr_js }}, {{ details.displayText|xlFormTitle|attr_js }})">{{details.displayText|text}}</a>
+            {% endif %}
+          {% endif %}
       {% endfor %}
     </div>
   </div>
