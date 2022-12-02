@@ -295,7 +295,10 @@ if (!empty($_POST['form_save'])) {
     if ($issue) {
         $patientIssuesService->updateIssue($issueRecord);
     } else {
-        $issueRecord["date"] = date("Y-m-d H:m:s");
+        // TELESALUD
+        $issueRecord['title'] = 'Medical Problem ' . date("Y-m-d H:m:s");
+        // ./TELESALUD
+        $issueRecord['date'] = date("Y-m-d H:m:s");
         $issueRecord['activity'] = 1;
         $issueRecord['user'] = $_SESSION['authUser'];
         $issueRecord['groupname'] = $_SESSION['authProvider'];
@@ -323,8 +326,10 @@ if (!empty($_POST['form_save'])) {
         sqlStatement($query, array($thispid, $issue, $thisenc));
     }
 
+    /* TELESALUD 
     $tmp_title = $ISSUE_TYPES[$text_type][2] . ": $form_begin " .
         substr($_POST['form_title'], 0, 40);
+    ./TELSALUD */ 
 
     // Close this window and redisplay the updated list of issues.
     //
@@ -509,6 +514,7 @@ function getCodeText($code)
                 document.getElementById('row_severity').style.display = 'none';
                 document.getElementById('row_reaction').style.display = alldisp;
                 document.getElementById('row_verification').style.display = verificationdisp;
+                document.getElementById('row_form_title').style.display = 'none';
 
                 // let element = document.getElementById('form_title');
                 // if (typeof(element) != 'undefined' && element != null) { document.getElementById('form_title').style.display = 'none';}
@@ -536,9 +542,11 @@ function getCodeText($code)
         // If it has a code, add that too.
         function set_text() {
             var f = document.forms[0];
+            /* TELESALUD
             var sel = f.form_titles.options[f.form_titles.selectedIndex];
             f.form_title.value = sel.text;
             f.form_title_id.value = sel.value;
+            ./TELESALUD */
 
             f.form_selected_codes.options.length = 0
 
@@ -587,9 +595,11 @@ function getCodeText($code)
             addSelectedCode(codeKey, codeKey + ' (' + codedesc + ')')
 
             var f = document.forms[0]
+            /* TELESALUD
             if (f.form_title.value == '') {
                 f.form_title.value = codedesc;
             }
+            ./TELESALUD */
         }
 
         function addSelectedCode(codeKey, codeText) {
@@ -723,7 +733,7 @@ function getCodeText($code)
             let display = '';
             <?php echo MedicalDevice::fullOutputJavascript('display', 'data', false); ?>
             document.getElementById('udi_display').innerHTML = display;
-            document.getElementById('form_title').value = data.standard_elements.deviceName;
+            // TELESALUD document.getElementById('form_title').value = data.standard_elements.deviceName;
         }
 
         // Check for errors when the form is submitted.
@@ -741,10 +751,12 @@ function getCodeText($code)
                 return false;
             }
 
+            /* TELESALUD
             if (!f.form_title.value) {
-                alert(<?php echo xlj('Please enter a title!'); ?>);
+                alert(<?php // echo xlj('Please enter a title!'); ?>);
                 return false;
             }
+            ./TELESALUD */ 
 
             top.restoreSession();
             return true;

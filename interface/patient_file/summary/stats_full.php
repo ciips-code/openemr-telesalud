@@ -261,7 +261,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                             onclick="headerSelectionChanged(this, <?php echo attr_js($focustype);?>);"/>
                                     </th>
                                     <?php } ?>
-                                    <th scope="col"><?php echo xlt('Title'); ?></th>
+                                    <!-- TELESALUD
+                                    <th scope="col"><?php // echo xlt('Title'); ?></th>
+                                    ./TELSAUD -->
                                     <th scope="col"><?php echo xlt('Begin'); ?></th>
                                     <th scope="col"><?php echo xlt('End'); ?></th>
                                     <th scope="col"><?php echo xlt('Coding (click for education)'); ?></th>
@@ -372,7 +374,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                 if ($canSelect) {
                                     echo "  <td><input type='checkbox' class='selection-check' id='sel_" . attr($rowid) . "'/></td>\n";
                                 }
-                                echo "  <td class='text-left' id='" . attr($rowid) . "'>" . text($disptitle) . "</td>\n";
+                                // echo "  <td class='text-left' id='" . attr($rowid) . "'>" . text($disptitle) . "</td>\n";
                                 echo "  <td>" . text(trim(oeFormatDateTime($row['begdate']))) . "&nbsp;</td>\n";
                                 echo "  <td>" . text(trim(oeFormatDateTime($row['enddate']))) . "&nbsp;</td>\n";
                                 // both codetext and statusCompute have already been escaped above with htmlspecialchars)
