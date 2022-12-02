@@ -615,6 +615,7 @@ $menu = $eventDispatcher->dispatch($encounterMenuEvent, EncounterMenuEvent::MENU
 
 $twig = new TwigContainer(null, $GLOBALS['kernel']);
 $t = $twig->getTwig();
+
 echo $t->render('encounter/forms/navbar.html.twig', [
     'encounterDate' => oeFormatShortDate($encounter_date),
     'patientName' => $patientName,
@@ -622,6 +623,12 @@ echo $t->render('encounter/forms/navbar.html.twig', [
     'enableFollowUpEncounters' => $GLOBALS['enable_follow_up_encounters'],
     'menuArray' => $menu->getMenuData(),
 ]);
+/*
+echo "<pre>";
+print_r($menu->getMenuData());
+echo "</pre>";
+die();
+*/
 ?>
 
 <div id="encounter_forms" class="mx-1">
@@ -668,13 +675,15 @@ echo $t->render('encounter/forms/navbar.html.twig', [
 
 <div class='encounter-summary-column'>
 <?php if ($GLOBALS['enable_amc_prompting']) { ?>
+    <!-- TELESALUD
+
     <div class="float-right border border-dark mr-2">
         <div class="float-left m-2">
           <table>
             <tr>
               <td>
               <?php // Display the education resource checkbox (AMC prompting)
-                  $itemAMC = amcCollect("patient_edu_amc", $pid, 'form_encounter', $encounter);
+                  // $itemAMC = amcCollect("patient_edu_amc", $pid, 'form_encounter', $encounter);
                 ?>
               <?php if (!(empty($itemAMC))) { ?>
                   <input type="checkbox" id="prov_edu_res" checked />
@@ -683,13 +692,13 @@ echo $t->render('encounter/forms/navbar.html.twig', [
               <?php } ?>
             </td>
             <td>
-                <span class="text"><?php echo xlt('Provided Education Resource(s)?') ?></span>
+                <span class="text"><?php // echo xlt('Provided Education Resource(s)?') ?></span>
             </td>
             </tr>
             <tr>
             <td>
             <?php // Display the Provided Clinical Summary checkbox (AMC prompting)
-                $itemAMC = amcCollect("provide_sum_pat_amc", $pid, 'form_encounter', $encounter);
+                // $itemAMC = amcCollect("provide_sum_pat_amc", $pid, 'form_encounter', $encounter);
             ?>
             <?php if (!(empty($itemAMC))) { ?>
                 <input type="checkbox" id="provide_sum_pat_flag" checked />
@@ -698,11 +707,11 @@ echo $t->render('encounter/forms/navbar.html.twig', [
             <?php } ?>
             </td>
             <td>
-                <span class="text"><?php echo xlt('Provided Clinical Summary?') ?></span>
+                <span class="text"><?php // echo xlt('Provided Clinical Summary?') ?></span>
             </td>
             </tr>
             <?php // Display the medication reconciliation checkboxes (AMC prompting)
-                $itemAMC = amcCollect("med_reconc_amc", $pid, 'form_encounter', $encounter);
+                // $itemAMC = amcCollect("med_reconc_amc", $pid, 'form_encounter', $encounter);
             ?>
             <?php if (!(empty($itemAMC))) { ?>
                 <tr>
@@ -710,7 +719,7 @@ echo $t->render('encounter/forms/navbar.html.twig', [
                         <input type="checkbox" id="trans_trand_care" checked />
                     </td>
                     <td>
-                        <span class="text"><?php echo xlt('Transition/Transfer of Care?') ?></span>
+                        <span class="text"><?php // echo xlt('Transition/Transfer of Care?') ?></span>
                     </td>
                 </tr>
                 </table>
@@ -724,7 +733,7 @@ echo $t->render('encounter/forms/navbar.html.twig', [
                             <?php } ?>
                         </td>
                         <td>
-                            <span class="text"><?php echo xlt('Medication Reconciliation Performed?') ?></span>
+                            <span class="text"><?php // echo xlt('Medication Reconciliation Performed?') ?></span>
                         </td>
                     </tr>
                     <tr>
@@ -736,7 +745,7 @@ echo $t->render('encounter/forms/navbar.html.twig', [
                         <?php } ?>
                         </td>
                         <td>
-                            <span class="text"><?php echo xlt('Summary Of Care Provided?') ?></span>
+                            <span class="text"><?php // echo xlt('Summary Of Care Provided?') ?></span>
                         </td>
                     </tr>
             </table>
@@ -746,7 +755,7 @@ echo $t->render('encounter/forms/navbar.html.twig', [
                         <input type="checkbox" id="trans_trand_care" />
                     </td>
                     <td>
-                        <span class="text"><?php echo xlt('Transition/Transfer of Care?') ?></span>
+                        <span class="text"><?php // echo xlt('Transition/Transfer of Care?') ?></span>
                     </td>
                 </tr>
                 </table>
@@ -756,7 +765,7 @@ echo $t->render('encounter/forms/navbar.html.twig', [
                             <input type="checkbox" id="med_reconc_perf" disabled />
                         </td>
                         <td>
-                            <span class="text"><?php echo xlt('Medication Reconciliation Performed?') ?></span>
+                            <span class="text"><?php // echo xlt('Medication Reconciliation Performed?') ?></span>
                         </td>
                     </tr>
                     <tr>
@@ -764,7 +773,7 @@ echo $t->render('encounter/forms/navbar.html.twig', [
                             <input type="checkbox" id="soc_provided" disabled />
                         </td>
                         <td>
-                            <span class="text"><?php echo xlt('Summary of Care Provided?') ?></span>
+                            <span class="text"><?php // echo xlt('Summary of Care Provided?') ?></span>
                         </td>
                     </tr>
                 </table>
@@ -772,7 +781,7 @@ echo $t->render('encounter/forms/navbar.html.twig', [
         </div>
     </div>
 <?php } ?>
-</div>
+</div> ./ TELESALUD -->
 
 </div>
 
@@ -1002,5 +1011,15 @@ if (!$pass_sens_squad) {
 ?>
 
 </div> <!-- end large encounter_forms DIV -->
+    <script>
+        // TELESALUD
+        if(typeof load_location === 'undefined') {
+            function load_location(location) {
+                top.restoreSession();
+                document.location = location;
+            }
+        }
+        // ./TELESALUD
+    </script>
 </body>
 </html>

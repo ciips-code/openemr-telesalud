@@ -117,28 +117,20 @@ switch ($search_any_type) {
             <!-- ko if: patient -->
             <!-- ko with: patient -->
             <div class="btn-group btn-group-sm">               
-				<a class="btn btn-primary" data-bind="click: clickEncounterList" href="#" title="<?php echo xla("Visit History"); ?>">
+				<div>
+                <a class="btn btn-primary" data-bind="click: clickEncounterList" href="#" title="<?php echo xla("Visit History"); ?>">
                     <?php echo xla("Visit History"); ?>
-                </a> &nbsp		
-                
-               
+                </a> &nbsp
+                </div>
+                <div>
 				<a class="btn btn-primary" data-bind="click: clickNewEncounter" href="#"
                     title="<?php echo xla("New Encounter"); ?>">
                     <?php echo xla("New Encounter"); ?>
                 </a>
-				<?php /*include_once('../../../telesalud/controllers/C_TSalud_Vc.php'); */?>
-				&nbsp
-				 
-				 <a class="btn btn-primary" href="https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=37138231bca5255abbc13936ba997f1cfd4652bd&medic=e07uDsZDV8" title="<?php echo xla("Teleconsulta Medico"); ?>" target="_blank">
-                    <?php echo xla("Teleconsulta Medico"); ?>
-                </a> 
-				
-				&nbsp
-				 
-				 <a class="btn btn-primary" href="https://srv3.integrandosalud.com/os-telesalud/videoconsultation?vc=37138231bca5255abbc13936ba997f1cfd4652bd" title="<?php echo xla("Teleconsulta Paciente"); ?>" target="_blank">
-                    <?php echo xla("Teleconsulta Paciente"); ?>
-                </a> 
-				
+                </div>
+                
+                <!-- TELESALUD -->
+                <div id="vcButton"> </div>
             </div>
 
             <!-- ko if: encounterArray().length > 0 -->

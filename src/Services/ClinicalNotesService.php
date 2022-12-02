@@ -313,13 +313,16 @@ class ClinicalNotesService extends BaseService
             throw new \InvalidArgumentException("formid, and pid must all be populated");
         }
 
+        // BEGIN TELESALUD
         $sql = "SELECT fcn.*
                         ,lo_category.title AS category_title
                         ,lo_category.notes AS category_code
                 FROM `form_clinical_notes` fcn
                 LEFT JOIN list_options lo_category ON lo_category.option_id = fcn.clinical_notes_category
                 LEFT JOIN list_options lo_type ON lo_type.option_id = fcn.clinical_notes_type
-                WHERE fcn.`form_id`=? AND fcn.`pid` = ? AND fcn.`encounter` = ?";
+                WHERE fcn.`form_id`=? AND fcn.`pid` = ? AND fcn.`encounter` = ?
+                GROUP BY fcn.id";
+        // END TELESALUD
         return QueryUtils::fetchRecords($sql, array($formid, $pid, $encounter));
     }
 
@@ -368,7 +371,12 @@ class ClinicalNotesService extends BaseService
 
         $selectList = [];
         foreach ($optionsList as $option) {
-            $selectList[] = ['value' => $option['option_id'], 'code' => $option['notes'], 'title' => $option['title']];
+            $selectList[] = ['value' => $option['option_id'], 'code' => $option['notes'], 'title' => $option['title']
+        /**
+         * include is_default this is necessary for the function getDefaultSelectedOption
+         */
+            , 'is_default' => $option['is_default']
+        ];
         }
         return $selectList;
     }

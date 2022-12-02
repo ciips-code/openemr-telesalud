@@ -121,11 +121,20 @@ $display_current_medications_below = 1;
 
 // Process Medical Problems, Allergies, and Medications
 foreach ($ISSUE_TYPES as $key => $arr) {
+
+    // TELESALUD
+    if (in_array($key, ['allergy', 'medication'])) {
+        continue;
+    }
+    // ./TELESALUD
+
     // Skip if user has no access to this issue type.
     if (!AclMain::aclCheckIssue($key)) {
         continue;
     }
 
+    // TELESALUD
+    /*
     if ($old_key == "medication" && $GLOBALS['erx_enable'] && $erx_upload_complete == 1) {
         $display_current_medications_below = 0;
 
@@ -157,6 +166,8 @@ foreach ($ISSUE_TYPES as $key => $arr) {
             $old_key = '';
         }
     }
+    */
+    // ./TELESALUD
 
     $issues = getListData($pid, $key);
 
@@ -241,6 +252,8 @@ foreach (['treatment_protocols', 'injury_log'] as $formname) {
 }
 
 // Render the Immunizations card if turned on
+// TELESALUD
+/*
 if (!$GLOBALS['disable_immunizations'] && !$GLOBALS['weight_loss_clinic']) :
     $sql = "SELECT i1.id AS id, i1.immunization_id AS immunization_id, i1.cvx_code AS cvx_code, c.code_text_short AS cvx_text,
                 IF(i1.administered_date, concat(i1.administered_date,' - ',c.code_text_short),
@@ -283,8 +296,12 @@ if (!$GLOBALS['disable_immunizations'] && !$GLOBALS['weight_loss_clinic']) :
         'imx' => $imxList,
     ]);
 endif; // End immunizations
+*/
+// ./TELESALUD
 
 // Render the Prescriptions card if turned on
+// TELESALUD
+/*
 if (!$GLOBALS['disable_prescriptions'] && AclMain::aclCheckCore('patients', 'rx')) :
     if ($GLOBALS['erx_enable'] && $display_current_medications_below == 1) {
         $sql = "SELECT * FROM prescriptions WHERE patient_id = ? AND active = '1'";
@@ -353,6 +370,8 @@ if (!$GLOBALS['disable_prescriptions'] && AclMain::aclCheckCore('patients', 'rx'
 
     echo $t->render('patient/card/rx.html.twig', $viewArgs);
 endif;
+*/
+// ./TELESALUD
 
 // Render Old Medications card
 if ($erx_upload_complete == 1) {
