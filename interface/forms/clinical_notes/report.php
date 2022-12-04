@@ -47,11 +47,13 @@ function clinical_notes_report($pid, $encounter, $cols, $id)
             <tbody>
             <?php
             foreach ($data as $key => $value) {
+                print "Mostrando valores del data";
+                print($value);
                 ?>
                 <tr>
-                    <!-- TELE SALUD -->
-                    <td class="border p-1"><span class='text'><?php echo text($value['date']) . ' ' . text($value['time']); ?></span></td>
-                    <!-- ./TELE SALUD -->
+                    <!-- TELESALUD -->
+                    <td class="border p-1"><span class='text'><?php echo text($value['date']); ?></span></td>
+                    <!-- TELESALUD -->
                     <td class="border p-1"><span class='text text-wrap'><?php echo text($value['codetext']); ?></span></td>
                     <td class="border p-1"><span class='text'><?php echo text($value['description']); ?></span></td>
                     <td class="border p-1"><span class='text'><?php echo text($value['user']); ?></span></td>
