@@ -986,7 +986,9 @@ if (
         echo "class='tab " . ($divnos == 1 ? 'd-block' : 'd-none') . "'>";
 
         // Use the form's report.php for display.  Forms with names starting with LBF
-        // are list-based forms sharing a single collection of code.
+        // are list-based forms sharing a single collection of code.      
+        // Fix: $encounter = 0 so get session encounter value 
+        $encounter=$_SESSION['encounter'];
         //
         if (substr($formdir, 0, 3) == 'LBF') {
             include_once($GLOBALS['incdir'] . "/forms/LBF/report.php");
