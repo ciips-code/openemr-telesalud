@@ -1,0 +1,1 @@
+ALTER TABLE `form_clinical_notes` CHANGE `date` `date` DATETIME NULL DEFAULT NULL;

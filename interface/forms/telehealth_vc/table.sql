@@ -4,20 +4,20 @@
 -- -
 DROP table if exists telehealth_vc;
 CREATE TABLE `telehealth_vc` (
-    `pc_eid` INT(11) UNSIGNED NOT NULL,
-    `success` BOOL,
-    `message` VARCHAR(1024),
-    `data_id` VARCHAR(1024),
-    `valid_from` VARCHAR(1024),
-    `valid_to` VARCHAR(1024),
-    `patient_url` VARCHAR(1024),
-    `medic_url` VARCHAR(1024),
-    `url` VARCHAR(1024),
-    `medic_secret` VARCHAR(1024),
-     `evolution` longtext  NULL,
-     `encounter` BIGINT(20)  NULL DEFAULT 0,
-    `created` DATETIME NOT NULL,
-    `updated` TIMESTAMP NOT NULL
+  `pc_eid` INT(11) UNSIGNED NOT NULL,
+  `success` BOOL,
+  `message` VARCHAR(1024),
+  `data_id` VARCHAR(1024),
+  `valid_from` VARCHAR(1024),
+  `valid_to` VARCHAR(1024),
+  `patient_url` VARCHAR(1024),
+  `medic_url` VARCHAR(1024),
+  `url` VARCHAR(1024),
+  `medic_secret` VARCHAR(1024),
+  `evolution` LONGTEXT NULL,
+  `encounter` BIGINT(20) NULL DEFAULT 0,
+  `created` DATETIME NOT NULL,
+  `updated` TIMESTAMP NOT NULL
 );
 ALTER TABLE `telehealth_vc`
 ADD PRIMARY KEY (`pc_eid`);
@@ -25,28 +25,19 @@ ADD PRIMARY KEY (`pc_eid`);
 -- Table structure for table `telehealth_vc_files`
 --
 DROP table if exists `telehealth_vc_files`;
--- CREATE TABLE `telehealth_vc_files` (
---     `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
---     `pc_eid` INT(11) UNSIGNED NOT NULL,
---     `type` VARCHAR(1024),
---     `description` VARCHAR(1024),
---     `file` VARCHAR(1024),
---     `updated` TIMESTAMP NOT NULL,
---     PRIMARY KEY (`id`) USING BTREE
--- );
 -- -
 -- Telesalud Video Consultations Settins Table 
 -- -
 DROP table if exists telehealth_vc_config;
 CREATE TABLE `telehealth_vc_config` (
-    `smtp_server` VARCHAR(1024),
-    `smtp_user` VARCHAR(1024),
-    `smtp_password` VARCHAR(1024),
-    `smtp_port` VARCHAR(1024),
-    `smtp_ssl_verify_peer` VARCHAR(1024),
-    `smtp_ssl_verify_peer_name` VARCHAR(1024),
-    `vc_api_url` VARCHAR(1024),
-    `vc_api_token` VARCHAR(1024)
+  `smtp_server` VARCHAR(1024),
+  `smtp_user` VARCHAR(1024),
+  `smtp_password` VARCHAR(1024),
+  `smtp_port` VARCHAR(1024),
+  `smtp_ssl_verify_peer` VARCHAR(1024),
+  `smtp_ssl_verify_peer_name` VARCHAR(1024),
+  `vc_api_url` VARCHAR(1024),
+  `vc_api_token` VARCHAR(1024)
 );
 INSERT INTO `telehealth_vc_config`
 VALUES (
@@ -64,11 +55,23 @@ VALUES (
 -- -
 DROP table if exists telehealth_vc_topic;
 CREATE TABLE `telehealth_vc_topic` (
-    `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `topic` VARCHAR(30) NULL,
-    `description` VARCHAR(255) NULL,
-    `value` VARCHAR(10) NULL,
-    PRIMARY KEY (`id`) USING BTREE
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `topic` VARCHAR(30) NULL,
+  `description` VARCHAR(255) NULL,
+  `value` VARCHAR(10) NULL,
+  PRIMARY KEY (`id`) USING BTREE
+);
+-- 
+-- tabla de logs
+-- 
+drop table if exists telehealth_vc_log;
+CREATE TABLE telehealth_vc_log (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `timestamp` TIMESTAMP NOT NULL,
+  `data_id` VARCHAR(255) NOT NULL,
+  `status` VARCHAR(30) NOT NULL,
+  `response` longtext NULL,
+  PRIMARY KEY (`id`) USING BTREE
 );
 -- -   
 INSERT INTO `telehealth_vc_topic` (`topic`, `description`, `value`)
@@ -105,14 +108,12 @@ where name = 'Teleconsultas';
 delete from categories
 where name = 'Video Consultation';
 insert into categories (id, value, name, parent, aco_spec, lft, rght)
-VALUES (31, '', 'Teleconsultas', 1, 'patients|docs', 52, 56);
--- tabla de logs
-drop table if exists telehealth_vc_log;
-CREATE TABLE telehealth_vc_log (
-   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `timestamp` TIMESTAMP  NOT NULL,
-  `data_id` VARCHAR(255) NOT NULL,
-  `status` VARCHAR(30) NOT NULL,
-  `response` longtext  NULL,
-    PRIMARY KEY (`id`) USING BTREE
-);
+VALUES (
+    31,
+    '',
+    'Teleconsultas',
+    1,
+    'patients|docs',
+    52,
+    56
+  );

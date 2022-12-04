@@ -26,11 +26,10 @@ function clinical_notes_report($pid, $encounter, $cols, $id)
 {
     $count = 0;
     $clinicalNotesService = new ClinicalNotesService();
-    $records = $clinicalNotesService->getClinicalNotesForPatientForm($id, $pid, $encounter) ?? [];
+   $records = $clinicalNotesService->getClinicalNotesForPatientForm($id, $pid, $encounter) ?? [];
     $data = array_filter($records, function ($val) {
         return $val['activity'] == ClinicalNotesService::ACTIVITY_ACTIVE;
-    });
-
+    });    
     if ($data) {
         ?>
         <table class="table w-100">
@@ -50,7 +49,7 @@ function clinical_notes_report($pid, $encounter, $cols, $id)
                 ?>
                 <tr>
                     <!-- TELE SALUD -->
-                    <td class="border p-1"><span class='text'><?php echo text($value['date']) . ' ' . text($value['time']); ?></span></td>
+                    <td class="border p-1"><span class='text'><?php echo text($value['date']); ?></span></td>
                     <!-- ./TELE SALUD -->
                     <td class="border p-1"><span class='text text-wrap'><?php echo text($value['codetext']); ?></span></td>
                     <td class="border p-1"><span class='text'><?php echo text($value['description']); ?></span></td>

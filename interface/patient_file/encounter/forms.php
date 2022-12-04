@@ -590,7 +590,7 @@ $eventDispatcher->addListener(EncounterMenuEvent::MENU_RENDER, function (Encount
 });
 
 $dateres = getEncounterDateByEncounter($encounter);
-$encounter_date = date("Y-m-d", strtotime($dateres["date"]));
+$encounter_date = date("Y-m-d", strtotime($dateres["date"]??''));
 $providerIDres = getProviderIdOfEncounter($encounter);
 $providerNameRes = getProviderName($providerIDres, false);
 
@@ -986,7 +986,12 @@ if (
         echo "class='tab " . ($divnos == 1 ? 'd-block' : 'd-none') . "'>";
 
         // Use the form's report.php for display.  Forms with names starting with LBF
-        // are list-based forms sharing a single collection of code.
+        // are list-based forms sharing a single collection of code.      
+        // Fix: $encounter = 0 so get session encounter value 
+        if($encounter==0){
+            $encounter=$_SESSION['encounter']?? 0;
+        }
+        
         //
         if (substr($formdir, 0, 3) == 'LBF') {
             include_once($GLOBALS['incdir'] . "/forms/LBF/report.php");
