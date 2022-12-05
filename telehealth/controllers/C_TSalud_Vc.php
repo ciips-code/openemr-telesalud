@@ -148,10 +148,7 @@ if (isset($_GET['action'])) {
             // save document file
             $r = saveDocument($base64_content, $pid, $encounter, $formid);
             break;
-        case 'saveEncounter':
-            // save document file
-            // $r = saveEncounter($pid);
-            break;
+
         case 'getEvolution':
             // save document file
             echo getEvolution($encounter);
@@ -265,7 +262,7 @@ function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility
     $return = $conn->query($query) or trigger_error($conn->error . " " . $query);
     $result = addForm(
         $encounter,
-        xlt('Telehealth Encounter'),
+        xlt('Telehealth Videoconstations Encounter'),
         sqlInsert(
             "INSERT INTO form_encounter SET
                 date = ?,
@@ -319,50 +316,7 @@ function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility
 
     return $return;
 }
-function saveEncounter($pid, $encounter)
-{
-    $formid = (int) ($_GET['id'] ?? 0);
 
-    $clinicalNotesService = new ClinicalNotesService();
-    $conn = dbConn();
-    if ($conn) {
-
-        if (empty($formid)) {
-
-            $sql = "SELECT form_id, encounter FROM `forms` WHERE formdir = 'clinical_notes' AND pid = %s AND encounter = %s AND deleted = 0 LIMIT 1";
-            $query = sprintf($sql, array($_SESSION["pid"], $_SESSION["encounter"]));
-            // print_r($query);
-            // $formid = sqlSuery($query)['form_id'] ?? 0;
-            // if (!empty($formid)) {
-            //     echo "<script>var message=" .
-            //         js_escape(xl("Already a Clinical Notes form for this encounter. Using existing Clinical Notes form.")) .
-            //         "</script>";
-            // }
-        }
-        // if ($formid) {
-        //     $records = $clinicalNotesService->getClinicalNotesForPatientForm($formid, $_SESSION['pid'], $_SESSION['encounter']) ?? [];
-        //     $check_res = [];
-        //     foreach ($records as $record) {
-        //         // we are only going to include active clinical notes, but we leave them as historical records in the system
-        //         // FHIR and other resources still refer to them, they will just be marked as inactive...
-        //         if ($record['activity'] == ClinicalNotesService::ACTIVITY_ACTIVE) {
-        //             $record['uuid'] = UuidRegistry::uuidToString($record['uuid']);
-        //             $check_res[] = $record;
-        //         }
-        //     }
-        // } else {
-        //     $check_res = [
-        //         [
-        //             'id' => 0, 'code' => '', 'codetext' => '', 'clinical_notes_type' => '', 'description' => ''
-        //         ]
-        //     ];
-        // }
-
-        // $clinical_notes_type = $clinicalNotesService->getClinicalNoteTypes();
-        // $clinical_notes_category = $clinicalNotesService->getClinicalNoteCategories();
-    }
-    return true;
-}
 
 /**
  *
@@ -376,10 +330,10 @@ function dbConn()
     $password = "openemr";
     $database = "openemr";
     // dev server
-    $servername = "localhost";
-    $username = "admin_devopenemr";
-    $password = "BxX7vZb27z";
-    $database = "admin_devopenemr";
+    // $servername = "localhost";
+    // $username = "admin_devopenemr";
+    // $password = "BxX7vZb27z";
+    // $database = "admin_devopenemr";
     //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -942,18 +896,14 @@ function getVcFiles($data_id, $medic_secret)
                         if (!empty($file['file'])) {
                             // echo "<br>Saving files $type...";
                             $filetext = $file['file'];
-                            //data id
-                            // $data_id = $response_data['data']['id'];
+                            $fileName = strtolower(trim(preg_replace('#\W+#', '_', $file['description']), '_'));
                             //get event data
                             $event_data = getEventData($data_id);
                             if (isset($event_data['pc_pid'])) {
-                                // echo "Event data : " . print_r($event_data, true);
                                 //
                                 $patient_id = $event_data['pc_pid'];
-                                $encounter = $event_data['pc_eid'];
-                                $formid = 25; //$event_data['formID'];
                                 //Save file
-                                saveDocument($filetext, $patient_id, $encounter, $formid);
+                                saveDocument($filetext, $patient_id, $fileName);
                             }
                         } else {
                             // echo "<br>$type have not file";
@@ -990,7 +940,7 @@ function getVcFiles($data_id, $medic_secret)
  * @param [type] $formid encounter form id
  * @return void
  */
-function saveDocument($filetext, $patient_id, $encounter, $formid)
+function saveDocument($filetext, $patient_id, $fileName)
 {
     $d = null;
     // try {
@@ -1003,11 +953,7 @@ function saveDocument($filetext, $patient_id, $encounter, $formid)
     $type = explode('/', $mimetype)[1];
     //
     if ($type !== 'x-empty') {
-
-        //
-        // $siteID = 'default';
-        // $web_root = $_SERVER['DOCUMENT_ROOT'];
-        $fileName = check_file_dir_name($encounter) . "_" . check_file_dir_name($formid) . ".$type";
+        $fileName = check_file_dir_name($fileName) . ".$type";
         // get catid 
         $query = "SELECT id FROM categories where name ='" . VC . "'";
         $result = sqlS($query);
@@ -1021,19 +967,16 @@ function saveDocument($filetext, $patient_id, $encounter, $formid)
             $fileName,
             $mimetype,
             $imgdata,
-            empty($_GET['higher_level_path']) ? '' : $_GET['higher_level_path'],
-            empty($_POST['path_depth']) ? 1 : $_POST['path_depth'],
-            // $non_HTTP_owner,
-            // false,
-            // $_FILES['file']['tmp_name'][$key]
+            $_GET['higher_level_path'] ?? '',
+            $_POST['path_depth'] ?? '',
         );
+
         if ($rc) {
-            $error .= $rc . "\n";
+            echo  $rc . "\n";
         } else {
             // $this->assign("upload_success", "true");
+            // print_r($rc);
         }
-
-        // $type = 'txt';
     }
     return $d;
     // print_r($d);
@@ -1220,9 +1163,10 @@ function getEventData($data_id)
                 FROM
                     forms AS f
                 WHERE
-                    f.form_name = 'Telehealth Video Consultations'
+                    f.pid = e.pc_pid 
+                    and f.encounter=vc.encounter
                 LIMIT 1),
-            0) AS formID
+            0) AS formId
 FROM
     telehealth_vc AS vc
         INNER JOIN
@@ -1233,23 +1177,6 @@ WHERE
     // echo "<br>$query";
     return  sqlS($query);
 }
-function getPost()
-{
-    if (!empty($_POST)) {
-        // when using application/x-www-form-urlencoded or multipart/form-data as the HTTP Content-Type in the request
-        // NOTE: if this is the case and $_POST is empty, check the variables_order in php.ini! - it must contain the letter P
-        return $_POST;
-    }
-
-    // when using application/json as the HTTP Content-Type in the request
-    $post = json_decode(file_get_contents('php://input'), true);
-    if (json_last_error() == JSON_ERROR_NONE) {
-        return $post;
-    }
-
-    return [];
-}
-
 /**
  * get topic appointment status from list_options
  *
@@ -1261,54 +1188,4 @@ function getappStatus($topic)
     $sql_appstatus = "SELECT * FROM telehealth_vc_topic where topic='$topic';";
     $records_appstatus = sqlS($sql_appstatus);
     return $records_appstatus['value'];
-}
-/**
- * Rregisster Telehealth
- *
- * @param [type] $directory
- * @param integer $sql_run
- * @param integer $unpackaged
- * @param integer $state
- * @return void
- */
-function registerTelehealth($directory, $sql_run = 0, $unpackaged = 1, $state = 0)
-{
-    // $directory = 'telehealth_vc';
-    // $check = sqlS("select state from registry where directory=?", array($directory));
-    // if ($check == false) {
-    //     $lines = @file($GLOBALS['srcdir'] . "/../interface/forms/$directory/info.txt");
-    //     if ($lines) {
-    //         $name = $lines[0];
-    //         $category = $category ?? ($lines[1] ?? 'Miscellaneous');
-    //     } else {
-    //         $name = $directory;
-    //         $category = "Miscellaneous";
-    //     }
-
-    //     return sqlInsert("insert into registry set
-    // 		name=?,
-    // 		state=?,
-    // 		directory=?,
-    // 		sql_run=?,
-    //         unpackaged=?,
-    //         category=?,
-    // 		date=NOW()
-    // 	", array($name, $state, $directory, $sql_run, $unpackaged, $category));
-    // }
-
-    return false;
-}
-/**
- * unregister Telehealdh OpenEmr form
- *
- * @return void
- */
-function installTelehealh()
-{
-    // DROP table if exists telehealth_vc;
-    // DROP table if exists telehealth_vc_files;
-    // DROP table if exists telehealth_vc_config;
-    // DROP table if exists telehealth_vc_topic;
-    // DELETE FROM registry WHERE `directory`='telehealth_vc';
-    return true;
 }
