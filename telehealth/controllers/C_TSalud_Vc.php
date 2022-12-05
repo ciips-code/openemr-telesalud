@@ -902,8 +902,9 @@ function getVcFiles($data_id, $medic_secret)
                             if (isset($event_data['pc_pid'])) {
                                 //
                                 $patient_id = $event_data['pc_pid'];
+                                $encounter = $event_data['encounter'];
                                 //Save file
-                                saveDocument($filetext, $patient_id, $fileName);
+                                saveDocument($filetext, $patient_id, $encounter, $fileName);
                             }
                         } else {
                             // echo "<br>$type have not file";
@@ -940,7 +941,7 @@ function getVcFiles($data_id, $medic_secret)
  * @param [type] $formid encounter form id
  * @return void
  */
-function saveDocument($filetext, $patient_id, $fileName)
+function saveDocument($filetext, $patient_id, $encounter, $fileName)
 {
     $d = null;
     // try {
@@ -961,6 +962,7 @@ function saveDocument($filetext, $patient_id, $fileName)
 
         $error = '';
         $d = new Document();
+        $d->encounter_id = $encounter;
         $rc = $d->createDocument(
             $patient_id,
             $category_id,
