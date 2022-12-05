@@ -34,8 +34,8 @@ define('Services_DIR', "$webroot/Services");
 define('MAIN_DIR', "$webroot/");
 define('PHP_MAILER_DIR', "$webroot/telehealth/controllers/PHPMailer/src/");
 //
-define('JITSI_API_URL', 'https://meet.telesalud.iecs.org.ar:32443/api/videoconsultation?');
-define('JITSI_API_DATA_URL', 'https://meet.telesalud.iecs.org.ar:32443/api/videoconsultation/data?');
+define('JITSI_API_URL', 'https://meet.telesalud.iecs.org.ar:31443/api/videoconsultation?');
+define('JITSI_API_DATA_URL', 'https://meet.telesalud.iecs.org.ar:31443/api/videoconsultation/data?');
 
 define('JITSI_API_TOKEN', "1|OB00LDC8eGEHCAhKMjtDRUXu9buxOm2SREHzQqPz");
 define('JITSI_API_AUTH', "Authorization: Bearer " . JITSI_API_TOKEN);
