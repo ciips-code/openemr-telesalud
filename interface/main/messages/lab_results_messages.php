@@ -53,7 +53,7 @@ function lab_results_messages($set_pid, $rid, $provider_id = "")
                 $link = "<a href='../../orders/orders_results.php?review=1&set_pid=" . attr_url($set_pid) . "'" .
                 " onclick='return top.restoreSession()'>here</a>";
                 $note = "Patient $pname's lab results have arrived. Please click $link to review them.<br/>";
-                $note_type = "Lab Results";
+                $note_type = xlt('Lab Results');
                 $message_status = "New";
                 // Add pnote.
                 $noteid = addPnote($set_pid, $note, $userauthorized, '1', $note_type, $user_detail['username'], '', $message_status);

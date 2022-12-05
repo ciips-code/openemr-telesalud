@@ -49,7 +49,6 @@ use OpenEMR\Reminder\BirthdayReminder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 $twig = new TwigContainer(null, $GLOBALS['kernel']);
-
 // Set session for pid (via setpid). Also set session for encounter (if applicable)
 if (isset($_GET['set_pid'])) {
     require_once("$srcdir/pid.inc");
@@ -59,6 +58,8 @@ if (isset($_GET['set_pid'])) {
         SessionUtil::setSession('encounter', $encounter);
     }
 }
+
+
 
 // Note: it would eventually be a good idea to move this into
 // it's own module that people can remove / add if they don't
@@ -165,14 +166,11 @@ function portalAuthorized($pid)
     }
 
     $return = [
-        'isAllowed' => false
-        ,'allowed' => [
-                'api' => false
-                ,'portal' => false
+        'isAllowed' => false, 'allowed' => [
+            'api' => false, 'portal' => false
         ],
         'credentials' => [
-                'created' => false
-                ,'date' => null
+            'created' => false, 'date' => null
         ]
     ];
 
@@ -292,7 +290,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
         function referentialCdsClick(codetype, codevalue) {
             top.restoreSession();
             // Force a new window instead of iframe to address cross site scripting potential
-            dlgopen('../education.php?type=' + encodeURIComponent(codetype) + '&code=' + encodeURIComponent(codevalue), '_blank', 1024, 750,true);
+            dlgopen('../education.php?type=' + encodeURIComponent(codetype) + '&code=' + encodeURIComponent(codevalue), '_blank', 1024, 750, true);
         }
 
         function oldEvt(apptdate, eventid) {
@@ -526,7 +524,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     if ($GLOBALS['erx_import_status_message']) { ?>
                         if (msg_updation)
                             alert(msg_updation);
-                        <?php
+            <?php
                     }
                 }
             }
@@ -723,7 +721,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                 //  3. The notification has not been turned off (or shown depending on global selection) for this year
                 $birthdayAlert = new BirthdayReminder($pid, $_SESSION['authUserID']);
                 if ($birthdayAlert->isDisplayBirthdayAlert()) {
-                    ?>
+            ?>
                     // show the active reminder modal
                     dlgopen('', 'bdayreminder', 300, 170, '', false, {
                         allowResize: false,
@@ -794,14 +792,14 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                 if (!empty($date_of_death)) {
                     $date_of_death = $date_of_death['date_deceased'];
                 }
-                ?>
+            ?>
                 parent.left_nav.setPatient(<?php echo js_escape($result['fname'] . " " . $result['lname']) .
                                                 "," . js_escape($pid) . "," . js_escape($result['pubpid']) . ",'',";
-                if (empty($date_of_death)) {
-                    echo js_escape(" " . xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age') . ": " . getPatientAgeDisplay($result['DOB_YMD']));
-                } else {
-                    echo js_escape(" " . xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age at death') . ": " . oeFormatAge($result['DOB_YMD'], $date_of_death));
-                } ?>);
+                                            if (empty($date_of_death)) {
+                                                echo js_escape(" " . xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age') . ": " . getPatientAgeDisplay($result['DOB_YMD']));
+                                            } else {
+                                                echo js_escape(" " . xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age at death') . ": " . oeFormatAge($result['DOB_YMD'], $date_of_death));
+                                            } ?>);
                 var EncounterDateArray = new Array;
                 var CalendarCategoryArray = new Array;
                 var EncounterIdArray = new Array;
@@ -816,12 +814,12 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         EncounterDateArray[Count] = <?php echo js_escape(oeFormatShortDate(date("Y-m-d", strtotime($rowresult4['date'])))); ?>;
                         CalendarCategoryArray[Count] = <?php echo js_escape(xl_appt_category($rowresult4['pc_catname'])); ?>;
                         Count++;
-                        <?php
+                <?php
                     }
                 }
                 ?>
                 parent.left_nav.setPatientEncounter(EncounterIdArray, EncounterDateArray, CalendarCategoryArray);
-                <?php
+            <?php
             } // end setting new pid
             ?>
             parent.left_nav.syncRadios();
@@ -852,25 +850,25 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
         }
 
         <?php
-        if (!empty($GLOBALS['right_justify_labels_demographics']) && ($_SESSION['language_direction'] == 'ltr')) { ?>
-        div.tab td.label_custom, div.label_custom {
+        if (!empty($GLOBALS['right_justify_labels_demographics']) && ($_SESSION['language_direction'] == 'ltr')) { ?>div.tab td.label_custom,
+        div.label_custom {
             text-align: right !important;
         }
 
-        div.tab td.data, div.data {
+        div.tab td.data,
+        div.data {
             padding-left: 0.5em;
             padding-right: 2em;
         }
-            <?php
-        } ?>
 
         <?php
-        // This is for layout font size override.
-        $grparr = array();
-        getLayoutProperties('DEM', $grparr, 'grp_size');
-        if (!empty($grparr['']['grp_size'])) {
-            $FONTSIZE = round($grparr['']['grp_size'] * 1.333333);
-            $FONTSIZE = round($FONTSIZE * 0.0625, 2);
+        } ?><?php
+            // This is for layout font size override.
+            $grparr = array();
+            getLayoutProperties('DEM', $grparr, 'grp_size');
+            if (!empty($grparr['']['grp_size'])) {
+                $FONTSIZE = round($grparr['']['grp_size'] * 1.333333);
+                $FONTSIZE = round($FONTSIZE * 0.0625, 2);
             ?>
 
         /* Override font sizes in the theme. */
@@ -967,7 +965,6 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     $sectionCards = $sectionRenderEvents->getCards();
 
                     $t = $twig->getTwig();
-
                     foreach ($sectionCards as $card) {
                         $_auth = $card->getAcl();
                         if (!AclMain::aclCheckCore($_auth[0], $_auth[1])) {
@@ -1177,6 +1174,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         echo $twig->getTwig()->render('patient/card/loader.html.twig', $viewArgs);
                     endif; //end if prw is activated
 
+                    // TELESALUD
+                    /*
                     if (AclMain::aclCheckCore('patients', 'disclosure')) :
                         $authWriteDisclosure = AclMain::aclCheckCore('patients', 'disclosure', '', 'write');
                         $authAddonlyDisclosure = AclMain::aclCheckCore('patients', 'disclosure', '', 'addonly');
@@ -1197,6 +1196,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         ];
                         echo $twig->getTwig()->render('patient/card/loader.html.twig', $viewArgs);
                     endif; // end if disclosures authorized
+                    */
+                    // ./TELESALUD
 
                     if ($GLOBALS['amendments'] && AclMain::aclCheckCore('patients', 'amendment')) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('amendment'));
@@ -1226,6 +1227,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         echo $twig->getTwig()->render('patient/card/amendments.html.twig', $viewArgs);
                     endif; // end amendments authorized
 
+                    // TELESALUD
+                    /*
                     if (AclMain::aclCheckCore('patients', 'lab')) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('lab'));
                         // labdata expand collapse widget
@@ -1253,6 +1256,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         ];
                         echo $twig->getTwig()->render('patient/card/loader.html.twig', $viewArgs);
                     endif; // end labs authorized
+                    */
+                    // ./TELESALUD
 
                     if ($vitals_is_registered && AclMain::aclCheckCore('patients', 'med')) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('vital_sign'));
@@ -1333,7 +1338,6 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     $sectionCards = $sectionRenderEvents->getCards();
 
                     $t = $twig->getTwig();
-
                     foreach ($sectionCards as $card) {
                         $_auth = $card->getAcl();
                         $auth = AclMain::aclCheckCore($_auth[0], $_auth[1]);
@@ -1364,6 +1368,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
 
                         echo $t->render($card->getTemplateFile(), array_merge($card->getTemplateVariables(), $viewArgs));
                     }
+
 
                     if ($GLOBALS['erx_enable']) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('demographics'));
@@ -1396,7 +1401,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         echo $twig->getTwig()->render('patient/card/photo.html.twig', $viewArgs);
                     }
 
+                    // TELESALUD
                     // Advance Directives
+                    /*
                     if ($GLOBALS['advance_directives_warning']) {
                         // advance directives expand collapse widget
 
@@ -1458,6 +1465,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                             echo $twig->getTwig()->render('patient/card/adv_dir.html.twig', $viewArgs);
                         }
                     }  // close advanced dir block
+                    */
+                    // ./TELESALUD
+
 
                     // Show Clinical Reminders for any user that has rules that are permitted.
                     $clin_rem_check = resolve_rules_sql('', '0', true, '', $_SESSION['authUser']);
@@ -1786,27 +1796,30 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     endif;
                     ?>
                 </div> <!-- end right column div -->
-                </div> <!-- end div.main > row:first  -->
-            </div> <!-- end main content div -->
-        </div><!-- end container div -->
-        <?php $oemr_ui->oeBelowContainerDiv(); ?>
-        <script>
-            // Array of skip conditions for the checkSkipConditions() function.
-            var skipArray = [
-                <?php echo ($condition_str ?? ''); ?>
-            ];
-            checkSkipConditions();
+            </div> <!-- end div.main > row:first  -->
+        </div> <!-- end main content div -->
+    </div><!-- end container div -->
+    <?php $oemr_ui->oeBelowContainerDiv(); ?>
+    <script>
+        // Array of skip conditions for the checkSkipConditions() function.
+        var skipArray = [
+            <?php echo ($condition_str ?? ''); ?>
+        ];
+        checkSkipConditions();
 
-            var isPost = <?php echo js_escape($showEligibility ?? false); ?>;
-            var listId = '#' + <?php echo js_escape($list_id); ?>;
-            $(function() {
-                $(listId).addClass("active");
-                if (isPost === true) {
-                    $("#eligibility").click();
-                    $("#eligibility").get(0).scrollIntoView();
-                }
-            });
-        </script>
+        var isPost = <?php echo js_escape($showEligibility ?? false); ?>;
+        var listId = '#' + <?php echo js_escape($list_id); ?>;
+        $(function() {
+            $(listId).addClass("active");
+            if (isPost === true) {
+                $("#eligibility").click();
+                $("#eligibility").get(0).scrollIntoView();
+            }
+        });
+        // show vide consultation button
+        window.parent.showVCButton(<?php echo $_SESSION['authUserID']?>, <?php echo $pid?>)
+    </script>
+
 </body>
 
 </html>

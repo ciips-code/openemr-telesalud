@@ -233,7 +233,7 @@ function authorized_clicked() {
 </tr>
 <tr>
     <td style="width:150px;"></td><td style="width:220px;"></td>
-    <td style="width:200px;"><span class='text'><?php echo xlt('Your Password'); ?>: </span></td>
+    <td style="width:200px;"><span class='text'><?php echo xlt('Your user’s administration profile password'); ?>: </span></td>
     <td class='text' style="width:280px;"><input type='password' name=adminPass style="width:120px;"  value="" autocomplete='off' class="form-control"><font class="mandatory"></font></td>
 
 </tr>
@@ -287,7 +287,7 @@ if ($fres) {
 </select></td>
 </tr>
 <tr>
-<td><span class="text"><?php echo xlt('Federal Tax ID'); ?>: </span></td><td><input type="text" name='federaltaxid' style="width:120px;" class="form-control"></td>
+<td><span class="text"><?php echo xlt('Professional identification type'); ?>: </span></td><td><input type="text" name='federaltaxid' style="width:120px;" class="form-control"></td>
 <td><span class="text"><?php echo xlt('DEA number'); ?>: </span></td><td><input type="text" name='federaldrugid' style="width:120px;" class="form-control"></td>
 </tr>
 <tr>
@@ -362,7 +362,7 @@ foreach (array(1 => xl('None{{Authorization}}'), 2 => xl('Only Mine'), 3 => xl('
         </select>
     </td>
 <tr>
-<td><span class="text"><?php echo xlt('State License Number'); ?>: </span></td>
+<td><span class="text"><?php echo xlt('Professional identification number'); ?>: </span></td>
 <td><input type="text" name="state_license_number" style="width:120px;" class="form-control"></td>
 <td class='text'><?php echo xlt('NewCrop eRX Role'); ?>:</td>
 <td>

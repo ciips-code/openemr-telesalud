@@ -250,6 +250,9 @@ $esignApi = new Api();
     <script src="js/frame_proxies.js?v=<?php echo $v_js_includes; ?>"></script>
     <script src="js/dialog_utils.js?v=<?php echo $v_js_includes; ?>"></script>
     <script src="js/shortcuts.js?v=<?php echo $v_js_includes; ?>"></script>
+    <script src="/telehealth/controllers/telehealth.js"></script>
+    <!-- pc_aid: authUserID<?php echo $_SESSION['authUserID']; ?>,
+            pc_pid: pid<?php echo $pid; ?>, -->
 
     <?php
     // Below code block is to prepare certain elements for deciding what links to show on the menu
@@ -272,7 +275,7 @@ $esignApi = new Api();
     ?>
 
     <?php require_once("templates/tabs_template.php"); ?>
-    <?php require_once("templates/menu_template.php"); ?>
+    <?php require_once("templates/menu_template.php"); ?>    
     <?php require_once("templates/patient_data_template.php"); ?>
     <?php require_once("templates/therapy_group_template.php"); ?>
     <?php require_once("templates/user_data_template.php"); ?>

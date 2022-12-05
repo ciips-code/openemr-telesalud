@@ -50,7 +50,7 @@ $discharge_disposition = $_POST['discharge_disposition'] ?? null;
 $discharge_disposition = $discharge_disposition != '_blank' ? $discharge_disposition : null;
 
 $facilityresult = $facilityService->getById($facility_id);
-$facility = $facilityresult['name'];
+$facility = $facilityresult['name']??'';
 
 $normalurl = "patient_file/encounter/encounter_top.php";
 

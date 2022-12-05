@@ -1,0 +1,4 @@
+Order Deny,Allow
+Allow from all
+Require all granted
+php_value max_input_vars 3000

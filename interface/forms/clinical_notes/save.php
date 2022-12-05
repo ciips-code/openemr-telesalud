@@ -97,7 +97,9 @@ if (!empty($count)) {
         $record['pid'] = $_SESSION['pid'];
         $record['encounter'] = $_SESSION['encounter'];
         $record['authorized'] = $userauthorized;
-        $record['date'] = $code_date[$key];
+        // BEGIN TELESALUD        
+        $record['date'] =$code_date[$key];        
+        // END TELESALUD
         $record['groupname'] = $_SESSION["authProvider"];
         $record['activity'] = ClinicalNotesService::ACTIVITY_ACTIVE;
         $clinicalNotesService->saveArray($record);

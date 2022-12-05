@@ -16,11 +16,15 @@ use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Services\AppointmentService;
 use OpenEMR\Services\UserService;
 
+require_once('../../../telehealth/controllers/C_TSalud_Vc.php');
+
 function newpatient_report($pid, $encounter, $cols, $id)
 {
-    $res = sqlStatement("select e.*, f.name as facility_name from form_encounter as e join facility as f on f.id = e.facility_id where e.pid=? and e.id=?", array($pid,$id));
+    $res = sqlStatement("select e.*, f.name as facility_name from form_encounter as e join facility as f on f.id = e.facility_id where e.pid=? and e.id=?", array($pid, $id));
+    //
     print "<table><tr><td>\n";
     while ($result = sqlFetchArray($res)) {
+        // print_r($result);
         $userService = new UserService();
         $provider = $userService->getUser($result["provider_id"]);
         $referringProvider = $userService->getUser($result["referring_provider_id"]);
@@ -29,6 +33,7 @@ function newpatient_report($pid, $encounter, $cols, $id)
         if (empty($result['sensitivity']) || AclMain::aclCheckCore('sensitivities', $result['sensitivity'])) {
             print "<span class=bold>" . xlt('Category') . ": </span><span class=text>" . text($calendar_category[0]['pc_catname']) . "</span><br />\n";
             print "<span class=bold>" . xlt('Reason') . ": </span><span class=text>" . nl2br(text($result["reason"])) . "</span><br />\n";
+            print "<span class=bold>" . xlt('Evolution') . ": </span><span class=text>" . nl2br(text(getEvolution($result['encounter']))) . "</span><br />\n";            
             print "<span>" . xlt('Provider') . ": </span><span class=text>" . text($provider['lname'] . ", " . $provider['fname']) . "</span><br />\n";
             print "<span>" . xlt('Referring Provider') . ": </span><span class=text>" . text(($referringProvider['lname'] ?? '') . ", " . ($referringProvider['fname'] ?? '')) . "</span><br />\n";
             print "<span>" . xlt('POS Code') . ": </span><span class=text>" . text(sprintf('%02d', trim($result['pos_code'] ?? ''))) . "</span><br />\n";
