@@ -330,10 +330,10 @@ function dbConn()
     $password = "openemr";
     $database = "openemr";
     // dev server
-    // $servername = "localhost";
-    // $username = "admin_devopenemr";
-    // $password = "BxX7vZb27z";
-    // $database = "admin_devopenemr";
+    $servername = "localhost";
+    $username = "admin_devopenemr";
+    $password = "BxX7vZb27z";
+    $database = "admin_devopenemr";
     //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
