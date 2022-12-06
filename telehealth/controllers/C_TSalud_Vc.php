@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 //Paths
 $webroot = $_SERVER['DOCUMENT_ROOT'];
 // autoload 
-require_once($webroot.'/vendor/autoload.php');
+require_once($webroot . '/vendor/autoload.php');
 //get envornment variables
-$dotenv = Dotenv\Dotenv::createImmutable($webroot.'/');
+$dotenv = Dotenv\Dotenv::createImmutable($webroot . '/');
 $dotenv->load();
 /**
  * 
@@ -38,13 +39,13 @@ define('Services_DIR', "$webroot/Services");
 define('MAIN_DIR', "$webroot/");
 define('PHP_MAILER_DIR', "$webroot/telehealth/controllers/PHPMailer/src/");
 // Videoconsutlation API
-define('VC_API_PORT', '31443');
-define('VC_API_URL', 'https://meet.telesalud.iecs.org.ar:' . VC_API_PORT . '/api/videoconsultation?');
-define('VC_API_DATA_URL', 'https://meet.telesalud.iecs.org.ar:31443/api/videoconsultation/data?');
+define('VC_API_PORT', $_ENV['VC_API_PORT']);
+define('VC_API_URL', $_ENV['VC_API_URL'] .':'. VC_API_PORT . $_ENV['VC_API']);
+define('VC_API_DATA_URL', $_ENV['VC_API_DATA_URL'] .':'. VC_API_PORT . $_ENV['VC_API_DATA']);
 //TOKEN PRODUCTION
 // define('VC_API_TOKEN', "1|OB00LDC8eGEHCAhKMjtDRUXu9buxOm2SREHzQqPz");
 //TOKEN DEVELOPMENT
-define('VC_API_TOKEN', "1|dcX1XEqBOOtVC0ufo3RzyrOR96Jqajzr0Ly6tLmz");
+define('VC_API_TOKEN', $_ENV['VC_API_PORT']);
 define('VC_API_AUTH', "Authorization: Bearer " . VC_API_TOKEN);
 //OpenEMR Classes
 use OpenEMR\Common\Csrf\CsrfUtils;
