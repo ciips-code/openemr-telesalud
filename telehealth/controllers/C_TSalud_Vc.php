@@ -33,13 +33,16 @@ define('Core_DIR', "$webroot/src/Core");
 define('Services_DIR', "$webroot/Services");
 define('MAIN_DIR', "$webroot/");
 define('PHP_MAILER_DIR', "$webroot/telehealth/controllers/PHPMailer/src/");
-//
-define('JITSI_API_URL', 'https://meet.telesalud.iecs.org.ar:31443/api/videoconsultation?');
-define('JITSI_API_DATA_URL', 'https://meet.telesalud.iecs.org.ar:31443/api/videoconsultation/data?');
-
-define('JITSI_API_TOKEN', "1|OB00LDC8eGEHCAhKMjtDRUXu9buxOm2SREHzQqPz");
-define('JITSI_API_AUTH', "Authorization: Bearer " . JITSI_API_TOKEN);
-
+// Videoconsutlation API
+define('VC_API_PORT', '31443');
+define('VC_API_URL', 'https://meet.telesalud.iecs.org.ar:' . VC_API_PORT . '/api/videoconsultation?');
+define('VC_API_DATA_URL', 'https://meet.telesalud.iecs.org.ar:31443/api/videoconsultation/data?');
+//TOKEN PRODUCTION
+// define('VC_API_TOKEN', "1|OB00LDC8eGEHCAhKMjtDRUXu9buxOm2SREHzQqPz");
+//TOKEN DEVELOPMENT
+define('VC_API_TOKEN', "1|dcX1XEqBOOtVC0ufo3RzyrOR96Jqajzr0Ly6tLmz");
+define('VC_API_AUTH', "Authorization: Bearer " . VC_API_TOKEN);
+//OpenEMR Classes
 use OpenEMR\Common\Csrf\CsrfUtils;
 use OpenEMR\Common\Uuid\UuidRegistry;
 use OpenEMR\Core\Header;
@@ -49,8 +52,7 @@ use OpenEMR\Services\CodeTypesService;
 use OpenEMR\Services\EncounterService;
 use OpenEMR\Services\FacilityService;
 use OpenEMR\Services\ListService;
-
-
+//some OpenEMR globals vars and requirements 
 $_GET['site'] = 'default';
 $ignoreAuth = true;
 //
@@ -131,6 +133,7 @@ if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'insertEvent':
             createVc($pc_eid);
+            // echo createVideoConsultationTest();
             break;
         case 'vcButton': // echo "generate link"; //
             // $links =
@@ -334,6 +337,11 @@ function dbConn()
     $username = "admin_devopenemr";
     $password = "BxX7vZb27z";
     $database = "admin_devopenemr";
+    // production server
+    // $servername = "localhost";
+    // $username = "admin_devopenemr";
+    // $password = "BxX7vZb27z";
+    // $database = "admin_devopenemr";
     //
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -532,6 +540,8 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
          *      respuesta de SCV
          */
         $svc_response = requestAPI($data, CURLOPT_POST);
+        // $svc_response = createVideoConsultationTest(VC_API_URL, $data, VC_API_TOKEN);
+        // echo $svc_response;
         /**
          * * * @var array $vc_data datos devueltos por el SCV
          */
@@ -539,10 +549,10 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
         // print_r($vc_data);
         // si hay respuesta
         if ($vc_data['success']) {
-            // agregar video consulta a la bd
-            insertVc($pc_eid, $vc_data);
             //save log
             logVc($vc_data['data']['id'], 'Scheduled', $svc_response);
+            // agregar video consulta a la bd
+            insertVc($pc_eid, $vc_data);
             // actualizar links de acceso a video consulta en evento
             updateLinksToAgenda($pc_eid, $vc_data);
             //agregar encuentro
@@ -557,10 +567,12 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
             // enviar email de la video consulta al medico
             // sendEmail($calendar_data);
         } else {
-            echo "$br Errores en respuesta API Datos devueltos: " . print_r($vc_data, true);
+            $error = "$br Errores en respuesta API Datos devueltos: " . print_r($vc_data, true);
+            logVc('0', 'Error', "$error");
         }
     } catch (Exception $e) {
-        // ehco $e
+
+        logVc('0', 'Error', "{$e->getMessage()}");
     }
 }
 /**
@@ -1026,13 +1038,13 @@ current_timestamp())";
         // $return = sqlInsert($query);
         // echo $sql;
         $conn = dbConn();
-        $return = $conn->query($query) or trigger_error($conn->error . " " . $query);
+        $return = $conn->query($query); // or trigger_error($conn->error . " " . $query);
     } catch (Exception $e) {
-        //
-        echo $e;
-        // Error: Duplicate entry '1' for key 'PRIMARY' //
-
+        // echo $e;
+        logVc('0', 'Error', "{$e->getMessage()}");
     }
+    //save log
+    logVc('0', 'Saved', 'Telehalth saved on DB ok');
     return $return;
 }
 
@@ -1055,7 +1067,7 @@ current_timestamp())";
  * @param boolean $files
  * @return string
  */
-function requestAPI($data, $method = '', $files = false)
+function requestAPI($data, $method = CURLOPT_POST, $files = false)
 
 {
     try {
@@ -1063,13 +1075,13 @@ function requestAPI($data, $method = '', $files = false)
         // Create VC
         $curl = curl_init();
         if ($files) {
-            // echo "<br>Requesting Files URL: " . JITSI_API_DATA_URL;
+            // echo "<br>Requesting Files URL: " . VC_API_DATA_URL;
             // $qry_str='';
-            curl_setopt($curl, CURLOPT_URL, JITSI_API_DATA_URL . http_build_query($data));
+            curl_setopt($curl, CURLOPT_URL, VC_API_DATA_URL . http_build_query($data));
             // curl_setopt($curl, CURLOPT_HEADER, 1); 
         } else {
-            // echo "<br>Requesting Files URL: " . JITSI_API_DATA_URL;
-            curl_setopt($curl, CURLOPT_URL, JITSI_API_URL);
+            echo "<br>Requesting new teleconsultation: " . VC_API_DATA_URL;
+            curl_setopt($curl, CURLOPT_URL, VC_API_URL);
         }
 
         // Returns the data/output as a string instead of raw data
@@ -1080,11 +1092,13 @@ function requestAPI($data, $method = '', $files = false)
          */
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             'Content-Type:application/json',
-            'Authorization: Bearer ' . JITSI_API_TOKEN
+            VC_API_AUTH
         ));
-        if ($method) {
+        if (!empty($method)) {
+            $jsdata = json_encode($data);
+            // echo "<br>Using post $method with  $jsdata</br>";
             curl_setopt($curl, $method, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $jsdata);
         }
 
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -1092,10 +1106,13 @@ function requestAPI($data, $method = '', $files = false)
         // echo "<br>Calling API...";
         $result = curl_exec($curl);
         if (!$result) {
-            die("API $curl - Connection Failure");
+            $error = "API $curl - Connection Failure";
+            logVc('0', 'Error', "$error");
+            die($error);
         }
     } catch (Exception $e) {
         echo $e->getMessage();
+        logVc('0', 'Error', "{$e->getMessage()}");
     } finally {
         curl_close($curl);
     }
@@ -1103,6 +1120,43 @@ function requestAPI($data, $method = '', $files = false)
     return $result;
 }
 
+/**
+ * Undocumented function
+ *
+ * @param [type] $api_url
+ * @param [type] $data
+ * @param [type] $token
+ * @return void
+ */
+function createVideoConsultationTest($api_url, $data, $token)
+{
+
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => VC_API_URL, //'https://meet.telesalud.iecs.org.ar:31443/api/videoconsultation?',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => 'appointment_date=2022-12-6%2007%3A00%3A00&days_before_expiration=1&medic_name=medico-yois&patient_name=paciente-yois&extra%5B%5D=hola',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer 1|dcX1XEqBOOtVC0ufo3RzyrOR96Jqajzr0Ly6tLmz',
+            'Content-Type: application/x-www-form-urlencoded'
+        ),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    echo $response;
+}
 
 /**
  * Capture VC notifications
