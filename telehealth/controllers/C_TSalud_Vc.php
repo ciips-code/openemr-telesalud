@@ -1,10 +1,11 @@
 <?php
-
 declare(strict_types=1);
+//Paths
+$webroot = $_SERVER['DOCUMENT_ROOT'];
 // autoload 
-require('../../vendor/autoload.php');
+require_once($webroot.'/vendor/autoload.php');
 //get envornment variables
-$dotenv = Dotenv\Dotenv::createImmutable('../../');
+$dotenv = Dotenv\Dotenv::createImmutable($webroot.'/');
 $dotenv->load();
 /**
  * 
@@ -25,8 +26,7 @@ $dotenv->load();
  * -Enviar mail al medico y acitavar color de que el paciente esta presente
  */
 // Video consutlation strting constat
-//Paths
-$webroot = $_SERVER['DOCUMENT_ROOT'];
+
 define('VC', 'Teleconsultas');
 define('CLASS_DIR', "$webroot/library/classes/");
 define('SRC_DIR', "$webroot/src/");
