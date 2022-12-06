@@ -1,7 +1,12 @@
 <?php
 
 declare(strict_types=1);
-
+// autoload 
+require('../../vendor/autoload.php');
+//get envornment variables
+$dotenv = Dotenv\Dotenv::createImmutable('../../');
+$dotenv->load();
+// print_r($_ENV);
 /**
  * 
  * 
@@ -328,24 +333,12 @@ function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility
 function dbConn()
 {
     // localserver
-    $servername = "ops-openemr-mysql";
-    $username = "openemr";
-    $password = "openemr";
-    $database = "openemr";
-    // dev server
-    $servername = "localhost";
-    $username = "admin_devopenemr";
-    $password = "BxX7vZb27z";
-    $database = "admin_devopenemr";
-    // production server
-    // $servername = "localhost";
-    // $username = "admin_devopenemr";
-    // $password = "BxX7vZb27z";
-    // $database = "admin_devopenemr";
-    //
+    $servername = $_ENV['OPS_DB_HOST'];
+    $username = $_ENV['OPS_DB_USER'];
+    $password = $_ENV['OPS_DB_PASSWORD'];
+    $database = $_ENV['OPS_DB_DATABASE'];
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
-
     // Check connection
     if ($conn->connect_error) {
         die("Database connection failed: " . $conn->connect_error);
