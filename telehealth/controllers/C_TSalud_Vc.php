@@ -6,7 +6,6 @@ require('../../vendor/autoload.php');
 //get envornment variables
 $dotenv = Dotenv\Dotenv::createImmutable('../../');
 $dotenv->load();
-// print_r($_ENV);
 /**
  * 
  * 
