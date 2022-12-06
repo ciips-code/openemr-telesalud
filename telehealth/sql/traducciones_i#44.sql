@@ -70,3 +70,13 @@ VALUES (
 			LIMIT 1
 		), 4, ' años de edad'
 	);
+-- corregir traducciones mal
+UPDATE lang_definitions
+SET lang_id = 4
+WHERE definition LIKE '%cita%'
+	AND lang_id = 1;
+-- corregir recurrente
+UPDATE lang_definitions
+SET lang_id = 4
+WHERE definition LIKE '%recurrente%'
+	AND lang_id = 1;
