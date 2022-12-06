@@ -142,7 +142,8 @@ if ($_REQUEST['MedEx'] == "start") {
             }
         } else {
             $response_prob = array();
-            $response_prob['show'] = xlt("We ran into some problems connecting your EHR to the MedEx servers") . ".<br >
+            $response_prob['show'] = 
+            ("We ran into some problems connecting your EHR to the MedEx servers") . ".<br >
 				" . xlt('Most often this is due to a Username/Password mismatch') . "<br />"
                 . xlt('Run Setup again or contact support for assistance') .
                 " <a href='https://medexbank.com/cart/upload/'>MedEx Bank</a>.<br />";
@@ -160,6 +161,7 @@ if (($_REQUEST['pid']) && ($_REQUEST['action'] == "new_recall")) {
     $query = "SELECT * FROM patient_data WHERE pid=?";
     $result = sqlQuery($query, array($_REQUEST['pid']));
     $result['age'] = $MedEx->events->getAge($result['DOB']);
+    $result['years_old_text']=xlt(' years old');
     // uuid is binary and will break json_encode in binary form (not needed, so will remove it from $result array)
     unset($result['uuid']);
 

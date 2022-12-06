@@ -82,7 +82,7 @@ function setpatient(pid, lname='', fname='', dob='') {
         }
         //there is an openemr global for age display under X years old (eg. under "2", so == 17 months old)
         //not sure where it is though... or if we can use it here.
-        $("#new_age").html(obj.age + ' years old');
+        $("#new_age").html(obj.age + obj.years_old_text);
         $("#new_reason").val(obj.PLAN);
         $("#new_recall_name").val(obj.lname + ', ' + obj.fname);
         $("#form_recall_date").val(obj.recall_date);
