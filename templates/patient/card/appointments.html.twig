@@ -81,7 +81,7 @@
             </div>
         {% endfor %}
     {% else %}
-        {{ _self.noItems("No Recurring Appointments{{Appointments}}"|xl)}}
+        {{ _self.noItems( "No Recurring Appointments"|xl)}} {{Appointments}}
     {% endif %}
 {% endif %}
 
