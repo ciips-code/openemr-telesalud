@@ -396,15 +396,16 @@ SELECT cal.pc_eid,
     pc_hometext,
     pc_startTime,
     pc_endTime,
-    vcdata.*
+    vc.*
 FROM `openemr_postcalendar_events` as cal
-    INNER join telehealth_vc as vcdata on cal.pc_eid = vcdata.pc_eid
+    INNER join telehealth_vc as vc on cal.pc_eid = vc.pc_eid
     INNER JOIN patient_data AS p ON cal.pc_pid = p.id
 where pc_eventDate = current_date()
     and CURRENT_TIME BETWEEN cal.pc_startTime and cal.pc_endTime
     and cal.pc_catid IN ($vcCatList)
     and cal.pc_aid = $authUserID
-    and cal.pc_pid = $patientID";
+    and cal.pc_pid = $patientID
+    and vc.active=1";
 
         $row = sqlS($sql);
         if (isset($row[$url_field_name])) {
@@ -850,6 +851,10 @@ function updateAppStatus($pc_eid, $data_id, $topic, $medic_secret, $appstatus, $
             // echo "Status ok getting files..";
             //Obtener y guardar adjuntos
             getVcFiles($data_id, $medic_secret);
+            //desactivar teleconsulta
+            $sql = "update telehealth_vc set active=0 where pc_eid=$pc_eid";
+            $result = $conn->query($sql) or trigger_error($conn->error);
+            logVc($data_id, 'finished', 'Videoconsultation active=0');
         }
         $conn->close();
     }
