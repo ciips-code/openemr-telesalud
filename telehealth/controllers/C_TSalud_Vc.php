@@ -40,12 +40,12 @@ define('MAIN_DIR', "$webroot/");
 define('PHP_MAILER_DIR', "$webroot/telehealth/controllers/PHPMailer/src/");
 // Videoconsutlation API
 define('VC_API_PORT', $_ENV['VC_API_PORT']);
-define('VC_API_URL', $_ENV['VC_API_URL'] .':'. VC_API_PORT . $_ENV['VC_API']);
-define('VC_API_DATA_URL', $_ENV['VC_API_DATA_URL'] .':'. VC_API_PORT . $_ENV['VC_API_DATA']);
+define('VC_API_URL', $_ENV['VC_API_URL'] . ':' . VC_API_PORT . $_ENV['VC_API']);
+define('VC_API_URL_DATA', $_ENV['VC_API_URL'] . ':' . VC_API_PORT . $_ENV['VC_API_DATA']);
 //TOKEN PRODUCTION
 // define('VC_API_TOKEN', "1|OB00LDC8eGEHCAhKMjtDRUXu9buxOm2SREHzQqPz");
 //TOKEN DEVELOPMENT
-define('VC_API_TOKEN', $_ENV['VC_API_PORT']);
+define('VC_API_TOKEN', $_ENV['VC_API_TOKEN']);
 define('VC_API_AUTH', "Authorization: Bearer " . VC_API_TOKEN);
 //OpenEMR Classes
 use OpenEMR\Common\Csrf\CsrfUtils;
@@ -1060,7 +1060,7 @@ current_timestamp())";
  * @param boolean $files
  * @return string
  */
-function requestAPI($data, $method = CURLOPT_POST, $files = false)
+function requestAPI($data, $method = '', $files = false)
 
 {
     try {
@@ -1068,12 +1068,12 @@ function requestAPI($data, $method = CURLOPT_POST, $files = false)
         // Create VC
         $curl = curl_init();
         if ($files) {
-            // echo "<br>Requesting Files URL: " . VC_API_DATA_URL;
+            // echo "<br>Requesting Files URL: " . VC_API_URL_DATA;
             // $qry_str='';
-            curl_setopt($curl, CURLOPT_URL, VC_API_DATA_URL . http_build_query($data));
+            curl_setopt($curl, CURLOPT_URL, VC_API_URL_DATA . http_build_query($data));
             // curl_setopt($curl, CURLOPT_HEADER, 1); 
         } else {
-            echo "<br>Requesting new teleconsultation: " . VC_API_DATA_URL;
+            // echo "<br>Requesting new teleconsultation: " . VC_API_URL;
             curl_setopt($curl, CURLOPT_URL, VC_API_URL);
         }
 
@@ -1084,8 +1084,10 @@ function requestAPI($data, $method = CURLOPT_POST, $files = false)
          * --header 'Content-Type: application/x-www-form-urlencoded'
          */
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+
             'Content-Type:application/json',
             VC_API_AUTH
+
         ));
         if (!empty($method)) {
             $jsdata = json_encode($data);
@@ -1104,7 +1106,7 @@ function requestAPI($data, $method = CURLOPT_POST, $files = false)
             die($error);
         }
     } catch (Exception $e) {
-        echo $e->getMessage();
+        // echo $e->getMessage();
         logVc('0', 'Error', "{$e->getMessage()}");
     } finally {
         curl_close($curl);
