@@ -145,7 +145,7 @@ if (!$from_trend_form && !$visitid && !$from_lbf_edit && $is_core) {
 $grparr = array();
 getLayoutProperties($formname, $grparr, '*');
 $lobj = $grparr[''];
-$formtitle = $lobj['grp_title'];
+$formtitle = xlt($lobj['grp_title']);
 $formhistory = 0 + $lobj['grp_repeats'];
 $grp_last_update = $lobj['grp_last_update'];
 

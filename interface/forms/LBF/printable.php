@@ -53,7 +53,7 @@ $CPR = 4; // cells per row
 $grparr = array();
 getLayoutProperties($formname, $grparr, '*');
 $lobj = $grparr[''];
-$formtitle = $lobj['grp_title'];
+$formtitle = xlt($lobj['grp_title']);
 $grp_last_update = $lobj['grp_last_update'];
 
 if (!empty($lobj['grp_columns'])) {
