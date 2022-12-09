@@ -76,24 +76,28 @@ SET
     lang_id = 4
 WHERE
     definition LIKE '%cita%' AND lang_id = 1
+-- 
 -- corregir recurrente
 UPDATE lang_definitions 
 SET 
     lang_id = 4
 WHERE
     definition LIKE '%recurrente%'
-        AND lang_id = 1
--- 
+        AND lang_id = 1 
 UPDATE `layout_options` 
 SET 
     title = 'Identification document type'
 WHERE
     title = 'External ID'
+-- 
+    
 UPDATE `layout_options` 
 SET 
     title = 'Identification document number'
 WHERE
     title = 'License/ID'
+-- 
+    
 SELECT 
     *
 FROM
@@ -101,6 +105,7 @@ FROM
 WHERE
     ld.constant_name LIKE 'Non-communicable diseases'
 LIMIT 1
+--
     
     INSERT INTO lang_definitions (`cons_id`, `lang_id`, `definition`)
 VALUES (
@@ -108,13 +113,25 @@ VALUES (
 			SELECT cons_id
 			FROM lang_constants AS lc
 			WHERE constant_name like 'Non-communicable diseases'
-				-- AND lc.cons_id NOT IN (
--- 					SELECT DISTINCT cons_id
--- 					FROM lang_definitions ld
--- 					WHERE ld.lang_id = 4
--- 				)
+				
 			LIMIT 1
 		), 4, 'Enfermedades no transmisibles'
 	);
     
     --  Lab results:
+    INSERT INTO lang_constants (constant_name)
+VALUES ('Lab Results');
+INSERT INTO lang_definitions (`cons_id`, `lang_id`, `definition`)
+VALUES (
+		(
+			SELECT lc.cons_id
+			FROM lang_constants AS lc
+			WHERE constant_name = 'Lab Results'
+				AND lc.cons_id NOT IN (
+					SELECT DISTINCT cons_id
+					FROM lang_definitions ld
+					WHERE ld.lang_id = 4
+				)
+			LIMIT 1
+		), 4, 'Resultados de laboratirio'
+	);
