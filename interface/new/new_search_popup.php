@@ -239,7 +239,7 @@ if ($result) {
         $relevance = $iter['relevance'];
         if ($relevance > 999) {
             $relevance -= 999;
-            $pubpid_matched = true;
+            // $pubpid_matched = true;
         }
 
         echo "<tr id='" . attr($iter['pid']) . "' class='oneresult";

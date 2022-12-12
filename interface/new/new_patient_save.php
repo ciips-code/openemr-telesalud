@@ -19,16 +19,16 @@ if (!CsrfUtils::verifyCsrfToken($_POST["csrf_token_form"])) {
 }
 
 // Validation for non-unique external patient identifier.
-if (!empty($_POST["pubpid"])) {
-    $form_pubpid = trim($_POST["pubpid"]);
-    $result = sqlQuery("SELECT count(*) AS count FROM patient_data WHERE " .
-    "pubpid = ?", array($form_pubpid));
-    if ($result['count']) {
-        // Error, not unique.
-        require_once("new.php");
-        exit();
-    }
-}
+// if (!empty($_POST["pubpid"])) {
+//     $form_pubpid = trim($_POST["pubpid"]);
+//     $result = sqlQuery("SELECT count(*) AS count FROM patient_data WHERE " .
+//     "pubpid = ?", array($form_pubpid));
+//     if ($result['count']) {
+//         // Error, not unique.
+//         require_once("new.php");
+//         exit();
+//     }
+// }
 
 require_once("$srcdir/pid.inc");
 require_once("$srcdir/patient.inc");
