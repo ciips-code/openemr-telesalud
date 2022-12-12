@@ -155,22 +155,22 @@ services:
             XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
         volumes:
             - ../..:/var/www/html
-    # Telesalud API RESTFul
-    ops-openemr-api:
-        container_name: ops_api
-        image: docker.io/bitnami/laravel:9
-        ports:
-        - '8302:8000'
-        environment:
-        - DB_HOST=ops-openemr-mysql
-        - DB_PORT=3306
-        - DB_USERNAME=openemr
-        - DB_DATABASE=openemr
-        - DB_PASSWORD=openemr
-        volumes:
-            - '../../telehealth/api/v1:/app'
-        depends_on:
-            - ops-openemr-mysql
+    # # Telesalud API RESTFul
+    # ops-openemr-api:
+    #     container_name: ops_api
+    #     image: docker.io/bitnami/laravel:9
+    #     ports:
+    #     - '8302:8000'
+    #     environment:
+    #     - DB_HOST=ops-openemr-mysql
+    #     - DB_PORT=3306
+    #     - DB_USERNAME=openemr
+    #     - DB_DATABASE=openemr
+    #     - DB_PASSWORD=openemr
+    #     volumes:
+    #         - '../../telehealth/api/v1:/app'
+    #     depends_on:
+    #         - ops-openemr-mysql
 # networks:
 #     internal:
 #         driver: bridge
