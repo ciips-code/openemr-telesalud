@@ -623,12 +623,7 @@ echo $t->render('encounter/forms/navbar.html.twig', [
     'enableFollowUpEncounters' => $GLOBALS['enable_follow_up_encounters'],
     'menuArray' => $menu->getMenuData(),
 ]);
-/*
-echo "<pre>";
-print_r($menu->getMenuData());
-echo "</pre>";
-die();
-*/
+
 ?>
 
 <div id="encounter_forms" class="mx-1">
