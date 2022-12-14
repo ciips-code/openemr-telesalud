@@ -222,7 +222,7 @@ $clinical_notes_category = $clinicalNotesService->getClinicalNoteCategories();
 //                                                         }
                                                     $selected = getDefaultSelectedOption($value, $context);  
                                                         ?>
-                                                        <option value="<?php echo attr($value['value']); ?>" <?php echo $selected; ?>><?php echo text($value['title']); ?></option>
+                                                        <option value="<?php echo attr($value['value']); ?>" <?php echo $selected; ?>><?php echo text(xlt($value['title'])); ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
