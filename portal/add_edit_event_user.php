@@ -537,6 +537,7 @@ if ($eid) {
     }
 
     $hometext = $row['pc_hometext'];
+    $hometext=str_replace('button_text',xlt('Copy patient link'),$hometext);
     if (substr($hometext, 0, 6) == ':text:') {
         $hometext = substr($hometext, 6);
     }
