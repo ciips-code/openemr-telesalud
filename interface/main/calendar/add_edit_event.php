@@ -754,7 +754,7 @@ if (!empty($_POST['form_action']) && ($_POST['form_action'] == "save")) {
      * ======================================================*/
         require_once( $_SERVER['DOCUMENT_ROOT'] . '/telehealth/controllers/C_TSalud_Vc.php');
         createVc($eid);
-        /* =======================================================
+    /* =======================================================
      *                    END TELESALUD 
      * ======================================================*/
 
@@ -2052,6 +2052,20 @@ function SubmitForm() {
 
     return true;
 }
+
+    // Function for copy content to cplipboard 
+    function copyLinkToClipboard(linkElementId) {
+    
+        // Get the link tag
+        var linktag = window.document.getElementById(linkElementId);
+        if (linktag!=null) {           
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(linktag.href);
+            // Alert the copied text
+            alert("Copied:" + linktag.href);
+        }
+    }
+
 </script>
 </body>
 </html>

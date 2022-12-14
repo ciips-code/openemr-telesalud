@@ -16,14 +16,3 @@ function showVCButton(authUserID, pid) {
         }
     });
 }
-// Function for copy content to cplipboard ß
-function copyLinkToClipboard(linkElementId) {
-
-    // Get the link tag
-    var linktag = document.getElementById(linkElementId);
-    // Copy the text inside the text field
-    navigator.clipboard.writeText(linktag.attr("href"));
-    // Alert the copied text
-    alert("Copied the text: " + linktag.attr("href"));
-
-}
