@@ -2060,11 +2060,54 @@ function SubmitForm() {
         var linktag = window.document.getElementById(linkElementId);
         if (linktag!=null) {           
             // Copy the text inside the text field
-            navigator.clipboard.writeText(linktag.href);
+            // navigator.clipboard.writeText(linktag.href);
+            // copyToClipboard(linktag.href);
+            copyToClipboard(linktag.href)
+    .then(() => console.log('text copied !'))
+    .catch(() => console.log('error'));
             // Alert the copied text
-            alert("Copied:" + linktag.href);
+            // alert("Copied:" + linktag.href);
         }
     }
+
+//     const unsecuredCopyToClipboard = (text) => { const textArea = document.createElement("textarea"); textArea.value=text; document.body.appendChild(textArea); textArea.focus();textArea.select(); try{document.execCommand('copy')}catch(err){console.error('Unable to copy to clipboard',err)}document.body.removeChild(textArea)};
+
+// /**
+//  * Copies the text passed as param to the system clipboard
+//  * Check if using HTTPS and navigator.clipboard is available
+//  * Then uses standard clipboard API, otherwise uses fallback
+// */
+// const copyToClipboard = (content) => {
+//   if (window.isSecureContext && navigator.clipboard) {
+//     navigator.clipboard.writeText(content);
+//   } else {
+//     unsecuredCopyToClipboard(content);
+//   }
+// };
+// return a promise
+function copyToClipboard(textToCopy) {
+    // navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+        // navigator clipboard api method'
+        return navigator.clipboard.writeText(textToCopy);
+    } else {
+        // text area method
+        let textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        // make the textarea out of viewport
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        return new Promise((res, rej) => {
+            // here the magic happens
+            document.execCommand('copy') ? res() : rej();
+            textArea.remove();
+        });
+    }
+}
 
 </script>
 </body>
