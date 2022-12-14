@@ -939,6 +939,7 @@ if ($eid) {
     $recurrence_end_date = ($row['pc_endDate'] && $row['pc_endDate'] != '0000-00-00') ? $row['pc_endDate'] : null;
     $pcroom = $row['pc_room'];
     $hometext = $row['pc_hometext'];
+    $hometext=str_replace('button_text',xlt('Copy patient link'),$hometext);
     if (substr($hometext, 0, 6) == ':text:') {
         $hometext = substr($hometext, 6);
     }
@@ -2069,21 +2070,6 @@ function SubmitForm() {
             // alert("Copied:" + linktag.href);
         }
     }
-
-//     const unsecuredCopyToClipboard = (text) => { const textArea = document.createElement("textarea"); textArea.value=text; document.body.appendChild(textArea); textArea.focus();textArea.select(); try{document.execCommand('copy')}catch(err){console.error('Unable to copy to clipboard',err)}document.body.removeChild(textArea)};
-
-// /**
-//  * Copies the text passed as param to the system clipboard
-//  * Check if using HTTPS and navigator.clipboard is available
-//  * Then uses standard clipboard API, otherwise uses fallback
-// */
-// const copyToClipboard = (content) => {
-//   if (window.isSecureContext && navigator.clipboard) {
-//     navigator.clipboard.writeText(content);
-//   } else {
-//     unsecuredCopyToClipboard(content);
-//   }
-// };
 // return a promise
 function copyToClipboard(textToCopy) {
     // navigator clipboard api needs a secure context (https)
