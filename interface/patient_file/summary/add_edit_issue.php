@@ -904,7 +904,7 @@ function getCodeText($code)
                         </div>
 
                         <div class="form-group col-12" id='row_enddate'>
-                            <label class="col-form-label" for="form_begin"><?php echo ('Resolution date') ?>:</label>
+                            <label class="col-form-label" for="form_end"><?php echo ('Resolution date') ?>:</label>
                             <input type='text' class='datepicker form-control' name='form_end' id='form_end' value='<?php echo attr(trim(oeFormatDateTime($irow['enddate'] ?? ''))) ?>' title='<?php echo xla('yyyy-mm-dd HH:MM date of recovery or end of medication'); ?>' autocomplete="off" />
                             &nbsp;(<?php echo xlt('leave blank if still active'); ?>)
                         </div>

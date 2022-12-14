@@ -833,6 +833,13 @@ if (
 ) {
     echo "<table class='w-100' id='partable'>";
     $divnos = 1;
+    /*
+    echo "<pre>";
+    print_r($result);
+    echo "</pre>";
+    die;
+    */
+
     foreach ($result as $iter) {
         $formdir = $iter['formdir'];
 
