@@ -439,10 +439,10 @@ function vcButton($url, $url_field_name)
     $button = '';
     if ($url_field_name == 'medic_url') {
         // xlt("Medic Teleconsultation");
-        $title = 'Start video consultation';
+        $title = xlt('Start video consultation');
     } else {
         // xlt("Patient Teleconsultation");
-        $title = 'Patient Teleconsultation';
+        $title = ('Patient Teleconsultation');
     }
     // echo $url;
     $link_element = "href=\"$url\" target=\"_blank\"";
