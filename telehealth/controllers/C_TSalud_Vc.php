@@ -801,7 +801,7 @@ function updateLinksToAgenda($pc_eid, $vc_data)
     $pc_hometext = mysqli_real_escape_string($conn, "Accesos a la video consulta:
 <ul>
 <li>Profesional: <a href=\"{$medic_url}\" target=\"_blank\" id=\"medicButton\">{$medic_url}</a></li>
-<li>Paciente: <a href=\"{$patient_url}\" target=\"_blank\" id=\"patientButton\">{$patient_url}</a></li>
+<li>Paciente: <a href=\"{$patient_url}\" target=\"_blank\" id=\"patientButton\">{$patient_url}</a> &nbsp  <a class=\"btn btn-primary\" href=\"#\" onclick=\"copyLinkToClipboard('patientButton');\"> button_text </a></li>
 </ul>
 ");
     $query = "update openemr_postcalendar_events set
@@ -1027,12 +1027,12 @@ valid_from,
 valid_to,
 patient_url,
 medic_url,
-url,medic_secret,created) ";
+url,medic_secret,created, active) ";
         $query .= " VALUES (
 $pc_eid, '$success','$message','$id',
 '$valid_from','$valid_to','$patient_url',
 '$medic_url','$data_url','$medic_secret',
-current_timestamp())";
+current_timestamp(), 1)";
         // $return = sqlInsert($query);
         // echo $sql;
         $conn = dbConn();

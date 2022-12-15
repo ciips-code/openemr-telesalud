@@ -754,7 +754,7 @@ if (!empty($_POST['form_action']) && ($_POST['form_action'] == "save")) {
      * ======================================================*/
         require_once( $_SERVER['DOCUMENT_ROOT'] . '/telehealth/controllers/C_TSalud_Vc.php');
         createVc($eid);
-        /* =======================================================
+    /* =======================================================
      *                    END TELESALUD 
      * ======================================================*/
 
@@ -939,6 +939,7 @@ if ($eid) {
     $recurrence_end_date = ($row['pc_endDate'] && $row['pc_endDate'] != '0000-00-00') ? $row['pc_endDate'] : null;
     $pcroom = $row['pc_room'];
     $hometext = $row['pc_hometext'];
+    $hometext=str_replace('button_text',xlt('Copy patient link'),$hometext);
     if (substr($hometext, 0, 6) == ':text:') {
         $hometext = substr($hometext, 6);
     }
@@ -2052,6 +2053,48 @@ function SubmitForm() {
 
     return true;
 }
+
+    // Function for copy content to cplipboard 
+    function copyLinkToClipboard(linkElementId) {
+    
+        // Get the link tag
+        var linktag = window.document.getElementById(linkElementId);
+        if (linktag!=null) {           
+            // Copy the text inside the text field
+            // navigator.clipboard.writeText(linktag.href);
+            // copyToClipboard(linktag.href);
+            copyToClipboard(linktag.href)
+    .then(() => console.log('text copied !'))
+    .catch(() => console.log('error'));
+            // Alert the copied text
+            // alert("Copied:" + linktag.href);
+        }
+    }
+// return a promise
+function copyToClipboard(textToCopy) {
+    // navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+        // navigator clipboard api method'
+        return navigator.clipboard.writeText(textToCopy);
+    } else {
+        // text area method
+        let textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        // make the textarea out of viewport
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        return new Promise((res, rej) => {
+            // here the magic happens
+            document.execCommand('copy') ? res() : rej();
+            textArea.remove();
+        });
+    }
+}
+
 </script>
 </body>
 </html>
