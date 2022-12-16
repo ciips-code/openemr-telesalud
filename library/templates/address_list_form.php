@@ -36,6 +36,7 @@ $widgetConstants = [
         ,'textDate' => 4
         ,'textbox' => 2
 ];
+$period_to_text= xlt(' to to ');
 
 // TODO: @adunsulag could we actually design out an actual layout and then just generate/display it in here?  Seems like that would provide the most extensible option?
 // TODO: @adunsulag the repeating nature of this as a layout display would be problematic... we'd need some kind of repeater widget, would be a fun project.
@@ -520,13 +521,14 @@ $widgetConstants = [
         let period = [];
         let periodStart = record.period_start;
         let periodEnd = record.period_end;
+        let period_to_text='<?php echo $period_to_text?>';
         if (!isBlank(periodStart) || !isBlank(periodEnd)) {
-            if (!isBlank(periodStart) && isBlank(periodEnd)) {
-                period.push(periodStart + " to " + window.xl('Current'));
+            if (!isBlank(periodStart) && isBlank(periodEnd)) {                
+                period.push(periodStart +period_to_text+ window.xl('Current'));
             } else if (isBlank(periodStart) && !isBlank(periodEnd)) {
                 period.push(window.xl('Expired')+ ":" + periodEnd);
             } else {
-                period.push(periodStart + " to " + periodEnd);
+                period.push(periodStart +period_to_text+ periodEnd);
             }
         }
         return period;
