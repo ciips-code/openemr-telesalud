@@ -58,14 +58,14 @@ $patientIssuesService = new PatientIssuesService();
                         <div class="row">
                             <div class="col-md-6 mt-2">
                                 <label for="form_begin" class="form-label"><?php echo ('Date of onset') ?>: </label>
-                                <input type="date" class="form-control" name='form_begin' id='form_begin' required>
+                                <input type="date" class="form-control" name='form_begin' id='form_begin'>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mt-2">
                                 <label for="form_end" class="form-label"><?php echo ('Resolution date') ?>: </label>
-                                <input type="date" class="form-control" name='form_end' id='form_end' required>
+                                <input type="date" class="form-control" name='form_end' id='form_end'>
                                 (<?php echo xlt('leave blank if still active'); ?>)
                             </div>
                         </div>
