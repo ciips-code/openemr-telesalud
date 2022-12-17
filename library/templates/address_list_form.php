@@ -36,7 +36,7 @@ $widgetConstants = [
         ,'textDate' => 4
         ,'textbox' => 2
 ];
-$period_to_text= xlt(' to to ');
+$period_to_text= xlt(' to ');
 
 // TODO: @adunsulag could we actually design out an actual layout and then just generate/display it in here?  Seems like that would provide the most extensible option?
 // TODO: @adunsulag the repeating nature of this as a layout display would be problematic... we'd need some kind of repeater widget, would be a fun project.
