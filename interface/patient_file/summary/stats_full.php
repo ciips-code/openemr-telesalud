@@ -208,6 +208,11 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         $encount = 0;
                         $first = 1; // flag for first section
                         foreach ($ISSUE_TYPES as $focustype => $focustitles) {
+
+                            if (in_array($focustype, ['allergy', 'medication'])) {
+                                continue;
+                            }
+
                             if (!AclMain::aclCheckIssue($focustype)) {
                                 continue;
                             }
