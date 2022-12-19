@@ -1,13 +1,15 @@
-# Instalación Plataforma de telesalud Todo en una basada en OpemEMR  v7.0.0
+# Instalación Plataforma de telesalud Todo en una v1.0 basada en OpemEMR  v7.0.0 
 
-Seguir los pasos de instalación del siguiente enlace. https://github.com/ciips-code/openemr-telesalud/blob/main/Documentation/INSTALL
-## Ejecutar los siguientes archivos via sql dump
+Seguir los pasos de instalación del siguiente enlace. https://github.com/ciips-code/openemr-telesalud/blob/release/v1.0/Documentation/INSTALL
+
+## Post instalacion 
+Una vez instalado OpenEmr y configurado la Base de datos debe ejecutar los siguientes archivos via sql dump
     - Listas y traducciones: /telehealth/sql/ops-openemr-data-upgrade.sql
     - Configuración Documentos: /telehealth/sql/documentos-teleconsulta.sql
     - Actualizaciones tablas: /telehealth/sql/ops-openemr-upgrade.sql
 
 ## Configurar sistema
-    -    Administración / Formularios / Formularios de administración
+Luego acceder al sistema via web server e ir al menu Administración / Formularios / Formularios de administración y dejar las configuraciones  como se describen a continuacion: 
         - Desactivar todos los formularios de la vista/encuentro que no sean los siguientes:
             - Plan de atención	inhabilitado	
             - Clinical Instructions	inhabilitado
@@ -27,7 +29,7 @@ Seguir los pasos de instalación del siguiente enlace. https://github.com/ciips-
             - Dictado	inhabilitado 
             - Signos Vitales	Activado
 ## Variables de entornos archivo .env
-Estas variables deben configurarse para que el módulo de teleconsulta funcione correctamente.
+Estas variables deben configurarse para que el módulo de teleconsulta funcione correctamente. El archivo debe estar en el direcotrio principal de la aplicacion OpenEMR 
 ################################
 # CONFIGURACION API SERVIDOR DE VIDEO CONSULTAS
 ################################
