@@ -53,25 +53,25 @@ Luego acceder al sistema via web server e ir al menu Administración / Formulari
 Estas variables deben configurarse para que el módulo de teleconsulta funcione correctamente. El archivo debe estar en el direcotrio principal de la aplicacion OpenEMR
 
 ################################
-# CONFIGURACION API SERVIDOR DE VIDEO CONSULTAS
+## CONFIGURACION API SERVIDOR DE VIDEO CONSULTAS
 ################################
 
-# URL Servidor
+### URL Servidor
 VC_API_URL='https://meet.telesalud.iecs.org.ar'
-# Endpoint 
+### Endpoint 
 VC_API='/api/videoconsultation?'
-# Endpoint de datos
+### Endpoint de datos
 VC_API_DATA='/api/videoconsultation/data?'
-# Puerto-
+### Puerto-
 VC_API_PORT=NRO DE PUERTO
-# Token access
+### Token access
 VC_API_TOKEN=TOKEN DE ACCESO
 
 ################################
-# CONFIGURACION SERVIDOR DE BASE DE DATOS
+## CONFIGURACION SERVIDOR DE BASE DE DATOS
 ################################
 
-# DATA BASE CONNECTIONS SETTING
+## DATA BASE CONNECTIONS SETTING
 OPS_DB_HOST=HOST DE BASE DE DATOS
 OPS_DB_PASSWORD=CONTRASEÑA DE BASE DE DATOS
 OPS_DB_USER=USUARIO DE BASE DE DATOS
