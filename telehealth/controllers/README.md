@@ -31,22 +31,22 @@ php load_icd_es.php
 ## Configurar sistema
 Luego acceder al sistema via web server e ir al menu Administración / Formularios / Formularios de administración y dejar las configuraciones  como se describen a continuacion: 
 - Desactivar todos los formularios de la vista/encuentro que no sean los siguientes:
-    - [] Plan de atención	    inhabilitado	
-    - [] Clinical Instructions	inhabilitado
+    - [ ] Plan de atención	    inhabilitado	
+    - [ ] Clinical Instructions	inhabilitado
     - [X] Nota Clínica	        Activado 
-    - [] Eye Exam	            inhabilitado 
-    - [] Hoja de tarifas	    inhabilitado 
-    - [] Functional and Cognitive Status	inhabilitado 
-    - [] Group Attendance Form	inhabilitado 
-    - [] Diversas opciones de facturación HCFA	inhabilitado 
-    - [] Formulario Nueva Visita	inhabilitado 
+    - [ ] Eye Exam	            inhabilitado 
+    - [ ] Hoja de tarifas	    inhabilitado 
+    - [ ] Functional and Cognitive Status	inhabilitado 
+    - [ ] Group Attendance Form	inhabilitado 
+    - [ ] Diversas opciones de facturación HCFA	inhabilitado 
+    - [ ] Formulario Nueva Visita	inhabilitado 
     - [X] New Group Encounter Form	Activado 
-    - [] Observation	            inhabilitado 
-    - [] Orden de Procedimiento	inhabilitado 
-    - [] Revisión de los sistemas	inhabilitado 
-    - [] Revisión de chequeos de sistemas	inhabilitado 
+    - [ ] Observation	            inhabilitado 
+    - [ ] Orden de Procedimiento	inhabilitado 
+    - [ ] Revisión de los sistemas	inhabilitado 
+    - [ ] Revisión de chequeos de sistemas	inhabilitado 
     - [X] SOEP	                    Activado 
-    - [] Dictado	                inhabilitado 
+    - [ ] Dictado	                inhabilitado 
     - [X] Signos Vitales	        Activado
 
 ## Variables de entornos archivo .env
