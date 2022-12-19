@@ -50,10 +50,12 @@ Luego acceder al sistema via web server e ir al menu Administración / Formulari
     - [X] Signos Vitales	        (activado)
 
 ## Variables de entornos archivo .env
-Estas variables deben configurarse para que el módulo de teleconsulta funcione correctamente. El archivo debe estar en el direcotrio principal de la aplicacion OpenEMR 
+Estas variables deben configurarse para que el módulo de teleconsulta funcione correctamente. El archivo debe estar en el direcotrio principal de la aplicacion OpenEMR
+
 ################################
 # CONFIGURACION API SERVIDOR DE VIDEO CONSULTAS
 ################################
+
 # URL Servidor
 VC_API_URL='https://meet.telesalud.iecs.org.ar'
 # Endpoint 
@@ -64,9 +66,11 @@ VC_API_DATA='/api/videoconsultation/data?'
 VC_API_PORT=NRO DE PUERTO
 # Token access
 VC_API_TOKEN=TOKEN DE ACCESO
+
 ################################
 # CONFIGURACION SERVIDOR DE BASE DE DATOS
 ################################
+
 # DATA BASE CONNECTIONS SETTING
 OPS_DB_HOST=HOST DE BASE DE DATOS
 OPS_DB_PASSWORD=CONTRASEÑA DE BASE DE DATOS
