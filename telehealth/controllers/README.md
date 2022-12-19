@@ -8,6 +8,26 @@ Una vez instalado OpenEmr y configurado la Base de datos debe ejecutar los sigui
     - Configuración Documentos: /telehealth/sql/documentos-teleconsulta.sql
     - Actualizaciones tablas: /telehealth/sql/ops-openemr-upgrade.sql
 
+
+## Actualización al CIE-11
+```
+cd path/to/project/telehealth/util
+```
+Abrir el archivo load_icd_es.php y editar los siguientes valores:
+```
+$host           = 'localhost';
+$port           = '3306';
+$username       = 'openemr_db_username';
+$password       = 'openemr_db_password';
+$db             = 'openemr_db_database';
+```
+
+Una vez establecido lo valores correr el script:
+```
+php load_icd_es.php
+```
+
+
 ## Configurar sistema
 Luego acceder al sistema via web server e ir al menu Administración / Formularios / Formularios de administración y dejar las configuraciones  como se describen a continuacion: 
         - Desactivar todos los formularios de la vista/encuentro que no sean los siguientes:
@@ -39,7 +59,7 @@ VC_API_URL='https://meet.telesalud.iecs.org.ar'
 VC_API='/api/videoconsultation?'
 # Endpoint de datos
 VC_API_DATA='/api/videoconsultation/data?'
-# Puerto
+# Puerto-
 VC_API_PORT=NRO DE PUERTO
 # Token access
 VC_API_TOKEN=TOKEN DE ACCESO
