@@ -209,6 +209,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         $first = 1; // flag for first section
                         foreach ($ISSUE_TYPES as $focustype => $focustitles) {
 
+                            // Omitimos los medicamentos y las alergias
                             if (in_array($focustype, ['allergy', 'medication'])) {
                                 continue;
                             }
