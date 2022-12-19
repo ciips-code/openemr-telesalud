@@ -4,9 +4,9 @@ Seguir los pasos de instalación del siguiente enlace. https://github.com/ciips-
 
 ## Post instalacion 
 Una vez instalado OpenEmr y configurado la Base de datos debe ejecutar los siguientes archivos via sql dump
-    - Listas y traducciones: /telehealth/sql/ops-openemr-data-upgrade.sql
-    - Configuración Documentos: /telehealth/sql/documentos-teleconsulta.sql
-    - Actualizaciones tablas: /telehealth/sql/ops-openemr-upgrade.sql
+1. Listas y traducciones: /telehealth/sql/ops-openemr-data-upgrade.sql
+1. Configuración Documentos: /telehealth/sql/documentos-teleconsulta.sql
+1. Actualizaciones tablas: /telehealth/sql/ops-openemr-upgrade.sql
 
 
 ## Actualización al CIE-11
@@ -30,24 +30,25 @@ php load_icd_es.php
 
 ## Configurar sistema
 Luego acceder al sistema via web server e ir al menu Administración / Formularios / Formularios de administración y dejar las configuraciones  como se describen a continuacion: 
-        - Desactivar todos los formularios de la vista/encuentro que no sean los siguientes:
-            - Plan de atención	inhabilitado	
-            - Clinical Instructions	inhabilitado
-            - Nota Clínica	Activado 
-            - Eye Exam	inhabilitado 
-            - Hoja de tarifas	inhabilitado 
-            - Functional and Cognitive Status	inhabilitado 
-            - Group Attendance Form	inhabilitado 
-            - Diversas opciones de facturación HCFA	inhabilitado 
-            - Formulario Nueva Visita	inhabilitado 
-            - New Group Encounter Form	Activado 
-            - Observation	inhabilitado 
-            - Orden de Procedimiento	inhabilitado 
-            - Revisión de los sistemas	inhabilitado 
-            - Revisión de chequeos de sistemas	inhabilitado 
-            - SOEP	Activado 
-            - Dictado	inhabilitado 
-            - Signos Vitales	Activado
+- Desactivar todos los formularios de la vista/encuentro que no sean los siguientes:
+    - [] Plan de atención	    inhabilitado	
+    - [] Clinical Instructions	inhabilitado
+    - [X] Nota Clínica	        Activado 
+    - [] Eye Exam	            inhabilitado 
+    - [] Hoja de tarifas	    inhabilitado 
+    - [] Functional and Cognitive Status	inhabilitado 
+    - [] Group Attendance Form	inhabilitado 
+    - [] Diversas opciones de facturación HCFA	inhabilitado 
+    - [] Formulario Nueva Visita	inhabilitado 
+    - [X] New Group Encounter Form	Activado 
+    - [] Observation	            inhabilitado 
+    - [] Orden de Procedimiento	inhabilitado 
+    - [] Revisión de los sistemas	inhabilitado 
+    - [] Revisión de chequeos de sistemas	inhabilitado 
+    - [X] SOEP	                    Activado 
+    - [] Dictado	                inhabilitado 
+    - [X] Signos Vitales	        Activado
+
 ## Variables de entornos archivo .env
 Estas variables deben configurarse para que el módulo de teleconsulta funcione correctamente. El archivo debe estar en el direcotrio principal de la aplicacion OpenEMR 
 ################################
