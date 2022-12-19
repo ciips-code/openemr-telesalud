@@ -1,5 +1,6 @@
 <?php
-
+// MVP para Plataforma de telesalud Todo en una basada en OpemEMR  v7.0.0
+// TODO: Refactorizar este controller como clase php 
 declare(strict_types=1);
 //Paths
 $webroot = $_SERVER['DOCUMENT_ROOT'];
