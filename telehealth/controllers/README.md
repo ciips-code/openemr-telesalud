@@ -2,6 +2,12 @@
 
 Seguir los pasos de instalación del siguiente enlace. https://github.com/ciips-code/openemr-telesalud/blob/release/v1.0/Documentation/INSTALL
 
+Se puede descargar la versión 1.0 de siguiente manera:
+```
+git clone https://github.com/ciips-code/openemr-telesalud openemr-telesalud.git
+git checkout 
+```
+
 ## Post instalacion 
 Una vez instalado OpenEmr y configurado la Base de datos debe ejecutar los siguientes archivos via sql dump
 1. Listas y traducciones: /telehealth/sql/ops-openemr-data-upgrade.sql
@@ -62,7 +68,7 @@ VC_API_URL='https://meet.telesalud.iecs.org.ar'
 VC_API='/api/videoconsultation?'
 ### Endpoint de datos
 VC_API_DATA='/api/videoconsultation/data?'
-### Puerto-
+### Puerto
 VC_API_PORT=NRO DE PUERTO
 ### Token access
 VC_API_TOKEN=TOKEN DE ACCESO
@@ -72,7 +78,7 @@ VC_API_TOKEN=TOKEN DE ACCESO
 ################################
 
 ## DATA BASE CONNECTIONS SETTING
-OPS_DB_HOST=HOST DE BASE DE DATOS
+OPS_DB_HOST=HOST DE BASE DE DATOS 
 OPS_DB_PASSWORD=CONTRASEÑA DE BASE DE DATOS
 OPS_DB_USER=USUARIO DE BASE DE DATOS
 OPS_DB_DATABASE=NOMBRE DE BASE DE DATOS
