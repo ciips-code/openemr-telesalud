@@ -4,8 +4,8 @@ Seguir los pasos de instalación del siguiente enlace. https://github.com/ciips-
 
 Se puede descargar la versión 1.0 de siguiente manera:
 ```
-git clone https://github.com/ciips-code/openemr-telesalud openemr-telesalud.git
-git checkout 
+git clone https://github.com/ciips-code/openemr-telesalud openemr-telesalud
+git checkout release/v1.0
 ```
 
 ## Post instalacion 
