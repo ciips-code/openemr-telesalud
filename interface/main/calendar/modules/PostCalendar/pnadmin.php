@@ -152,19 +152,19 @@ EOF;
             return $output->GetOutput();
         }
     }
-    foreach ($durationh as $i => $val) {
-        if (
-            !is_numeric($durationh[$i]) || !is_numeric($durationm[$i]) ||
-            !is_numeric($event_repeat_freq[$i]) ||
-            !is_numeric($event_repeat_on_freq[$i]) || !is_numeric($end_date_freq[$i])
-        ) {
-            $output->Text(postcalendar_admin_categories(
-                $msg,
-                " Hours, Minutes and recurrence values must be numeric!"
-            ));
-            return $output->GetOutput();
-        }
-    }
+    // foreach ($durationh as $i => $val) {
+    //     if (
+    //         !is_numeric($durationh[$i]) || !is_numeric($durationm[$i]) ||
+    //         !is_numeric($event_repeat_freq[$i]) ||
+    //         !is_numeric($event_repeat_on_freq[$i]) || !is_numeric($end_date_freq[$i])
+    //     ) {
+    //         $output->Text(postcalendar_admin_categories(
+    //             $msg,
+    //             " Hours, Minutes and recurrence values must be numeric!"
+    //         ));
+    //         return $output->GetOutput();
+    //     }
+    // }
     if (!empty($newnam)) {
         if (
             !is_numeric($new_durationh) ||
