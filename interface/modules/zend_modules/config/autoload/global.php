@@ -126,3 +126,26 @@ function my_decrypt($data)
     list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
 }
+
+
+
+
+// Telehealth functions 
+/**
+ * returns range calnedar cateogries list 
+ *
+ * @return array 
+ */
+function getCalRangCatList()
+{
+    
+    $calendar_ranges_cats_list = array();
+    $sql = "SELECT pc_catid FROM openemr_postcalendar_categories where pc_range=1";
+    // echo $sql;    
+    $resource = sqlStatement($sql);
+    while ($irow = sqlFetchArray($resource)) {        
+        $calendar_ranges_cats_list[] = $irow['pc_catid'];
+    }
+    // print_r($calendar_ranges_cats_list);
+    return $calendar_ranges_cats_list;
+}

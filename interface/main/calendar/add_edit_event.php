@@ -111,8 +111,11 @@ $g_view = AclMain::aclCheckCore("groups", "gcalendar", false, 'view');
  * @var EventDispatcherInterface $eventDispatcher
  */
 $eventDispatcher = $GLOBALS['kernel']->getEventDispatcher();
-// get calendar range categories list
-$calendar_ranges_cats_lis=array(2,101);
+/**
+ * Telehealth project 
+ */
+$calendar_ranges_cats_list=getCalRangCatList();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -1135,7 +1138,7 @@ function set_display() {
         var style_apptstatus = document.getElementById('title_apptstatus').style;
         var style_prefcat = document.getElementById('title_prefcat').style;
         //get range calendar categories list
-        let calendarRangeCatsList = <?php echo json_encode($calendar_ranges_cats_lis); ?>;
+        let calendarRangeCatsList = <?php echo json_encode($calendar_ranges_cats_list); ?>;
         // if selected catid is in calendarRangeCatsList        
            if(calendarRangeCatsList.find((id)=>{
                         //

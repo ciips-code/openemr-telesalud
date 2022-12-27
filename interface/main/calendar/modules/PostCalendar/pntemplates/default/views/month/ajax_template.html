@@ -435,7 +435,12 @@ foreach ($providers as $provider) {
             if ($providerid != $event['aid']  && $event['aid']!=0) { continue; }
 
             // Omit IN and OUT events to reduce clutter in this month view
-            if (($event['catid'] == 2) || ($event['catid'] == 3)) { continue; }
+            //($event['catid'] == 2) 
+            if (
+                
+                (in_array($event['catid'],$calendar_ranges_cats_list))
+                
+                || ($event['catid'] == 3)) { continue; }
 
             // specially handle all-day events
             if ($event['alldayevent'] == 1) {

@@ -590,9 +590,14 @@ function findFirstAvailable($period)
 
     return $available_times;
 }
+/**
+ * Telehealth project 
+ */
+$calendar_ranges_cats_list=getCalRangCatList();
 
 function findFirstInDay($day, $date)
 {
+    global $calendar_ranges_cats_list;
     $stack = array();
     $lastcat = 3;
     $intime = false;
@@ -600,7 +605,8 @@ function findFirstInDay($day, $date)
     foreach ($day as $event) {
         //echo "event is: " . $event['title'] . " cat is: " .$event['catid'] . " event date is: " . $date . "<br />";
 
-        if ($event['catid'] == 2) { //catid 2 is reserved to represent "In Office" events, id 3 is "Out Of Office"
+        // if ($event['catid'] == 2) { //catid 2 is reserved to represent "In Office" events, id 3 is "Out Of Office"
+        if(in_array($event['catid'],$calendar_ranges_cats_list)  ){
             $intime = $event['startTime'];
             //echo "setting in: $intime<br />";
         } elseif ($event['catid'] == 3) {

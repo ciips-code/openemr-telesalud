@@ -479,7 +479,11 @@ foreach ($providers as $provider) {
         echo "</td></tr>\n";
     }
     echo "</table></div></td>";
-
+    /**
+    * Telehealth project 
+    */
+   $calendar_ranges_cats_list=getCalRangCatList();
+   
     // For each day...
     // output a TD with an inner containing DIV positioned 'relative'
     // within that DIV we place our event DIVs using 'absolute' positioning
@@ -506,9 +510,15 @@ foreach ($providers as $provider) {
             $slotendmins = $starttimeh * 60 + $starttimem + $interval;
 
             $events_in_timeslot = array();
+            //($e1['catid'] == 2) 
             foreach ($events as $e1) {
                 // ignore IN and OUT events
-                if (!empty($e1['catid']) && (($e1['catid'] == 2) || ($e1['catid'] == 3))) { continue; }
+                if (!empty($e1['catid']) && (
+                    
+                
+                (in_array($e1['catid'],$calendar_ranges_cats_list)) 
+
+                || ($e1['catid'] == 3))) { continue; }
                 // skip events without an ID (why they are in the loop, I have no idea)
                 if (empty($e1['eid'])) { continue; }
                 // skip events for other providers
@@ -636,7 +646,9 @@ foreach ($providers as $provider) {
             // the IN event creates a DIV until the OUT event
             // or, without an OUT DIV matching the IN event
             // then the IN event runs until the end of the day
-            if ($event['catid'] == 2) {
+            //if ($event['catid'] == 2) 
+            if(in_array($event['catid'],$calendar_ranges_cats_list))
+            {
                 // locate a matching OUT for this specific IN
                 $found = false;
                 $outMins = 0;

@@ -399,7 +399,16 @@ function PrintEvents($events, $providerid, $TPL_IMAGE_PATH) {
             // the IN event creates a DIV until the OUT event
             // or, without an OUT DIV matching the IN event
             // then the IN event runs until the end of the day
-            if ($event['catid'] == 2) {
+            /**
+            * Telehealth project 
+            */
+            $calendar_ranges_cats_list=getCalRangCatList();
+
+            //if ($event['catid'] == 2) 
+            
+            if(in_array($event['catid'],$calendar_ranges_cats_list))
+
+            {
                 // locate a matching OUT for this specific IN
                 $found = false;
                 $outMins = 0;
