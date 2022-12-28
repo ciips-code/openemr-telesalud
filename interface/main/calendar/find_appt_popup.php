@@ -59,9 +59,15 @@ function doOneDay($catid, $udate, $starttime, $duration, $prefcatid)
     if ($iend <= $i) {
         $iend = $i + 1;
     }
-
+ /**
+    * Telehealth project 
+    */
+    $calendar_ranges_cats_list=getCalRangCatList();
+   
     for (; $i < $iend; ++$i) {
-        if ($catid == 2) {        // in office
+        // if ($catid == 2) {  
+                  // in office
+            if(in_array($catid,$calendar_ranges_cats_list) )      
             // If a category ID was specified when this popup was invoked, then select
             // only IN events with a matching preferred category or with no preferred
             // category; other IN events are to be treated as OUT events.

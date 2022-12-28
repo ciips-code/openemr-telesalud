@@ -484,7 +484,7 @@ foreach ($providers as $provider) {
             foreach ($events as $e1) {
                 // ignore IN event
                 //if (($e1['catid'] == 2)) 
-                if(in_array($e1['catid'],$$calendar_ranges_cats_list=g))
+                if(in_array($e1['catid'],$calendar_ranges_cats_list))
                 { continue; }
 
 				// skip events without an ID (why they are in the loop, I have no idea)
@@ -730,8 +730,10 @@ foreach ($providers as $provider) {
             if($GLOBALS['event_color']==2)
             $color=$row['color'];
             $divTitle .= "\n" . $row['name'];
-
-            if ($catid == 2 || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
+            //$catid == 2 
+            if (               
+                (in_array($catid,$calendar_ranges_cats_list))
+            || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
                 if      ($catid ==  2) $catname = xl("IN");
                 else if ($catid ==  3) $catname = xl("OUT");
                 else if ($catid ==  4) $catname = xl("VACATION");

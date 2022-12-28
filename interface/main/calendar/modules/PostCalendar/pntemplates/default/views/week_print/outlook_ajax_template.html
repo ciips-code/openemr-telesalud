@@ -492,8 +492,10 @@ function PrintEvents($events, $providerid, $TPL_IMAGE_PATH) {
             $divTitle = date("D, d M Y", strtotime($date ?? null));
 
             $eventdatetime = strtotime(($date ?? '')." ".$starth.":".$startm);
-
-            if ($catid == 2 || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
+            //$catid == 2 
+            if (                
+                in_array($catid,$calendar_ranges_cats_list)
+                || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
                 if      ($catid ==  2) $catname = xl("IN");
                 else if ($catid ==  3) $catname = xl("OUT");
                 else if ($catid ==  4) $catname = xl("VACATION");

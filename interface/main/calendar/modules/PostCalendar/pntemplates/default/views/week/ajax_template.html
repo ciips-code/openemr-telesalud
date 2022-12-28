@@ -513,11 +513,8 @@ foreach ($providers as $provider) {
             //($e1['catid'] == 2) 
             foreach ($events as $e1) {
                 // ignore IN and OUT events
-                if (!empty($e1['catid']) && (
-                    
-                
+                if (!empty($e1['catid']) && (                
                 (in_array($e1['catid'],$calendar_ranges_cats_list)) 
-
                 || ($e1['catid'] == 3))) { continue; }
                 // skip events without an ID (why they are in the loop, I have no idea)
                 if (empty($e1['eid'])) { continue; }
@@ -745,8 +742,9 @@ foreach ($providers as $provider) {
 	    if($GLOBALS['event_color']==2)
 	    $color=$row['color'];
 	      $divTitle .= "\n" . $row['name'];
-            if ($catid == 2 || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
-                if      ($catid ==  2) $catname = xl("IN");
+          //($catid ==  2) $catname = xl("IN");                
+            if ((in_array($catid,$calendar_ranges_cats_list)) || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
+                if(in_array($catid,$calendar_ranges_cats_list)) $catname = xl("IN");
                 else if ($catid ==  3) $catname = xl("OUT");
                 else if ($catid ==  4) $catname = xl("VACATION");
                 else if ($catid ==  8) $catname = xl("LUNCH");
