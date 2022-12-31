@@ -149,7 +149,7 @@ require_once("modules/$pcDir/pcSmarty.class.php");
 function &pcVarPrepForDisplay($s)
 {
     $s = nl2br(pnVarPrepForDisplay(postcalendar_removeScriptTags($s)));
-    $s = preg_replace('/&amp;(#)?([0-9a-z]+);/i', '&\\1\\2;', $s);
+    $s = preg_replace('/&amp;(#)?([0-9a-z]+);/i', '&\\1\\2;', $s??'');
     return $s;
 }
 function &pcVarPrepHTMLDisplay($s)
@@ -781,7 +781,7 @@ function pc_clean($s)
     }
 
     unset($display_type);
-    $s = preg_replace('/[\r|\n]/i', '', $s);
+    $s = preg_replace('/[\r|\n]/i', '', $s??'');
     $s = str_replace("'", "\'", $s);
     $s = str_replace('"', '&quot;', $s);
     // ok, now we need to break really long lines

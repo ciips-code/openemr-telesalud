@@ -461,7 +461,7 @@ foreach ($providers as $provider) {
         * Telehealth project 
         */
        $calendar_ranges_cats_list=getCalRangCatList();
-       
+        
 
 
     // For each event...
@@ -590,6 +590,10 @@ foreach ($providers as $provider) {
 
             // determine the class for the event DIV based on the event category
             $evtClass = "event_appointment";
+            
+            if(in_array($event['catid'],$calendar_ranges_cats_list)) 
+            {$evtClass = "event_in";}
+            else{
             switch ($event['catid']) {
                 case 1:  // NO-SHOW appt
                     $evtClass = "event_noshow";
@@ -616,6 +620,9 @@ foreach ($providers as $provider) {
                     $evtClass = 'event_appointment';
                     break;
             }
+            
+        }
+
             // eventViewClass allows the event class to override the template (such as from a dispatched system event).
             $evtClass = $event['eventViewClass'] ?? $evtClass;
 
@@ -696,7 +703,7 @@ foreach ($providers as $provider) {
             if($eventtype['pc_cattype']==1)
             $pccattype = 'true';
             $patientid = $event['pid'];
-            $commapos = strpos($event['patient_name'], ",");
+            $commapos = strpos($event['patient_name']??'', ",");
             $lname = substr($event['patient_name'], 0, $commapos);
 	        $fname = substr($event['patient_name'], $commapos + 2);
             $patient_dob = oeFormatShortDate($event['patient_dob']);
@@ -859,7 +866,9 @@ foreach ($providers as $provider) {
               ">";
             }
           // second part for the special IN event
-          if ($event['catid'] != 2) { echo $content; }
+          //if ($event['catid'] != 2) 
+          if(!in_array($event['catid'],$calendar_ranges_cats_list)) 
+          { echo $content; }
           echo "</div>\n";
        }
        elseif($_SESSION['pc_facility'] == $row['id']){
@@ -891,7 +900,9 @@ foreach ($providers as $provider) {
                " id='" . attr($eventdate) . "-" . attr($eventid) . "-" . attr($pccattype) . "'".
                ">";
            // second part for the special IN event
-           if ($event['catid'] != 2) { echo $content; }
+          // if ($event['catid'] != 2) 
+           if(!in_array($event['catid'],$calendar_ranges_cats_list)) 
+           { echo $content; }
            echo "</div>\n";
        }
        else{
@@ -923,7 +934,9 @@ foreach ($providers as $provider) {
                " id='" . attr($eventdate) . "-" . attr($eventid) . "-" . attr($pccattype) . "'".
                ">";
            // second part for the special IN event
-           if ($event['catid'] != 2) { echo "<span class='text-danger text-center font-weight-bold'>" . text($row['name']) . "</span>"; }
+           //if ($event['catid'] != 2) 
+           if(!in_array($event['catid'],$calendar_ranges_cats_list)) 
+           { echo "<span class='text-danger text-center font-weight-bold'>" . text($row['name']) . "</span>"; }
            echo "</div>\n";
        }
   } // end EVENT loop

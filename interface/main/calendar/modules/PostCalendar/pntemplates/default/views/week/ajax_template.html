@@ -482,7 +482,9 @@ foreach ($providers as $provider) {
     /**
     * Telehealth project 
     */
-   $calendar_ranges_cats_list=getCalRangCatList();
+    $calendar_ranges_cats_list=getCalRangCatList();
+    
+    
    
     // For each day...
     // output a TD with an inner containing DIV positioned 'relative'
@@ -606,6 +608,9 @@ foreach ($providers as $provider) {
             //check to see if the event is in the clinic hours range, if not it will not be displayed
             if  ( (int)$starth < (int)$openhour || (int)$starth > (int)$closehour ) { continue; }
 
+            if(in_array($event['catid'],$calendar_ranges_cats_list)) 
+            {$evtClass = "event_in";}
+            else{
             switch ($event['catid']) {
                 case 1:  // NO-SHOW appt
                     $evtClass = "event_noshow";
@@ -635,6 +640,7 @@ foreach ($providers as $provider) {
                     $evtClass = "event_appointment";
                     break;
             }
+        }
             // eventViewClass allows the event class to override the template (such as from a dispatched system event).
             $evtClass = $event['eventViewClass'] ?? $evtClass;
 
