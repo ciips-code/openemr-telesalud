@@ -310,8 +310,8 @@ foreach ($times as $slottime) {
 echo "</table></div></td>";
 
 /**
- * Telehealth project 
- */
+* Telehealth project 
+*/
 $calendar_ranges_cats_list=getCalRangCatList();
 
 
@@ -443,6 +443,10 @@ foreach ($providers as $provider) {
 
             // determine the class for the event DIV based on the event category
             $evtClass = "event_appointment";
+
+            if(in_array($event['catid'],$calendar_ranges_cats_list)) 
+            {$evtClass = "event_in";}
+            else{
             switch ($event['catid']) {
                 case 1:  // NO-SHOW appt
                     $evtClass = "event_noshow";
@@ -469,6 +473,7 @@ foreach ($providers as $provider) {
                     $evtClass = "event_appointment";
                     break;
             }
+           }
             // eventViewClass allows the event class to override the template (such as from a dispatched system event).
             $evtClass = $event['eventViewClass'] ?? $evtClass;
 

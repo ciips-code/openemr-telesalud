@@ -146,6 +146,6 @@ function getCalRangCatList()
     while ($irow = sqlFetchArray($resource)) {        
         $calendar_ranges_cats_list[] = $irow['pc_catid'];
     }
-    // print_r($calendar_ranges_cats_list);
+    // 
     return $calendar_ranges_cats_list;
 }
