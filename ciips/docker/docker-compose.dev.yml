@@ -6,8 +6,12 @@ services:
         command: --default-authentication-plugin=mysql_native_password
         volumes:
             - databasevolume:/var/lib/mysql
+            - ./sql:/docker-entrypoint-initdb.d
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         ports:
             - ${MYSQL_PORT}:3306
 
@@ -26,5 +30,9 @@ services:
             - ./dockerfiles/dev/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf:ro
         depends_on:
             - mysql
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 volumes:
     databasevolume: {}

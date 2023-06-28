@@ -35,7 +35,7 @@ RUN rm -rf /var/www/html \
     && mv sites sites_temp \
     && chown -R www-data:www-data /var/www/html
 
-WORKDIR=/var/www/html
+WORKDIR /var/www/html
 
 EXPOSE 80
 
