@@ -30,9 +30,5 @@ services:
             - ./dockerfiles/dev/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf:ro
         depends_on:
             - mysql
-        environment:
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 volumes:
     databasevolume: {}

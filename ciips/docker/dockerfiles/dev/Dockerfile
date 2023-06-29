@@ -25,8 +25,8 @@ RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php \
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
 ARG NGINX_UID=1000
-RUN usermod -u 10001 ubuntu
-RUN usermod -u ${NGINX_UID} www-data
+RUN usermod -u 10001 ubuntu && groupmod -g 10001 ubuntu
+RUN usermod -u ${NGINX_UID} www-data && groupmod -g ${NGINX_UID} www-data
 
 WORKDIR /var/www/html
 
