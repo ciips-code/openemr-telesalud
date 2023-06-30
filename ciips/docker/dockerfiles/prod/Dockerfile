@@ -25,7 +25,7 @@ RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php \
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
 RUN rm -rf /var/www/html \
-    && git clone --branch develop https://github.com/selva987/openemr-telesalud.git /var/www/html \
+    && git clone https://github.com/ciips-code/openemr-telesalud.git /var/www/html \
     && cd /var/www/html \
     && composer install \
     && npm install \
