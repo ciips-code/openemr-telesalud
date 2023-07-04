@@ -291,18 +291,17 @@ if (!empty($_POST['form_save'])) {
         $issueRecord['medication'] = $_POST['form_medication'];
     }
 
+    $issueRecord['diagnosis'] = implode(";", $issueRecord['diagnosis']);
+
     $patientIssuesService = new PatientIssuesService();
     if ($issue) {
+        $issueRecord['modifydate'] = date('Y-m-d H:i:s');
         $patientIssuesService->updateIssue($issueRecord);
     } else {
-        // TELESALUD
-        $issueRecord['title'] = 'Medical Problem ' . date("Y-m-d H:m:s");
-        // ./TELESALUD
         $issueRecord['date'] = date("Y-m-d H:m:s");
         $issueRecord['activity'] = 1;
         $issueRecord['user'] = $_SESSION['authUser'];
         $issueRecord['groupname'] = $_SESSION['authProvider'];
-        $issueRecord['diagnosis'] = implode(";", $issueRecord['diagnosis']);
 
         $patientIssuesService->createIssue($issueRecord);
     }
@@ -349,11 +348,27 @@ if (!empty($_POST['form_save'])) {
 }
 
 $irow = array();
+$diagnosisList = array();
 if ($issue) {
     $patientIssuesService = new PatientIssuesService();
     $irow = $patientIssuesService->getOneById($issue);
     if (!AclMain::aclCheckIssue($irow['type'], '', 'write')) {
         die(xlt("Edit is not authorized!"));
+    }
+
+    $diags = explode(";", $irow['diagnosis']);
+    foreach ($diags as $diag) {
+        // $codedesc = lookup_code_descriptions($diag);
+        list($codetype, $code) = explode(':', trim($diag));
+        $sql = "SELECT codes, title FROM list_options WHERE codes = '$codetype:{$code}'";
+        $queryDiag = sqlStatement($sql);
+
+        $codedesc = 'Not found';
+        while ($rowDiag = sqlFetchArray($queryDiag)) {
+            $codedesc = $rowDiag['title'];
+        }
+        $diagnosisList[$diag] = $codedesc;
+
     }
 } elseif ($thistype) {
     $irow['type'] = $thistype;
@@ -756,7 +771,7 @@ function getCodeText($code)
                 alert(<?php // echo xlj('Please enter a title!'); ?>);
                 return false;
             }
-            ./TELESALUD */ 
+            ./TELESALUD */
 
             top.restoreSession();
             return true;
@@ -814,7 +829,7 @@ function getCodeText($code)
 
                         <div class="form-group col-12" id='row_form_title'>
                             <label class="col-form-label" for="title_diagnosis"><?php echo xlt('Title'); /* echo xlt('Title'); */ ?>:</label>
-                            <input type='text' class="form-control" name='form_title' id='form_title' value='<?php echo attr($irow['title'] ?? '') ?>' autocomplete="off" />
+                            <input type='hidden' class="form-control" name='form_title' id='form_title' value='<?php echo attr($irow['title'] ?? '') ?>' autocomplete="off" />
                             <input type='hidden' name='form_title_id' value='<?php echo attr($irow['list_option_id'] ?? '') ?>'>
                         </div>
 
@@ -848,7 +863,10 @@ function getCodeText($code)
 
                         <div class="form-group col-12" id='row_titles'>
                             <label for="form_titles" class="col-form-label"> </label>
-                            <select name='form_titles[]' id='form_titles' class="form-control">
+                            <select name='form_titles[]' id='form_titles' multiple="" class="form-control">
+                        <?php foreach($diagnosisList as $diagCode => $diagText) { ?>
+                                <option value="<?= $diagCode ?>" selected=""><?= $diagText ?></option>
+                        <?php } ?>
                             </select>
                             <!-- <p><?php echo xlt('(Select one of these, or type your own title)'); ?></p> -->
                         </div>
@@ -1102,6 +1120,8 @@ function getCodeText($code)
             onCodeSelectionChange()
         });
 
+
+
         $(function() {
             // trigger datepicker
             $('#form_begin').datetimepicker({
@@ -1109,6 +1129,13 @@ function getCodeText($code)
                 minView: 2,
                 format: 'd/m/Y',
                 autoclose: true,
+            });
+            $('#form_titles').on('change', function(e) {
+                let diags = [];
+                $(this).select2('data').forEach(function(e,i) {
+                    diags.push(e.text);
+                })
+                $('#form_title').val(diags.join(' ; ') ?? '');
             });
         });
 
