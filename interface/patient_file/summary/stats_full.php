@@ -278,7 +278,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                     <th scope="col"><?php echo xlt('Referred By'); ?></th>
                                     <th scope="col"><?php echo xlt('Modify Date'); ?></th>
                                     <th scope="col"><?php echo xlt('Comments'); ?></th>
-                                    <th scope="col"><?php echo xlt('Enc'); ?></th>
+                                    <th scope="col"><?php //echo xlt('Enc'); ?></th>
                                 </tr>
                             </thead>
                             <?php
@@ -315,8 +315,6 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
 
                                 $disptitle = trim($row['title']) ? $row['title'] : "[Missing Title]";
 
-                                $ierow = sqlQuery("SELECT count(*) AS count FROM issue_encounter WHERE " .
-                                "list_id = ?", array($rowid));
 
                                 // encount is used to toggle the color of the table-row output below
                                 ++$encount;
@@ -333,7 +331,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                         list($codetype, $code) = explode(':', trim($diag));
                                         $sql = "SELECT codes, title FROM list_options WHERE codes = '$codetype:{$code}'";
                                         $queryDiag = sqlStatement($sql);
-                                        
+
                                         $codedesc = 'Not found';
                                         while ($rowDiag = sqlFetchArray($queryDiag)) {
                                             $codedesc = $rowDiag['title'];
@@ -344,7 +342,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                         }
 
                                         $codetext .= "<a href='javascript:educlick(" . attr_js($codetype) . "," . attr_js($code) . ")' $colorstyle>" . text($diag . " (" . $codedesc . ")") . "</a>";
-                                        
+
                                     }
                                 }
 
@@ -398,7 +396,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                 echo "  <td>" . text(oeFormatDateTime($row['modifydate'])) . "</td>\n";
                                 echo "  <td>" . text($row['comments']) . "</td>\n";
                                 echo "  <td id='e_" . attr($rowid) . "' class='noclick text-center' title='" . xla('View related encounters') . "'>";
-                                echo "  <button value='" . attr($ierow['count']) . "' class='btn btn-primary btn-sm editenc btn-edit' id='" . attr($rowid) . "'>" . xlt("Edit") . "</button>";
+                                echo "  <button class='btn btn-primary btn-sm editmp btn-edit' id='" . attr($rowid) . "'>" . xlt("Edit") . "</button>";
                                 echo "  </td>";
                                 echo " </tr>\n";
                             }
@@ -422,8 +420,7 @@ $(function () {
     $(".statrow").mouseover(function() { $(this).toggleClass("highlight"); });
     $(".statrow").mouseout(function() { $(this).toggleClass("highlight"); });
 
-    $(".statrow").click(function() { dopclick(this.id,0); });
-    $(".editenc").click(function(event) { doeclick(this.id); });
+    $(".editmp").click(function() { dopclick(this.id,0); });
     $("#newencounter").click(function() { newEncounter(); });
     $("#history").click(function() { GotoHistory(); });
     $("#back").click(function() { GoBack(); });
