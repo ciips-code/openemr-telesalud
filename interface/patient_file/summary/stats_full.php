@@ -208,6 +208,12 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         $encount = 0;
                         $first = 1; // flag for first section
                         foreach ($ISSUE_TYPES as $focustype => $focustitles) {
+
+                            // Omitimos los medicamentos y las alergias
+                            if (in_array($focustype, ['allergy', 'medication'])) {
+                                continue;
+                            }
+
                             if (!AclMain::aclCheckIssue($focustype)) {
                                 continue;
                             }
@@ -238,7 +244,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                         attr_js($focustype)  . ")'>" . xlt('Add') . "</a>\n";
                                 }
                             }
-
+                            
                             $canDelete = AclMain::aclCheckCore('admin', 'super');
                             if ($canDelete) {
                                 echo "<button id='" . $focustype . "-delete' disabled type='button'
@@ -370,7 +376,8 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
 
                                 echo " <tr class='" . attr($bgclass) . " detail' $colorstyle>\n";
                                 if ($canSelect) {
-                                    echo "  <td><input type='checkbox' class='selection-check' id='sel_" . attr($rowid) . "'/></td>\n";
+                                    echo "  <td><input type='checkbox' class='selection-check' id='sel_" . attr($rowid) . "'
+                                        onclick='rowSelectionChanged(" . attr_js($focustype) . ");'/></td>\n";
                                 }
                                 // echo "  <td class='text-left' id='" . attr($rowid) . "'>" . text($disptitle) . "</td>\n";
                                 echo "  <td>" . text(trim(oeFormatDateTime($row['begdate']))) . "&nbsp;</td>\n";

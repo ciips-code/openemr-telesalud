@@ -365,6 +365,9 @@ function PrintEvents($events, $providerid, $TPL_IMAGE_PATH) {
 
             // determine the class for the event DIV based on the event category
             $evtClass = "event_appointment";
+            if(in_array($event['catid'],$calendar_ranges_cats_list)) 
+            {$evtClass = "event_in";}
+            else{
             switch ($event['catid']) {
                 case 1:  // NO-SHOW appt
                     $evtClass = "event_noshow";
@@ -391,6 +394,7 @@ function PrintEvents($events, $providerid, $TPL_IMAGE_PATH) {
                     $evtClass = "event_appointment";
                     break;
             }
+            }
             // eventViewClass allows the event class to override the template (such as from a dispatched system event).
             $evtClass = $event['eventViewClass'] ?? $evtClass;
 
@@ -399,7 +403,18 @@ function PrintEvents($events, $providerid, $TPL_IMAGE_PATH) {
             // the IN event creates a DIV until the OUT event
             // or, without an OUT DIV matching the IN event
             // then the IN event runs until the end of the day
-            if ($event['catid'] == 2) {
+            /**
+            * Telehealth project 
+            */
+            $calendar_ranges_cats_list=getCalRangCatList();
+            
+            
+
+            //if ($event['catid'] == 2) 
+            
+            if(in_array($event['catid'],$calendar_ranges_cats_list))
+
+            {
                 // locate a matching OUT for this specific IN
                 $found = false;
                 $outMins = 0;
@@ -465,9 +480,9 @@ function PrintEvents($events, $providerid, $TPL_IMAGE_PATH) {
 
             $eventid = $event['eid'];
             $patientid = $event['pid'];
-            $commapos = strpos($event['patient_name'], ",");
-            $lname = substr($event['patient_name'], 0, $commapos);
-	    $fname = substr($event['patient_name'], $commapos + 2);
+            $commapos = strpos($event['patient_name']??'', ",");
+            $lname = substr($event['patient_name']??'', 0, $commapos);
+	        $fname = substr($event['patient_name']??'', $commapos + 2);
             $patient_dob = $event['patient_dob'];
             $patient_age = $event['patient_age'];
             $catid = $event['catid'];
@@ -483,8 +498,10 @@ function PrintEvents($events, $providerid, $TPL_IMAGE_PATH) {
             $divTitle = date("D, d M Y", strtotime($date ?? null));
 
             $eventdatetime = strtotime(($date ?? '')." ".$starth.":".$startm);
-
-            if ($catid == 2 || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
+            //$catid == 2 
+            if (                
+                in_array($catid,$calendar_ranges_cats_list)
+                || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
                 if      ($catid ==  2) $catname = xl("IN");
                 else if ($catid ==  3) $catname = xl("OUT");
                 else if ($catid ==  4) $catname = xl("VACATION");

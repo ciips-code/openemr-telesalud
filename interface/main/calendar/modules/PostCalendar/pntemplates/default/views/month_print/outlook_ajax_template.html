@@ -246,6 +246,12 @@ div.tiny { width:1px; height:1px; font-size:1px; }
 [-assign var="month"   value=$DATE|date_format:"%m"|string_format:"%1d"-]
 [-assign var="year"    value=$DATE|date_format:"%Y"|string_format:"%4d"-]
 
+/**
+* Telehealth project 
+*/
+$calendar_ranges_cats_list=getCalRangCatList();
+
+
 [-php-]
 
 // start out without adding a pagebreak
@@ -333,7 +339,13 @@ foreach ($providers as $provider) {
             if ($providerid != $event['aid']) { continue; }
 
             // Omit IN and OUT events to reduce clutter in this month view
-            if (($event['catid'] == 2) || ($event['catid'] == 3)) { continue; }
+            //($event['catid'] == 2)
+            if (
+                
+            
+            (in_array($event['catid'],$calendar_ranges_cats_list))
+            
+            || ($event['catid'] == 3)) { continue; }
 
             // specially handle all-day events
             if ($event['alldayevent'] == 1) {
@@ -352,6 +364,10 @@ foreach ($providers as $provider) {
 
             // determine the class for the event DIV based on the event category
             $evtClass = "event_appointment";
+
+            if(in_array($event['catid'],$calendar_ranges_cats_list)) 
+            {$evtClass = "event_in";}
+            else{
             switch ($event['catid']) {
                 case 1:  // NO-SHOW appt
                     $evtClass = "event_noshow";
@@ -377,6 +393,7 @@ foreach ($providers as $provider) {
                 default: // some appointment
                     $evtClass = "event_appointment";
                     break;
+            }
             }
             // eventViewClass allows the event class to override the template (such as from a dispatched system event).
             $evtClass = $event['eventViewClass'] ?? $evtClass;

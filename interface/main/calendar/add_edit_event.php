@@ -111,6 +111,10 @@ $g_view = AclMain::aclCheckCore("groups", "gcalendar", false, 'view');
  * @var EventDispatcherInterface $eventDispatcher
  */
 $eventDispatcher = $GLOBALS['kernel']->getEventDispatcher();
+/**
+ * Telehealth project 
+ */
+$calendar_ranges_cats_list=getCalRangCatList();
 
 ?>
 <!DOCTYPE html>
@@ -1124,7 +1128,6 @@ function sel_group() {
     let title = '<?php echo xlt('Group Search'); ?>';
     dlgopen('find_group_popup.php', '_blank', 650, 300, '', title);
 }
-
 // Do whatever is needed when a new event category is selected.
 // For now this means changing the event title and duration.
 function set_display() {
@@ -1134,7 +1137,13 @@ function set_display() {
         var catid = s.options[s.selectedIndex].value;
         var style_apptstatus = document.getElementById('title_apptstatus').style;
         var style_prefcat = document.getElementById('title_prefcat').style;
-        if (catid == '2') { // In Office
+        //get range calendar categories list
+        let calendarRangeCatsList = <?php echo json_encode($calendar_ranges_cats_list); ?>;
+        // if selected catid is in calendarRangeCatsList        
+           if(calendarRangeCatsList.find((id)=>{
+                        //
+                        return id == catid;
+            })){// In Office
             style_apptstatus.display = 'none';
             style_prefcat.display = '';
             f.form_apptstatus.style.display = 'none';

@@ -149,7 +149,7 @@ require_once("modules/$pcDir/pcSmarty.class.php");
 function &pcVarPrepForDisplay($s)
 {
     $s = nl2br(pnVarPrepForDisplay(postcalendar_removeScriptTags($s)));
-    $s = preg_replace('/&amp;(#)?([0-9a-z]+);/i', '&\\1\\2;', $s);
+    $s = preg_replace('/&amp;(#)?([0-9a-z]+);/i', '&\\1\\2;', $s??'');
     return $s;
 }
 function &pcVarPrepHTMLDisplay($s)
@@ -177,7 +177,7 @@ function &postcalendar_makeValidURL($s)
 }
 function postcalendar_removeScriptTags($in)
 {
-    return preg_replace("/<script.*?>(.*?)<\/script>/", "", $in);
+    return preg_replace("/<script.*?>(.*?)<\/script>/", "", $in??'');
 }
 
 function postcalendar_getDate($format = 'Ymd')
@@ -590,9 +590,14 @@ function findFirstAvailable($period)
 
     return $available_times;
 }
+/**
+ * Telehealth project 
+ */
+$calendar_ranges_cats_list=getCalRangCatList();
 
 function findFirstInDay($day, $date)
 {
+    global $calendar_ranges_cats_list;
     $stack = array();
     $lastcat = 3;
     $intime = false;
@@ -600,7 +605,8 @@ function findFirstInDay($day, $date)
     foreach ($day as $event) {
         //echo "event is: " . $event['title'] . " cat is: " .$event['catid'] . " event date is: " . $date . "<br />";
 
-        if ($event['catid'] == 2) { //catid 2 is reserved to represent "In Office" events, id 3 is "Out Of Office"
+        // if ($event['catid'] == 2) { //catid 2 is reserved to represent "In Office" events, id 3 is "Out Of Office"
+        if(in_array($event['catid'],$calendar_ranges_cats_list)  ){
             $intime = $event['startTime'];
             //echo "setting in: $intime<br />";
         } elseif ($event['catid'] == 3) {
@@ -775,7 +781,7 @@ function pc_clean($s)
     }
 
     unset($display_type);
-    $s = preg_replace('/[\r|\n]/i', '', $s);
+    $s = preg_replace('/[\r|\n]/i', '', $s??'');
     $s = str_replace("'", "\'", $s);
     $s = str_replace('"', '&quot;', $s);
     // ok, now we need to break really long lines

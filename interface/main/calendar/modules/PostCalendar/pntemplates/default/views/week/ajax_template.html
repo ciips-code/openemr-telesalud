@@ -479,7 +479,13 @@ foreach ($providers as $provider) {
         echo "</td></tr>\n";
     }
     echo "</table></div></td>";
-
+    /**
+    * Telehealth project 
+    */
+    $calendar_ranges_cats_list=getCalRangCatList();
+    
+    
+   
     // For each day...
     // output a TD with an inner containing DIV positioned 'relative'
     // within that DIV we place our event DIVs using 'absolute' positioning
@@ -506,9 +512,12 @@ foreach ($providers as $provider) {
             $slotendmins = $starttimeh * 60 + $starttimem + $interval;
 
             $events_in_timeslot = array();
+            //($e1['catid'] == 2) 
             foreach ($events as $e1) {
                 // ignore IN and OUT events
-                if (!empty($e1['catid']) && (($e1['catid'] == 2) || ($e1['catid'] == 3))) { continue; }
+                if (!empty($e1['catid']) && (                
+                (in_array($e1['catid'],$calendar_ranges_cats_list)) 
+                || ($e1['catid'] == 3))) { continue; }
                 // skip events without an ID (why they are in the loop, I have no idea)
                 if (empty($e1['eid'])) { continue; }
                 // skip events for other providers
@@ -599,6 +608,9 @@ foreach ($providers as $provider) {
             //check to see if the event is in the clinic hours range, if not it will not be displayed
             if  ( (int)$starth < (int)$openhour || (int)$starth > (int)$closehour ) { continue; }
 
+            if(in_array($event['catid'],$calendar_ranges_cats_list)) 
+            {$evtClass = "event_in";}
+            else{
             switch ($event['catid']) {
                 case 1:  // NO-SHOW appt
                     $evtClass = "event_noshow";
@@ -628,6 +640,7 @@ foreach ($providers as $provider) {
                     $evtClass = "event_appointment";
                     break;
             }
+        }
             // eventViewClass allows the event class to override the template (such as from a dispatched system event).
             $evtClass = $event['eventViewClass'] ?? $evtClass;
 
@@ -636,7 +649,9 @@ foreach ($providers as $provider) {
             // the IN event creates a DIV until the OUT event
             // or, without an OUT DIV matching the IN event
             // then the IN event runs until the end of the day
-            if ($event['catid'] == 2) {
+            //if ($event['catid'] == 2) 
+            if(in_array($event['catid'],$calendar_ranges_cats_list))
+            {
                 // locate a matching OUT for this specific IN
                 $found = false;
                 $outMins = 0;
@@ -733,8 +748,9 @@ foreach ($providers as $provider) {
 	    if($GLOBALS['event_color']==2)
 	    $color=$row['color'];
 	      $divTitle .= "\n" . $row['name'];
-            if ($catid == 2 || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
-                if      ($catid ==  2) $catname = xl("IN");
+          //($catid ==  2) $catname = xl("IN");                
+            if ((in_array($catid,$calendar_ranges_cats_list)) || $catid == 3 || $catid == 4 || $catid == 8 || $catid == 11) {
+                if(in_array($catid,$calendar_ranges_cats_list)) $catname = xl("IN");
                 else if ($catid ==  3) $catname = xl("OUT");
                 else if ($catid ==  4) $catname = xl("VACATION");
                 else if ($catid ==  8) $catname = xl("LUNCH");

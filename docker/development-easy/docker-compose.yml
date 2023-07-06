@@ -32,8 +32,8 @@ services:
             - ../../../data/database:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: root
-            TZ : America/Argentina/Buenos_Aires
-    ops-openemr:    
+            TZ: America/Argentina/Buenos_Aires
+    ops-openemr:
         # build: .
         container_name: ops_openemr
         restart: always
@@ -56,7 +56,7 @@ services:
             - ../../../logs:/var/log:rw
             - ../../../logs-www:/var/www/logs:rw
             # couchdb data
-            - ../../../data/couchdb:/couchdb/data
+            # - ../../../data/couchdb:/couchdb/data
         environment:
             DEBUG_COLORS: "true"
             TERM: xterm-256color
@@ -85,14 +85,14 @@ services:
             OPENEMR_SETTING_rest_portal_api: 1
             OPENEMR_SETTING_portal_onsite_two_enable: 1
             OPENEMR_SETTING_ccda_alt_service_enable: 3
-            OPENEMR_SETTING_couchdb_host: ops-openemr-couchdb
-            OPENEMR_SETTING_couchdb_port: 6984
-            OPENEMR_SETTING_couchdb_user: admin
-            OPENEMR_SETTING_couchdb_pass: password
-            OPENEMR_SETTING_couchdb_dbase: example
-            OPENEMR_SETTING_couchdb_ssl_allow_selfsigned: 1
-            OPENEMR_SETTING_gbl_ldap_host: 'ldap://ops-openemr-openldap:389'
-            OPENEMR_SETTING_gbl_ldap_dn: 'cn={login},dc=example,dc=org'
+            # OPENEMR_SETTING_couchdb_host: ops-openemr-couchdb
+            # OPENEMR_SETTING_couchdb_port: 6984
+            # OPENEMR_SETTING_couchdb_user: admin
+            # OPENEMR_SETTING_couchdb_pass: password
+            # OPENEMR_SETTING_couchdb_dbase: example
+            # OPENEMR_SETTING_couchdb_ssl_allow_selfsigned: 1
+            # OPENEMR_SETTING_gbl_ldap_host: 'ldap://ops-openemr-openldap:389'
+            # OPENEMR_SETTING_gbl_ldap_dn: 'cn={login},dc=example,dc=org'
         depends_on:
             - ops-openemr-mysql
         # networks:
@@ -105,33 +105,33 @@ services:
             - 8310:80
         environment:
             PMA_HOSTS: ops-openemr-mysql
-    ops-openemr-couchdb:
-        container_name: ops_openemr_couchdb
-        restart: always
-        image: couchdb
-        ports:
-            - 5984:5984
-            - 6984:6984
-        volumes:
-            - ../library/couchdb-config-ssl-cert-keys/local.ini:/opt/couchdb/etc/local.ini:rw
-            - ../library/couchdb-config-ssl-cert-keys/easy/ca.pem:/etc/ssl/ca.pem:ro
-            - ../library/couchdb-config-ssl-cert-keys/easy/server-cert.pem:/etc/ssl/server-cert.pem:ro
-            - ../library/couchdb-config-ssl-cert-keys/easy/server-key.pem:/etc/ssl/server-key.pem:ro
-            - ../../../data/couchdb:/opt/couchdb/data
-        environment:
-            COUCHDB_USER: admin
-            COUCHDB_PASSWORD: password
-    ops-openemr-openldap:
-        container_name: ops_openemr_openldap
-        restart: always
-        image: openemr/dev-ldap:easy
-        ports:
-            - 8389:389
-        environment:
-            LDAP_TLS_VERIFY_CLIENT: try
-            LDAP_TLS_CA_CRT_FILENAME: ca.pem
-            LDAP_TLS_CRT_FILENAME: server-cert.pem
-            LDAP_TLS_KEY_FILENAME: server-key.pem
+    # ops-openemr-couchdb:
+    #     container_name: ops_openemr_couchdb
+    #     restart: always
+    #     image: couchdb
+    #     ports:
+    #         - 5984:5984
+    #         - 6984:6984
+    #     volumes:
+    #         - ../library/couchdb-config-ssl-cert-keys/local.ini:/opt/couchdb/etc/local.ini:rw
+    #         - ../library/couchdb-config-ssl-cert-keys/easy/ca.pem:/etc/ssl/ca.pem:ro
+    #         - ../library/couchdb-config-ssl-cert-keys/easy/server-cert.pem:/etc/ssl/server-cert.pem:ro
+    #         - ../library/couchdb-config-ssl-cert-keys/easy/server-key.pem:/etc/ssl/server-key.pem:ro
+    #         # - ../../../data/couchdb:/opt/couchdb/data
+    #     environment:
+    #         COUCHDB_USER: admin
+    #         COUCHDB_PASSWORD: password
+    # ops-openemr-openldap:
+    #     container_name: ops_openemr_openldap
+    #     restart: always
+    #     image: openemr/dev-ldap:easy
+    #     ports:
+    #         - 8389:389
+    #     environment:
+    #         LDAP_TLS_VERIFY_CLIENT: try
+    #         LDAP_TLS_CA_CRT_FILENAME: ca.pem
+    #         LDAP_TLS_CRT_FILENAME: server-cert.pem
+    #         LDAP_TLS_KEY_FILENAME: server-key.pem
     ops-openemr-xdebug-nginx:
         container_name: ops_xdebug_nginx
         build:
@@ -171,16 +171,4 @@ services:
     #         - '../../telehealth/api/v1:/app'
     #     depends_on:
     #         - ops-openemr-mysql
-# networks:
-#     internal:
-#         driver: bridge
-# volumes:
-#     database: {}
-#     public: {}
-#     sites: {}
-#     nodemodules: {}
-#     vendor: {}
-#     ccdanodemodules: {}
-#     log: {}
-#     logs-www: {}
-#     couchdb: {}
+
