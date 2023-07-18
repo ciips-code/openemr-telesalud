@@ -97,7 +97,7 @@ $clinical_notes_category = $clinicalNotesService->getClinicalNoteCategories();
             document.getElementById("description_" + rowid1[1]).value = '';
             document.getElementById("code_" + rowid1[1]).value = '';
             document.getElementById("codetext_" + rowid1[1]).value = '';
-            document.getElementById("code_date_" + rowid1[1]).value = '';
+            //document.getElementById("code_date_" + rowid1[1]).value = '';
             document.getElementById("clinical_notes_type_" + rowid1[1]).value = '';
             document.getElementById("id_" + rowid1[1]).value = '';
             if (typeof doTemplateEditor !== 'undefined') {
@@ -196,7 +196,7 @@ $clinical_notes_category = $clinicalNotesService->getClinicalNoteCategories();
                                         <div class="row pl-2">
                                             <div class="col-12">
                                                 <label for="code_date_<?php echo attr($key) + 1; ?>" class="h5"><?php echo xlt('Date and Time'); ?>:</label>
-                                                <input type='text' id="code_date_<?php echo attr($key) + 1; ?>" name='code_date[]' class="form-control code_date datepicker" value='<?php echo attr($obj["date"]??''); ?>' title='<?php echo xla('yyyy-mm-dd Date of service'); ?>' autocomplete="off" />
+                                                <input type='text' id="code_date_<?php echo attr($key) + 1; ?>" name='code_date[]' class="form-control code_date datepicker" value='<?php echo attr($obj["date"]?? date('Y-m-d H:i:s')); ?>' title='<?php echo xla('yyyy-mm-dd Date of service'); ?>' autocomplete="off" />
                                             </div>
                                             <div class="col-12">
                                                 <label for="clinical_notes_type_<?php echo attr($key) + 1; ?>" class="h5"><?php echo xlt('Type'); ?>:</label>
