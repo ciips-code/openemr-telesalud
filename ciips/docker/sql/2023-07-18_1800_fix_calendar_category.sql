@@ -1,0 +1,3 @@
+UPDATE openemr_postcalendar_categories
+SET pc_constant_id='second', pc_catname='Second opinionn', pc_catcolor='#000000', pc_catdesc='Para configurar agenda de profesional de segunda opinion', pc_recurrtype=0, pc_enddate=NULL, pc_recurrspec='a:5:{s:17:"event_repeat_freq";s:1:"0";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:1:"0";}', pc_recurrfreq=0, pc_duration=0, pc_end_date_flag=0, pc_end_date_type=0, pc_end_date_freq=0, pc_end_all_day=0, pc_dailylimit=0, pc_cattype=1, pc_active=0, pc_seq=20, aco_spec='acct|bill'
+WHERE pc_catid=20;

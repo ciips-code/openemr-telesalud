@@ -1,1 +1,1 @@
-TRUNCATE TABLE keys;
+TRUNCATE TABLE `keys`;
