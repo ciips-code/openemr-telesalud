@@ -97,7 +97,7 @@ $catslots = 1;
 if ($input_catid) {
     $srow = sqlQuery("SELECT pc_duration FROM openemr_postcalendar_categories WHERE pc_catid = ?", array($input_catid));
     if ($srow['pc_duration']) {
-        $catslots = ceil($srow['pc_duration'] / $slotsecs);
+        $slotsecs = $srow['pc_duration'];
     }
 }
 
