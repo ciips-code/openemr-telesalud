@@ -244,8 +244,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                         attr_js($focustype)  . ")'>" . xlt('Add') . "</a>\n";
                                 }
                             }
-                            
-                            $canDelete = AclMain::aclCheckCore('admin', 'super');
+
+//                            $canDelete = AclMain::aclCheckCore('admin', 'super');
+                            $canDelete = false;
                             if ($canDelete) {
                                 echo "<button id='" . $focustype . "-delete' disabled type='button'
                                     class='btn btn-sm btn-delete btn-danger mr-1'
