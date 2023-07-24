@@ -44,3 +44,4 @@ telesalud/api/v1/composer.lock
 
 ciips/docker/.env
 ciips/docker/docker-compose.yml
+/ciips/docker/sql/2023-07-24_1600_icd11.sql.gz
