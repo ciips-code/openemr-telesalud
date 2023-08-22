@@ -4186,6 +4186,20 @@ $GLOBALS_METADATA = array(
         ],
 
     ],
+    'ICD11' => [
+        'icd11_languages' => [
+            xl('ICD11 available languages id'),
+            'text',
+            '',
+            xl('Comma separated list for languages id in which ICD11 terms are loaded in the DB'),
+        ],
+        'icd11_fallback_language' => [
+            xl('ICD11 fallback language id'),
+            'num',
+            '4',
+            xl('Language ID in which terms are going to be displayed in case the user selected a non supported language'),
+        ],
+    ]
 );
 
 if (!empty($GLOBALS['ippf_specific'])) {

@@ -360,7 +360,8 @@ if ($issue) {
     foreach ($diags as $diag) {
         // $codedesc = lookup_code_descriptions($diag);
         list($codetype, $code) = explode(':', trim($diag));
-        $sql = "SELECT codes, title FROM list_options WHERE codes = '$codetype:{$code}'";
+        $lang = getICD11LangId();
+        $sql = "SELECT codes, title FROM list_options WHERE codes = '$codetype:{$code}' AND lang_id = $lang";
         $queryDiag = sqlStatement($sql);
 
         $codedesc = 'Not found';

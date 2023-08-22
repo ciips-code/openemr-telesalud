@@ -23,14 +23,16 @@ require_once $GLOBALS['srcdir'] . '/csv_like_join.php';
 
 $term = $_POST['searchTerm'];
 $response = [];
+$lang = getICD11LangId();
 
 $query = sqlStatement(
-    "SELECT codes as id, title as text  
-    FROM list_options 
-    WHERE 
-        list_id = 'medical_problem_issue_list' AND 
-        activity = 1 AND 
-        (title LIKE '$term%' OR codes LIKE '$term%') 
+    "SELECT codes as id, title as text
+    FROM list_options
+    WHERE
+        list_id = 'medical_problem_issue_list' AND
+        activity = 1 AND
+        lang_id = $lang AND
+        (title LIKE '$term%' OR codes LIKE '$term%')
     ORDER BY CHAR_LENGTH(title) LIMIT 100");
 
 while ($row = sqlFetchArray($query)) {
