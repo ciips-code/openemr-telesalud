@@ -185,7 +185,7 @@ if (isset($_GET['action'])) {
  * @param integer $pc_catid
  * @return void
  */
-function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
+function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility_id, $reason = 'Video consultation', $pc_catid = 16)
 {
     $facilityService = new FacilityService();
     $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d H:i:s'));

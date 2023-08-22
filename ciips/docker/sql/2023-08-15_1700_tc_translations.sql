@@ -7,7 +7,8 @@ INSERT INTO lang_constants (cons_id,constant_name) VALUES
 (13483, 'Unassigned'),
 (13484, 'Acute (active)'),
 (13485, 'Chronic (passive)'),
-(13486, 'Invalid')
+(13486, 'Invalid'),
+(13487, 'Video Consultation')
 ;
 
 INSERT INTO lang_definitions(cons_id, lang_id, definition) VALUES
@@ -18,7 +19,8 @@ INSERT INTO lang_definitions(cons_id, lang_id, definition) VALUES
 (13483, 4, 'Sin Asignar'),
 (13484, 4, 'Agudo (activo)'),
 (13485, 4, 'Crónico (pasivo)'),
-(13486, 4, 'Inválido')
+(13486, 4, 'Inválido'),
+(13487, 4, 'Video consulta')
 ;
 
 UPDATE list_options
@@ -33,5 +35,9 @@ WHERE list_id='outcome' AND option_id='7';
 UPDATE list_options
 SET title='Invalid'
 WHERE list_id='outcome' AND option_id='8';
+
+UPDATE globals
+SET gl_value='Consultation'
+WHERE gl_name='default_chief_complaint';
 
 

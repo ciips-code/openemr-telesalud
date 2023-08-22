@@ -460,7 +460,7 @@ function efmouseover(elem, ptid, encid, formname, formid) {
                 }
 
                 if (!empty($result4["reason"])) {
-                    $reason_string .= text($result4["reason"]) . "<br />\n";
+                    $reason_string .= xlt($result4["reason"]) . "<br />\n";
                 }
 
                     // else
