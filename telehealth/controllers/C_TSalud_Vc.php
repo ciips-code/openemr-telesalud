@@ -505,6 +505,9 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
         $extra_data = array(
             'saludo' => 'Hola'
         );
+        if(isset($_ENV['OPS_NOTIFICATIONS_ENDPOINT']) && $_ENV['OPS_NOTIFICATIONS_ENDPOINT']) {
+            $extra_data['notification_url'] = $_ENV['OPS_NOTIFICATIONS_ENDPOINT'];
+        }
 
         // preparar datos a enviar al SCV
         $appoinment_date = $calendar_data['encounterDate'] . ' ' . $calendar_data['encounterTime'];
