@@ -752,14 +752,14 @@ if (!empty($_POST['form_action']) && ($_POST['form_action'] == "save")) {
      *                    INSERT NEW EVENT(S)
      * ======================================================*/
 
-        $eid = InsertEventFull();        
+        $eid = InsertEventFull();
     /* =======================================================
-     *                    TELESALUD 
+     *                    TELESALUD
      * ======================================================*/
         require_once( $_SERVER['DOCUMENT_ROOT'] . '/telehealth/controllers/C_TSalud_Vc.php');
         createVc($eid);
     /* =======================================================
-     *                    END TELESALUD 
+     *                    END TELESALUD
      * ======================================================*/
 
         //Tell subscribers that a new single appointment has been set
@@ -943,7 +943,13 @@ if ($eid) {
     $recurrence_end_date = ($row['pc_endDate'] && $row['pc_endDate'] != '0000-00-00') ? $row['pc_endDate'] : null;
     $pcroom = $row['pc_room'];
     $hometext = $row['pc_hometext'];
-    $hometext=str_replace('button_text',xlt('Copy patient link'),$hometext);
+    $translations = [
+        'button_text' => xlt('Copy patient link'),
+        'Video Consultation Links' => xlt('Video Consultation Links'),
+        'Patient' => xlt('Patient'),
+        'Professional' => xlt('Professional'),
+    ];
+    $hometext=str_replace(array_keys($translations),$translations,$hometext);
     if (substr($hometext, 0, 6) == ':text:') {
         $hometext = substr($hometext, 6);
     }
@@ -1804,7 +1810,7 @@ if (empty($_GET['prov'])) { ?>
         <!-- <label><?php echo xlt('Comments'); ?>:</label> -->
         <input class='form-control' type='hidden' name='form_comments' value='<?php echo attr($hometext); ?>' title='<?php echo xla('Optional information about this event'); ?>' />
         <?php echo htmlspecialchars_decode(stripslashes($hometext)); ?>
-       
+
     </div>
 </div>
 <div class="form-row mx-2">
@@ -2063,12 +2069,12 @@ function SubmitForm() {
     return true;
 }
 
-    // Function for copy content to cplipboard 
+    // Function for copy content to cplipboard
     function copyLinkToClipboard(linkElementId) {
-    
+
         // Get the link tag
         var linktag = window.document.getElementById(linkElementId);
-        if (linktag!=null) {           
+        if (linktag!=null) {
             // Copy the text inside the text field
             // navigator.clipboard.writeText(linktag.href);
             // copyToClipboard(linktag.href);

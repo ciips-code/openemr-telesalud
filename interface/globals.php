@@ -118,6 +118,24 @@ function GetCallingScriptName()
     return $e->getTrace()[1]['file'];
 }
 
+function getICD11LangId() {
+    $availableLangs = explode(',', $GLOBALS['icd11_languages']);
+    if(in_array($_SESSION['language_choice'], $availableLangs)) return $_SESSION['language_choice'];
+    else return $GLOBALS['icd11_fallback_language'];
+}
+
+function getICD11Term($code, $lang = null) {
+    if(!$lang) {
+        $lang = getICD11LangId();
+    }
+    $sql = "SELECT title FROM list_options WHERE codes = ?
+                                                AND lang_id = ?";
+    $queryDiag = sqlStatement($sql, [$code, $lang]);
+    $term = sqlFetchArray($queryDiag);
+    if($term) return $term['title'];
+    return '';
+}
+
 // This is the directory that contains site-specific data.  Change this
 // only if you have some reason to.
 $GLOBALS['OE_SITES_BASE'] = "$webserver_root/sites";

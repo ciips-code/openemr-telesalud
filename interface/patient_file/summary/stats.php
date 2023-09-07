@@ -189,6 +189,23 @@ foreach ($ISSUE_TYPES as $key => $arr) {
         }
 
         $listData = getListData($pid, $key);
+        //TELESALUD
+        //Translate ICD11 medical problems
+        if($listData && $key == 'medical_problem') {
+            $lang = getICD11LangId();
+            foreach($listData as &$l) {
+                if($l['diagnosis'] != '') {
+                    $terms = explode(';', $l['diagnosis']);
+                    $titles = [];
+                    foreach($terms as $term) {
+                        $titles[] = getICD11Term($term, $lang);
+                    }
+                }
+
+                $l['title'] = implode('; ', $titles);
+            }
+        }
+        //.TELESALUD
         $id = $key . "_ps_expand";
         $viewArgs = [
             'title' => xl($arr[0]),

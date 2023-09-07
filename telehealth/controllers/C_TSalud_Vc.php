@@ -4,14 +4,14 @@
 declare(strict_types=1);
 //Paths
 $webroot = $_SERVER['DOCUMENT_ROOT'];
-// autoload 
+// autoload
 require_once($webroot . '/vendor/autoload.php');
 //get envornment variables
 $dotenv = Dotenv\Dotenv::createImmutable($webroot . '/');
 $dotenv->load();
 /**
- * 
- * 
+ *
+ *
  * - Mostrar link iniciar teleconsutla en encabezado de resumen de paciente.
  * - Mostrar opciones de teleconsulta en el momento y hora correctas
  * - corregir el error sql de traducciones.
@@ -58,7 +58,7 @@ use OpenEMR\Services\CodeTypesService;
 use OpenEMR\Services\EncounterService;
 use OpenEMR\Services\FacilityService;
 use OpenEMR\Services\ListService;
-//some OpenEMR globals vars and requirements 
+//some OpenEMR globals vars and requirements
 $_GET['site'] = 'default';
 $ignoreAuth = true;
 //
@@ -133,7 +133,7 @@ $base64_content = '';
 $formid = 25;
 //
 /**
- * 
+ *
  */
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
@@ -186,7 +186,7 @@ if (isset($_GET['action'])) {
  * @param integer $pc_catid
  * @return void
  */
-function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility_id, $reason = 'Teleconsulta', $pc_catid = 16)
+function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility_id, $reason = 'Video consultation', $pc_catid = 16)
 {
     $facilityService = new FacilityService();
     $date = DateTimeToYYYYMMDDHHMMSS(date('Y-m-d H:i:s'));
@@ -238,8 +238,8 @@ function createEcounter($data_id, $pid, $provider_id, $userauthorized, $facility
         }
     }
     // // TSALUD- ISSUE-#16: Campos obligatorios nueva visita
-    // // Desde globales se ocultan todos los campos del formulario nueva visita. 
-    // // A continuación se asignan los valores obligatorios para que se pueda generar una nueva visita. 
+    // // Desde globales se ocultan todos los campos del formulario nueva visita.
+    // // A continuación se asignan los valores obligatorios para que se pueda generar una nueva visita.
 
     // // facility_id=3
     // // pc_catid=5
@@ -351,8 +351,8 @@ function dbConn()
 
 /**
  *
- * @param unknown $conn            
- * @param unknown $sql            
+ * @param unknown $conn
+ * @param unknown $sql
  * @return array|NULL[]
  */
 function sqlS($sql)
@@ -379,9 +379,9 @@ function sqlS($sql)
 /**
  * Show VC HTML Button link
  *
- * @param integer $authUserID            
- * @param integer $patientID            
- * @param string $url_field_name            
+ * @param integer $authUserID
+ * @param integer $patientID
+ * @param string $url_field_name
  * @return string
  */
 function showVCButtonlink($authUserID, $patientID, $url_field_name = 'medic_url', $vcCatList = '16')
@@ -389,7 +389,7 @@ function showVCButtonlink($authUserID, $patientID, $url_field_name = 'medic_url'
     try {
         $r = '';
         $sql = "
-            
+
 SELECT cal.pc_eid,
     cal.pc_aid,
     cal.pc_pid,
@@ -420,7 +420,7 @@ where pc_eventDate = current_date()
     return $r;
 }
 /**
- * 
+ *
  */
 function getEvolution($encounter)
 {
@@ -431,8 +431,8 @@ function getEvolution($encounter)
 }
 /**
  *
- * @param unknown $url            
- * @param unknown $url_field_name            
+ * @param unknown $url
+ * @param unknown $url_field_name
  * @return string
  */
 function vcButton($url, $url_field_name)
@@ -469,7 +469,7 @@ function createVc($pc_eid)
     $vc_category_list = '16';
     /**
      *
-     * @var string $sql_vc_calender -   
+     * @var string $sql_vc_calender -
      *      Consulta cita de tipo video consulta
      *      devuelve:
      *      - datos a enviar al SCV
@@ -479,8 +479,8 @@ function createVc($pc_eid)
 SELECT c.pc_eid, c.pc_catid, c.pc_aid, c.pc_pid,
 c.pc_title, c.pc_time, c.pc_eventDate as encounterDate,
 c.pc_endDate, c.pc_startTime as encounterTime,
-c.pc_endTime, c.pc_duration, 
-CONCAT_WS( p.fname, p.mname, p.lname ) AS patientFullName, 
+c.pc_endTime, c.pc_duration,
+CONCAT_WS( p.fname, p.mname, p.lname ) AS patientFullName,
 CONCAT_WS( m.fname, m.mname, m.lname ) AS medicFullName
 , p.email as patientEmail
 ,  vc.patient_url as patientEncounterUrl
@@ -489,10 +489,10 @@ CONCAT_WS( m.fname, m.mname, m.lname ) AS medicFullName
 c.pc_facility
 
 FROM
-openemr_postcalendar_events AS c 
+openemr_postcalendar_events AS c
 INNER JOIN patient_data AS p ON
-c.pc_pid = p.id 
-INNER JOIN users AS m ON c.pc_aid = m.id 
+c.pc_pid = p.id
+INNER JOIN users AS m ON c.pc_aid = m.id
 left join telehealth_vc as vc on c.pc_eid =vc.pc_eid
 
 WHERE
@@ -506,6 +506,9 @@ c.pc_catid IN ($vc_category_list) and c.pc_eid=$pc_eid;";
         $extra_data = array(
             'saludo' => 'Hola'
         );
+        if(isset($_ENV['OPS_NOTIFICATIONS_ENDPOINT']) && $_ENV['OPS_NOTIFICATIONS_ENDPOINT']) {
+            $extra_data['notification_url'] = $_ENV['OPS_NOTIFICATIONS_ENDPOINT'];
+        }
 
         // preparar datos a enviar al SCV
         $appoinment_date = $calendar_data['encounterDate'] . ' ' . $calendar_data['encounterTime'];
@@ -581,7 +584,7 @@ function addEcounter()
 }
 /**
  *
- * @param unknown $calendar_data            
+ * @param unknown $calendar_data
  */
 function sendEmail($calendar_data)
 {
@@ -754,8 +757,8 @@ function xxmail($from, $to, $subject, $body, $headers)
 /**
  * returns subjetc, body and sender email to send
  *
- * @param array $consultationData            
- * @param string $for            
+ * @param array $consultationData
+ * @param string $for
  * @return string[]|unknown[]
  */
 function emailMessageFor($consultationData, $for = 'pac')
@@ -799,10 +802,10 @@ function updateLinksToAgenda($pc_eid, $vc_data)
     $patient_url = $vc_data['data']['patient_url'];
     $medic_url = $vc_data['data']['medic_url'];
     $conn = dbConn();
-    $pc_hometext = mysqli_real_escape_string($conn, "Accesos a la video consulta:
+    $pc_hometext = mysqli_real_escape_string($conn, "Video Consultation Links:
 <ul>
-<li>Profesional: <a href=\"{$medic_url}\" target=\"_blank\" id=\"medicButton\">{$medic_url}</a></li>
-<li>Paciente: <a href=\"{$patient_url}\" target=\"_blank\" id=\"patientButton\">{$patient_url}</a> &nbsp  <a class=\"btn btn-primary\" href=\"#\" onclick=\"copyLinkToClipboard('patientButton');\"> button_text </a></li>
+<li>Professional: <a href=\"{$medic_url}\" target=\"_blank\" id=\"medicButton\">{$medic_url}</a></li>
+<li>Patient: <a href=\"{$patient_url}\" target=\"_blank\" id=\"patientButton\">{$patient_url}</a> &nbsp  <a class=\"btn btn-primary\" href=\"#\" onclick=\"copyLinkToClipboard('patientButton');\"> button_text </a></li>
 </ul>
 ");
     $query = "update openemr_postcalendar_events set
@@ -887,7 +890,7 @@ function getVcFiles($data_id, $medic_secret)
         $conn = dbConn();
         //if connected and files inside answer
         if ($conn && isset($response_data['data']['files'])) {
-            // print_r($response_data);            
+            // print_r($response_data);
             // echo "Getting Files...";
             //get files
             $files = $response_data['data']['files'];
@@ -966,7 +969,7 @@ function saveDocument($filetext, $patient_id, $encounter, $fileName)
     //
     if ($type !== 'x-empty') {
         $fileName = check_file_dir_name($fileName) . ".$type";
-        // get catid 
+        // get catid
         $query = "SELECT id FROM categories where name ='" . VC . "'";
         $result = sqlS($query);
         $category_id = $result['id'];
@@ -1050,11 +1053,11 @@ current_timestamp(), 1)";
 /**
  * solcita servicio de video consulta
  *
- * @param array $data            
- * @param string $method            
- * @param string $bearToken            
- * @param unknown $authorization            
- * @param string $api_url            
+ * @param array $data
+ * @param string $method
+ * @param string $bearToken
+ * @param unknown $authorization
+ * @param string $api_url
  * @return string -
  *         respuesta del servicio de video consulta
  */
@@ -1077,7 +1080,7 @@ function requestAPI($data, $method = '', $files = false)
             // echo "<br>Requesting Files URL: " . VC_API_URL_DATA;
             // $qry_str='';
             curl_setopt($curl, CURLOPT_URL, VC_API_URL_DATA . http_build_query($data));
-            // curl_setopt($curl, CURLOPT_HEADER, 1); 
+            // curl_setopt($curl, CURLOPT_HEADER, 1);
         } else {
             // echo "<br>Requesting new teleconsultation: " . VC_API_URL;
             curl_setopt($curl, CURLOPT_URL, VC_API_URL);
@@ -1203,24 +1206,24 @@ function saveNotify()
     return json_encode($r);
 }
 /**
- * retrieve patient id, calendar event id and form id 
+ * retrieve patient id, calendar event id and form id
  *
  * @param [type] $data_id
  * @return void
  */
 function getEventData($data_id)
 {
-    $query = "SELECT 
+    $query = "SELECT
     vc.data_id,
     e.pc_eid,
     e.pc_pid,
     vc.encounter,
-    IFNULL((SELECT 
+    IFNULL((SELECT
                     f.id
                 FROM
                     forms AS f
                 WHERE
-                    f.pid = e.pc_pid 
+                    f.pid = e.pc_pid
                     and f.encounter=vc.encounter
                 LIMIT 1),
             0) AS formId
@@ -1237,7 +1240,7 @@ WHERE
 /**
  * get topic appointment status from list_options
  *
- * @param unknown $topic            
+ * @param unknown $topic
  * @return NULL
  */
 function getappStatus($topic)
