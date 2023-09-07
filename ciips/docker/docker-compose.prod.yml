@@ -7,7 +7,6 @@ services:
         volumes:
             - databasevolume:/var/lib/mysql
             - ./sql:/docker-entrypoint-initdb.d
-            - ./icd11/icd11_${ICD11_LANGUAGE:-es}.sql.gz:/docker-entrypoint-initdb.d/2023-07-24_1600_icd11.sql.gz
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}

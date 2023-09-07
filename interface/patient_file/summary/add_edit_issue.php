@@ -325,10 +325,10 @@ if (!empty($_POST['form_save'])) {
         sqlStatement($query, array($thispid, $issue, $thisenc));
     }
 
-    /* TELESALUD 
+    /* TELESALUD
     $tmp_title = $ISSUE_TYPES[$text_type][2] . ": $form_begin " .
         substr($_POST['form_title'], 0, 40);
-    ./TELSALUD */ 
+    ./TELSALUD */
 
     // Close this window and redisplay the updated list of issues.
     //
@@ -360,7 +360,8 @@ if ($issue) {
     foreach ($diags as $diag) {
         // $codedesc = lookup_code_descriptions($diag);
         list($codetype, $code) = explode(':', trim($diag));
-        $sql = "SELECT codes, title FROM list_options WHERE codes = '$codetype:{$code}'";
+        $lang = getICD11LangId();
+        $sql = "SELECT codes, title FROM list_options WHERE codes = '$codetype:{$code}' AND lang_id = $lang";
         $queryDiag = sqlStatement($sql);
 
         $codedesc = 'Not found';
@@ -806,7 +807,7 @@ function getCodeText($code)
 <body>
     <div class="container mt-3">
         <ul class="tabNav">
-            <li class='current'><a href='#'><?php /* echo xlt('Issue');  */ echo('Dato Clínico')?></a></li>
+            <li class='current'><a href='#'><?php  echo xlt('Clinical data'); ?></a></li>
             <?php
             // Build html tab data for each visit form linked to this issue.
             $tabcontents = '';
@@ -1091,7 +1092,7 @@ function getCodeText($code)
                 maximumSelectionSize: 10,
                 minimumResultsForSearch: Infinity,
                 minimumInputLength: 1,
-                placeholder: "Buscar problema CIE-11",
+                placeholder: "<?= xlt('Search for ICD11 problem') ?>",
                 ajax: {
                     url: "<?php echo $webroot ?>/interface/patient_file/summary/search_icd11.php",
                     type: "post",
