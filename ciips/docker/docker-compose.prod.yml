@@ -33,7 +33,20 @@ services:
             - sitevolume:/var/www/html/sites
         depends_on:
             - mysql
+        networks:
+            default:
+            frontend:
+                aliases:
+                    - openemr-web
 volumes:
     logvolume01: {}
     sitevolume: {}
     databasevolume: {}
+
+networks:
+    default:
+    # Delete this network if you don't need a reverse-proxy
+    frontend:
+        external: true
+        name: frontend
+
