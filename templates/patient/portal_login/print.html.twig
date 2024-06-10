@@ -30,8 +30,10 @@
     <script>
         function transmit(){
             // get a public key to encrypt the password info and send
-            document.getElementById('form_save').value='submit';
-            document.forms[0].submit();
+            if(validarFormulario()){
+                document.getElementById('form_save').value='submit';
+                document.forms[0].submit();
+            }
         }
         {% if (credMessage is not empty) %}
         // <?php if (!empty($credMessage)) { ?>
@@ -40,6 +42,26 @@
             });
         {% endif %}
         // <?php } ?>
+
+        function validarFormulario() {
+            var login_uname = document.getElementById('login_uname').value;
+
+            // Verificar que el campo no esté vacío
+            if (login_uname.trim() === '') {
+                alert('Por favor, ingresa un nombre de usuario');
+                return false;
+            }
+
+            // Verificar si el campo es un correo electronico valido
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(login_uname)) {
+                alert('Por favor, ingresa un correo electronico valido');
+                return false;
+            }
+
+            return true;
+        }
+
     </script>
 </head>
 <body class="body_top">
@@ -62,7 +84,7 @@
         </div>
         <div class="form-group">
             <label class="font-weight-bold" for="login_uname">{{ 'Login User Name'|xlt }}:</label>
-            <input type="text" class="form-control" name="login_uname" id="login_uname" value="{{ login_uname }}" readonly />
+            <input type="text" class="form-control" name="login_uname" id="login_uname" value="{{ login_uname }}" />
         </div>
         <label class="font-weight-bold" for="pwd">{{ 'Password'|xlt }}:</label>
         <div class="input-group">

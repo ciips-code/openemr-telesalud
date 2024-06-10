@@ -1175,7 +1175,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     endif; //end if prw is activated
 
                     // TELESALUD
-                    /*
+                    
                     if (AclMain::aclCheckCore('patients', 'disclosure')) :
                         $authWriteDisclosure = AclMain::aclCheckCore('patients', 'disclosure', '', 'write');
                         $authAddonlyDisclosure = AclMain::aclCheckCore('patients', 'disclosure', '', 'addonly');
@@ -1196,7 +1196,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         ];
                         echo $twig->getTwig()->render('patient/card/loader.html.twig', $viewArgs);
                     endif; // end if disclosures authorized
-                    */
+                    
                     // ./TELESALUD
 
                     if ($GLOBALS['amendments'] && AclMain::aclCheckCore('patients', 'amendment')) :
@@ -1228,7 +1228,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     endif; // end amendments authorized
 
                     // TELESALUD
-                    /*
+                    
                     if (AclMain::aclCheckCore('patients', 'lab')) :
                         $dispatchResult = $ed->dispatch(CardRenderEvent::EVENT_HANDLE, new CardRenderEvent('lab'));
                         // labdata expand collapse widget
@@ -1256,7 +1256,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         ];
                         echo $twig->getTwig()->render('patient/card/loader.html.twig', $viewArgs);
                     endif; // end labs authorized
-                    */
+                    
                     // ./TELESALUD
 
                     if ($vitals_is_registered && AclMain::aclCheckCore('patients', 'med')) :
@@ -1403,7 +1403,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
 
                     // TELESALUD
                     // Advance Directives
-                    /*
+                    
                     if ($GLOBALS['advance_directives_warning']) {
                         // advance directives expand collapse widget
 
@@ -1465,7 +1465,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                             echo $twig->getTwig()->render('patient/card/adv_dir.html.twig', $viewArgs);
                         }
                     }  // close advanced dir block
-                    */
+                    
                     // ./TELESALUD
 
 
@@ -1766,6 +1766,69 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
 
                     echo "<div id=\"stats_div\"></div>";
 
+                    //Prescriptions
+                    if ($GLOBALS['erx_enable'] && $display_current_medications_below == 1) {
+                        $sql = "SELECT * FROM prescriptions WHERE patient_id = ? AND active = '1'";
+                        $res = sqlStatement($sql, [$pid]);
+
+                        $rxArr = [];
+                        while ($row = sqlFetchArray($res)) {
+                            $row['unit'] = generate_display_field(array('data_type' => '1', 'list_id' => 'drug_units'), $row['unit']);
+                            $row['form'] = generate_display_field(array('data_type' => '1', 'list_id' => 'drug_form'), $row['form']);
+                            $row['route'] = generate_display_field(array('data_type' => '1', 'list_id' => 'drug_route'), $row['route']);
+                            $row['interval'] = generate_display_field(array('data_type' => '1', 'list_id' => 'drug_interval'), $row['interval']);
+                            $rxArr[] = $row;
+                        }
+                        $id = "current_prescriptions_ps_expand";
+                        $viewArgs = [
+                            'title' => xl('Current Medications'),
+                            'id' => $id,
+                            'forceAlwaysOpen' => false,
+                            'initiallyCollapsed' => (getUserSetting($id) == 0) ? false : true,
+                            'auth' => false,
+                            'rxList' => $rxArr,
+                        ];
+
+                        echo $t->render('patient/card/erx.html.twig', $viewArgs);
+                    }
+
+                    $id = "prescriptions_ps_expand";
+                    $viewArgs = [
+                        'title' => xl("Prescriptions"),
+                        'card_container_class_list' => ['flex-fill', 'mx-1', 'card'],
+                        'id' => $id,
+                        'forceAlwaysOpen' => false,
+                        'initiallyCollapsed' => (getUserSetting($id) == 0) ? false : true,
+                        'btnLabel' => "Edit",
+                        'auth' => AclMain::aclCheckCore('patients', 'rx', '', ['write', 'addonly']),
+                    ];
+
+                    if ($GLOBALS['erx_enable']) {
+                        $viewArgs['title'] = 'Prescription History';
+                        $viewArgs['btnLabel'] = 'Add';
+                        $viewArgs['btnLink'] = "{$GLOBALS['webroot']}/interface/eRx.php?page=compose";
+                    } else {
+                        $viewArgs['btnLink'] = "editScripts('{$GLOBALS['webroot']}/controller.php?prescription&list&id=" . attr_url($pid) . "')";
+                        $viewArgs['linkMethod'] = "javascript";
+                        $viewArgs['btnClass'] = "iframe";
+                    }
+
+                    $cwd = getcwd();
+                    chdir("../../../");
+                    $c = new Controller();
+                    // This is a hacky way to get a Smarty template from the controller and injecting it into
+                    // a Twig template. This reduces the amount of refactoring that is required but ideally the
+                    // Smarty template should be upgraded to Twig
+                    ob_start();
+                    echo $c->act(['prescription' => '', 'fragment' => '', 'patient_id' => $pid]);
+                    $viewArgs['content'] = ob_get_contents();
+                    ob_end_clean();
+
+                    echo "<div>";
+                    echo $t->render('patient/card/rx.html.twig', $viewArgs); // render core prescription card
+                    echo "</div>";
+
+                    //END prescriptions
                     // TRACK ANYTHING
                     // Determine if track_anything form is in use for this site.
                     $tmp = sqlQuery("SELECT count(*) AS count FROM registry WHERE directory = 'track_anything' AND state = 1");

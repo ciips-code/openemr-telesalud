@@ -101,9 +101,9 @@
                     &nbsp; &nbsp; &nbsp; &nbsp;
                     {if $prescription->get_refills() >= $prescription->get_dispensation_count()}
                         <input type="submit" name="disp_button"class='btn btn-primary btn-sm my-0 mr-1 ml-1' value="{xla t='Save and Dispense'}" />
-                        <input class="input-sm" type="text" name="disp_quantity" size="2" maxlength="10" value="{$DISP_QUANTITY|attr}" />
+                        <!-- <input class="input-sm" type="text" name="disp_quantity" size="2" maxlength="10" value="{$DISP_QUANTITY|attr}" />
                         units, {$GBL_CURRENCY_SYMBOL|text}
-                        <input class="input-sm" type="text" name="disp_fee" size="5" maxlength="10" value="{$DISP_FEE|attr}" />
+                        <input class="input-sm" type="text" name="disp_fee" size="5" maxlength="10" value="{$DISP_FEE|attr}" /> -->
                     {else}&nbsp;
                         {xlt t='prescription has reached its limit of'} {$prescription->get_refills()|text} {xlt t='refills'}.
                     {/if}
@@ -180,13 +180,13 @@
             <div class="jumbotron jumbotron-fluid" id="hiddendiv" style="display: none">&nbsp;</div>
         </div>
         {if !empty($DRUG_ARRAY_VALUES)}
-        <div class="form-group mt-3">
+        <!-- <div class="form-group mt-3">
             <label>&nbsp; {xlt t='in-house'}</label>
             <select class="input-sm form-control" name="drug_id" onchange="drugselected(this)">
                 {html_options values=$DRUG_ARRAY_VALUES output=$DRUG_ARRAY_OUTPUT selected=$prescription->get_drug_id()}
             </select>
             <input type="hidden" name="rxnorm_drugcode" value="{$prescription->rxnorm_drugcode|attr}">
-        </div>
+        </div> -->
         {/if}
         <div class="form-group mt-3">
             <label>{xlt t='Quantity'}</label>

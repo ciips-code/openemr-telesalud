@@ -801,19 +801,19 @@ function updateLinksToAgenda($pc_eid, $vc_data)
     $patient_url = $vc_data['data']['patient_url'];
     $medic_url = $vc_data['data']['medic_url'];
     $conn = dbConn();
-    $pc_hometext = mysqli_real_escape_string($conn, "Video Consultation Links:
-<ul>
-<li>Professional: <a href=\"{$medic_url}\" target=\"_blank\" id=\"medicButton\">{$medic_url}</a></li>
-<li>Patient: <a href=\"{$patient_url}\" target=\"_blank\" id=\"patientButton\">{$patient_url}</a> &nbsp  <a class=\"btn btn-primary\" href=\"#\" onclick=\"copyLinkToClipboard('patientButton');\"> button_text </a></li>
-</ul>
-");
-    $query = "update openemr_postcalendar_events set
-pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
-    // echo
-    // $query;
-    // return sqlStatement($sql_update_pc_hometext);
-    $conn = dbConn();
-    return $conn->query($query) or trigger_error($conn->error . " " . $query);
+//     $pc_hometext = mysqli_real_escape_string($conn, "Video Consultation Links:
+// <ul>
+// <li>Professional: <a href=\"{$medic_url}\" target=\"_blank\" id=\"medicButton\">{$medic_url}</a></li>
+// <li>Patient: <a href=\"{$patient_url}\" target=\"_blank\" id=\"patientButton\">{$patient_url}</a> &nbsp  <a class=\"btn btn-primary\" href=\"#\" onclick=\"copyLinkToClipboard('patientButton');\"> button_text </a></li>
+// </ul>
+// ");
+//     $query = "update openemr_postcalendar_events set
+// pc_hometext='$pc_hometext' where pc_eid=$pc_eid;";
+//     // echo
+//     // $query;
+//     // return sqlStatement($sql_update_pc_hometext);
+//     $conn = dbConn();
+//     return $conn->query($query) or trigger_error($conn->error . " " . $query);
 }
 /**
  * Undocumented function

@@ -32,6 +32,8 @@ $twig = $twigContainer->getTwig();
 $trustedEmail = sqlQueryNoLog("SELECT email_direct, email FROM `patient_data` WHERE `pid`=?", array($pid));
 $row = sqlQuery("SELECT pd.*,pao.portal_username, pao.portal_login_username,pao.portal_pwd,pao.portal_pwd_status FROM patient_data AS pd LEFT OUTER JOIN patient_access_onsite AS pao ON pd.pid=pao.pid WHERE pd.pid=?", array($pid));
 
+$usr= $_POST['login_uname'];
+
 $trustedEmail['email_direct'] = !empty(trim($trustedEmail['email_direct'])) ? text(trim($trustedEmail['email_direct'])) : text(trim($trustedEmail['email']));
 $trustedUserName = $trustedEmail['email_direct'];
 // check for duplicate username
@@ -132,6 +134,9 @@ if (isset($_POST['form_save']) && $_POST['form_save'] == 'submit') {
     } else {
         sqlStatementNoLog("INSERT INTO patient_access_onsite SET portal_username=?,portal_login_username=?,portal_pwd=?,portal_pwd_status=0,pid=?", $query_parameters);
     }
+
+    // actualizo la tabla patient_data para que funcione el portal y el mail se pueda modificar desde el formulario de credenciales
+    sqlQuery("UPDATE patient_data SET allow_patient_portal=? , email=?  WHERE id=?",array('YES',$usr,$pid));
 
     // Create the message
     $fhirServerConfig = new ServerConfig();

@@ -483,6 +483,7 @@ if ($is_expired) {
         $frame1url = "main_info.php";
         $frame1target = "cal";
     }
+
     if ($GLOBALS['default_second_tab']) {
         $frame2url = attr($GLOBALS['default_second_tab']);
         $frame2target = $map_paths_to_targets[$GLOBALS['default_second_tab']]['target'];

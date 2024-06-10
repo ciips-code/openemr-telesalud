@@ -935,20 +935,45 @@ if ($eid) {
              $repeattype = 6;
         }
     }
-
-    $recurrence_end_date = ($row['pc_endDate'] && $row['pc_endDate'] != '0000-00-00') ? $row['pc_endDate'] : null;
-    $pcroom = $row['pc_room'];
-    $hometext = $row['pc_hometext'];
-    $translations = [
-        'button_text' => xlt('Copy patient link'),
-        'Video Consultation Links' => xlt('Video Consultation Links'),
-        'Patient' => xlt('Patient'),
-        'Professional' => xlt('Professional'),
-    ];
-    $hometext=str_replace(array_keys($translations),$translations,$hometext);
+    $row2 = sqlQuery("SELECT * FROM telehealth_vc WHERE pc_eid = ?", array($eid));
+    if($row2){
+        $titleOfLinks = xl('Video Consultation Links');
+        $patientTitle2 = xl('Patient');
+        $professionalTitle2 = xl('Professional');
+        $button_text = xl('Copy patient link');
+        $hometext = <<<HTML
+        $titleOfLinks:
+        <ul>
+            <li>$professionalTitle2: <a href="{$row2['medic_url']}" target="_blank" id="medicButton">{$row2['medic_url']}</a></li>
+            <li>$patientTitle2: <a href="{$row2['patient_url']}" target="_blank" id="patientButton">{$row2['patient_url']}</a> &nbsp; 
+                <a class="btn btn-primary" href="#" onclick="copyLinkToClipboard('patientButton');">button_text</a>
+            </li>
+        </ul>
+        HTML;
+    }else{
+        $hometext = '';
+    }
+    $hometext=str_replace('button_text',xlt('Copy patient link'),$hometext);
     if (substr($hometext, 0, 6) == ':text:') {
         $hometext = substr($hometext, 6);
     }
+    $recurrence_end_date = ($row['pc_endDate'] && $row['pc_endDate'] != '0000-00-00') ? $row['pc_endDate'] : null;
+    $pcroom = $row['pc_room'];
+    $hometext=str_replace('button_text',xlt('Copy patient link'),$hometext);
+    if (substr($hometext, 0, 6) == ':text:') {
+        $hometext = substr($hometext, 6);
+    }
+    // $hometext = $row['pc_hometext'];
+    // $translations = [
+    //     'button_text' => xlt('Copy patient link'),
+    //     'Video Consultation Links' => xlt('Video Consultation Links'),
+    //     'Patient' => xlt('Patient'),
+    //     'Professional' => xlt('Professional'),
+    // ];
+    // $hometext=str_replace(array_keys($translations),$translations,$hometext);
+    // if (substr($hometext, 0, 6) == ':text:') {
+    //     $hometext = substr($hometext, 6);
+    // }
 } else {
       // a NEW event
       $eventstartdate = $date; // for repeating event stuff - JRM Oct-08
@@ -1798,9 +1823,9 @@ if (empty($_GET['prov'])) { ?>
 </div><!-- status row -->
 <div class="form-row mx-2">
     <div class="col-sm form-group">
-        <!-- <label><?php echo xlt('Comments'); ?>:</label> -->
+        <label><?php echo xlt('Comments'); ?>:</label>  
         <input class='form-control' type='hidden' name='form_comments' value='<?php echo attr($hometext); ?>' title='<?php echo xla('Optional information about this event'); ?>' />
-        <?php echo htmlspecialchars_decode(stripslashes($hometext)); ?>
+        <?php echo htmlspecialchars_decode(stripslashes($hometext)); ?> 
 
     </div>
 </div>

@@ -1,6 +1,6 @@
 <div class="card m-0 col-12 col-md-6 col-lg-4">
     <div class="card-header">
-        <a href="#" onclick="editAppointment({{ appt.mode | attr_js }},{{ appt.pc_eid | attr_js }})" title="{{ appt.etitle | attr }}">
+        <a href="#" onclick="editAppointment({{ appt.mode | attr_js }},{{ appt.pc_eid | attr_js }})" title="edit">
             <i class='float-right fa fa-edit fa-lg {% if appt.pc_recurrtype > 0 %} text-danger {% else %} text-success {% endif %} bg-light font-weight-light'></i>
         </a>
     </div>
@@ -10,6 +10,9 @@
             {{ appt.appointmentType | text }}<br>
             {{ appt.provider | text }}<br>
             {{ appt.status | text }}
+            {% if appt.patient_url %}
+                    <a class='btn btn-success btn-block' href='{{ appt.patient_url }}' target="_blank">{{'Go to videoconsultation' | xlt }}</a>
+            {% endif %}
         </p>
     </div>
 </div>

@@ -5,8 +5,8 @@
 global $disable_utf8_flag;
 $disable_utf8_flag = false;
 
-//$host: Servicio de MySQL configurado en el arhcivo docker-compose.yml (ops-openemr-mysql) 
-$host	= 'ops-openemr-mysql';
+//$host: Servicio de MySQL configurado en el arhcivo docker-compose.yml (ops-openemr-mysql)
+$host	= 'mysql';
 $port	= '3306';
 $login	= 'openemr';
 $pass	= 'openemr';
@@ -29,7 +29,7 @@ $sqlconf["db_encoding"] = $db_encoding;
 //////////////////////////
 //////////////////////////
 //////DO NOT TOUCH THIS///
-$config = 0; /////////////
+$config = 1; /////////////
 //////////////////////////
 //////////////////////////
 //////////////////////////

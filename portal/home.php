@@ -93,12 +93,20 @@ if ($appts) {
             }
         }
 
-        if ($row['pc_hometext'] != '') {
-            $etitle = xl('Comments') . ': ' . $row['pc_hometext'] . "\r\n";
-        } else {
+        if($row['medic_url'] && $row['patient_url']){
+            $titleOfLinks = xl('Video Consultation Links');
+            $etitle =  <<<HTML
+                $titleOfLinks:
+                <ul>
+                    <li>Professional: <a href="{$row['medic_url']}" target="_blank" id="medicButton">{$row['medic_url']}</a></li>
+                    <li>Patient: <a href="{$row['patient_url']}" target="_blank" id="patientButton">{$row['patient_url']}</a> &nbsp; 
+                        <a class="btn btn-primary" href="#" onclick="copyLinkToClipboard('patientButton');">button_text</a>
+                    </li>
+                </ul>
+            HTML;
+        }else{
             $etitle = '';
         }
-
         $formattedRecord = [
             'appointmentDate' => $dayname . ', ' . $row['pc_eventDate'] . ' ' . $disphour . ':' . $dispmin . ' ' . $dispampm,
             'appointmentType' => xl('Type') . ': ' . $row['pc_catname'],
@@ -106,8 +114,10 @@ if ($appts) {
             'status' => xl('Status') . ': ' . $status_title,
             'mode' => (int)$row['pc_recurrtype'] > 0 ? 'recurring' : $row['pc_recurrtype'],
             'icon_type' => (int)$row['pc_recurrtype'] > 0,
+            'pc_eid' => $row['pc_eid'] ?? null,
             'etitle' => $etitle,
-            'pc_eid' => $row['pc_eid'],
+            'patient_url' => $row['patient_url']
+            
         ];
         $filteredEvent = $GLOBALS['kernel']->getEventDispatcher()->dispatch(new AppointmentFilterEvent($row, $formattedRecord), AppointmentFilterEvent::EVENT_NAME);
         $appointments[] = $filteredEvent->getAppointment() ?? $formattedRecord;
