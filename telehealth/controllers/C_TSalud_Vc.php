@@ -1110,9 +1110,10 @@ function requestAPI($data, $method = '', $files = false)
         // echo "<br>Calling API...";
         $result = curl_exec($curl);
         if (!$result) {
-            $error = "API $curl - Connection Failure";
-            logVc('0', 'Error', "$error");
-            die($error);
+            $error = curl_error($curl);
+            $url = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
+            logVc('0', 'Error', "API Connection Failure to $url: $error");
+            die("API Connection Failure to $url: $error");
         }
     } catch (Exception $e) {
         // echo $e->getMessage();
